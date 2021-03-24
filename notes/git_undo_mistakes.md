@@ -6,7 +6,7 @@
 
 ### git restore -p filename
 - p stands for patches
-- will als for each change in this file to be restore or not
+- will ask for each change in this file to be restore or not
 
 ### git restore .
 - undo all changes since last commit
@@ -16,9 +16,9 @@
 - change commit message of last commit
 - do not change already pushed commit
 
-## git revert hash_value
+## git revert \<SHA>
 - it reverts specified single commit
-- hash_value can be seen through `git log`, eg. 74e3b2b
+- \<SHA> can be seen through `git log`, eg. 74e3b2b
 - it makes new commit by exactly doing opposite changes, so it is very safe
 
 ## git reset --hard 74e3b2b
@@ -39,7 +39,7 @@
 - you can `git reset 74e3b2b` but creating mew branch is preferred by `git branch branch_name 74e3b2b`
 
 ### Restore after deleting entire branch
-- look for hash_value from `git reflog`
+- look for \<SHA> from `git reflog`
 - then `git branch branch_name 36a46a1`
 
 ## Moving commit to another branch
@@ -55,6 +55,7 @@
     git checkout previous_branch_name
     git reset --hard HEAD~1
     ```
+
 ## Interactive rebase
 - is very advance, *dangerous* and powerful tool
 - read comments during the process
