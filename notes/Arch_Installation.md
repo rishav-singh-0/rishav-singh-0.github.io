@@ -17,11 +17,12 @@ If the command shows the directory without error, then the system is booted in U
 `ip link`
 WiFi - `iwctl`
 
-    - device list
-    - station device scan
-    - station device get-networks
-    - station device connect SSID
-        SSID is name of your WiFi network (eg. 'Dark Demon')
+- device list
+- station device scan
+- station device get-networks
+- station device connect SSID
+    
+    - SSID is name of your WiFi network (eg. 'Dark Demon')
 
 ### Alternate:
 `iwctl --passphrase passphrase station device connect SSID`
