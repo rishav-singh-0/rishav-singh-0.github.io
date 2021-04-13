@@ -1,5 +1,19 @@
 # Packages on Arch
 
+# pacstrap
+
+- base
+- linux-lts
+- linux-lts-headers
+- base-devel
+- btrfs
+- btrfs-progs
+- vim
+- networkmanager
+- grub
+- efibootmgr
+- intel-ucode
+
 # xorg
 
 - libx11
@@ -20,6 +34,7 @@
 - unclutter
 - os-prober
 - man-db
+- bash-completion
 
 ## Fonts
 
@@ -42,6 +57,7 @@
 
 - dash      :   POSIX compliant shell that aims to be as small as possible
 - dashbinsh :   redirects sh to dash (aur package)
+- zsh       :   advanced and programmable shell
 
 ## General
 
@@ -76,6 +92,8 @@
 - virtualbox
 - virtualbox-host-dkms (for lts and other kernels)
 - virtualbox-host-modules-arch (for latest linux kernels)
+
+Note: If you are on `linux` kernel then make sure you have `linux-headers` installed. Similarly if you are on `linux-lts kernel` then `linux-ltx-headers` should be installed.
 
 ## Fun
 
