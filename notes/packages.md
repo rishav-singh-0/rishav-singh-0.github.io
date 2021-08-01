@@ -15,29 +15,42 @@
 - intel-ucode
 
 ## Utils
-- mtpfs		: Reading and Writing from any MTP device
-- gvfs-mtp	: Virtual filesystem implementation for GIO (MTP backend; Android, media player)
-- gvfs-gphoto2	: Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)
-- tlp		: Linux Advanced Power Management
-- powertop	: A tool to diagnose issues with power consumption and power management
-- python-pip	        : The PyPA recommended tool for installing Python packages
-- jre8-openjdk          :
-- jre8-openjdk-headless :
+- mtpfs	        : Reading and Writing from any MTP device
+- ntfs-3g       : NTFS filesystem driver and utilities
+- gvfs-mtp      : Virtual filesystem implementation for GIO (MTP backend; Android, media player)
+- gvfs-gphoto2  : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)
+- tlp           : Linux Advanced Power Management
+- powertop      : A tool to diagnose issues with power consumption and power management
+- python-pip    : The PyPA recommended tool for installing Python packages
+- jre8-openjdk          : OpenJDK Java 8 full runtime environment
+- jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment
+
+### Arch
+```
+# Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+
+# Power Management
+pacman -S tlp powertop
+
+# Development
+pacman -S python-pip jdk8-openjdk jdk8-openjdk-headless
+```
 
 
 ## xorg
 
-- libx11	: X11 client-side library
-- xorg-xinit	: X.Org initialisation program
-- libxinerama	: X11 Xinerama extension library
-- libxft	: FreeType-based font drawing library for X
-- xorg-server	: Xorg X server
-- xorg-xrandr	: Primitive command line interface to RandR extension
-- xorg-xrdb	: X server resource database utility
-- xorg-xinput	: Small commandline tool to configure devices
-- xorg-xbacklight	: RandR-based backlight control application
-- xf86-video-intel	: X.org Intel i810/i830/i915/945G/G965+ video drivers
-- xclip		: Command line interface to the X11 clipboard
+- libx11        : X11 client-side library
+- xorg-xinit    : X.Org initialisation program
+- libxinerama   : X11 Xinerama extension library
+- libxft        : FreeType-based font drawing library for X
+- xorg-server   : Xorg X server
+- xorg-xrandr   : Primitive command line interface to RandR extension
+- xorg-xrdb     : X server resource database utility
+- xorg-xinput   : Small commandline tool to configure devices
+- xorg-xbacklight   : RandR-based backlight control application
+- xf86-video-intel  : X.org Intel i810/i830/i915/945G/G965+ video drivers
+- xclip             : Command line interface to the X11 clipboard
 
 ### Arch
 `pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip`
@@ -57,58 +70,61 @@
 - zip,unzip,tar,bzip2	: Compression utils
 
 ### Arch
-`pacman -S picom unclutter os-prober man-db bash-completion zsh-completions`
+```
+pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S zip unzip tar bzip2
+```
 
 
 ## Fonts
 
-- noto-fonts        :   google noto fonts
-- noto-fonts-cjk    :   google noto fonts full
-- ttf-joypixels     :   emoji fonts
+- noto-fonts        : Google Noto TTF fonts
+- noto-fonts-cjk    : Google Noto CJK fonts
+- ttf-joypixels     : Emoji as a Service (formerly EmojiOne)
 
 ### Arch
 `pacman -S noto-fonts ttf-joypixels`
 
 ## Music
 
-- alsa-utils:   Advanced Linux Sound Architecture - Utilities
-- pulseaudio:	A featureful, general-purpose sound server
-- pamixer   :   Pulseaudio command-line mixer like amixer
-- pulsemixer:   CLI and curses mixer for pulseaudio
-- mpd       :   Flexible, powerful, server-side application for playing music
-- mpc       :   Minimalist command line interface to MPD
-- ncmpcpp   :   terminal music player
-- mpv       :   video player
+- alsa-utils    : Advanced Linux Sound Architecture - Utilities
+- pulseaudio    : A featureful, general-purpose sound server
+- pamixer       : Pulseaudio command-line mixer like amixer
+- pulsemixer    : CLI and curses mixer for pulseaudio
+- mpd           : Flexible, powerful, server-side application for playing music
+- mpc           : Minimalist command line interface to MPD
+- ncmpcpp       : terminal music player
+- mpv           : video player
 
 ### Arch
 `pacman -S alsa-utils pulseaudio pamixer pulsemixer mpd mpc ncmpcpp mpv`
 
 ## Shell
 
-- dash      :   POSIX compliant shell that aims to be as small as possible
-- dashbinsh :   redirects sh to dash (aur package)
-- zsh       :   advanced and programmable shell
+- dash      : POSIX compliant shell that aims to be as small as possible
+- dashbinsh : redirects sh to dash (aur package)
+- zsh       : advanced and programmable shell
 
 ## General
 
-- fd        :   find replacement in rust
-- ripgrep   :   grep replacement in rust
-- fzf       :   fuzzy finder
-- htop      :   system manager
-- nitrogen  :   wallpaper manager
-- ranger    :   Vim-like file fanager
-- pcmanfm   :   File manager
-- neomutt   :   email client
-- dunst     :   notification demon
-- libnotify :   notification client
-- xarchiver :   GTK+ frontend to command line archivers
-- xterm     :   default terminal for various program
-- evince    :   document viewer
-- sxiv      :   image viewer
-- ueberzug  :   image previewer
-- maim      :   Utility to take a screenshot using imlib2
-- neovim    :   text editor
-- brave-bin :   internet browser
+- fd        : find replacement in rust
+- ripgrep   : grep replacement in rust
+- fzf       : fuzzy finder
+- htop      : system manager
+- nitrogen  : wallpaper manager
+- ranger    : Vim-like file fanager
+- pcmanfm   : File manager
+- neomutt   : email client
+- dunst     : notification demon
+- libnotify : notification client
+- xarchiver : GTK+ frontend to command line archivers
+- xterm     : default terminal for various program
+- evince    : document viewer
+- sxiv      : image viewer
+- ueberzug  : image previewer
+- maim      : Utility to take a screenshot using imlib2
+- neovim    : text editor
+- brave-bin : internet browser
 
 ### Arch
 ```
@@ -126,7 +142,11 @@ yay -S neovim-nightly-bin brave-bin
 
 ### Arch
 ```
+# For linux lts kernel
 pacman -S nvidia-lts nvidia-utils nvidia-settings nvidia-prime
+
+# For latest linux kernel
+pacman -S nvidia nvidia-utils nvidia-settings nvidia-prime
 ```
 
 ## Virtual Box
@@ -136,15 +156,21 @@ pacman -S nvidia-lts nvidia-utils nvidia-settings nvidia-prime
 - virtualbox-host-modules-arch (for latest linux kernels)
 
 ### Arch
-`pacman -S virtualbox virtualbox-host-dkms`
+```
+# For linux lts kernel
+pacman -S virtualbox virtualbox-host-dkms linux-headers-lts
 
-> Note: If you are on `linux` kernel then make sure you have `linux-headers` installed. Similarly if you are on `linux-lts kernel` then `linux-ltx-headers` should be installed.
+# For latest linux kernel
+pacman -S virtualbox virtualbox-host-modules-arch linux-headers
+```
+
+> Note: If you are on `linux` kernel then make sure you have `linux-headers` installed. Similarly if you are on `linux-lts` kernel then `linux-ltx-headers` should be installed.
 
 ## Fun
 
-- figlet        :   write words with style
-- cmatrix       :   terminal animation
-- neofetch  :   stylish system info
+- figlet        :   A program for making large letters out of ordinary text
+- cmatrix       :   A curses-based scrolling 'Matrix'-like screen
+- neofetch      :   A CLI system information tool
 
 ### Arch
 ```
