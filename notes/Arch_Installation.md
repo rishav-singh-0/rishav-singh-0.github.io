@@ -21,7 +21,7 @@ WiFi - `iwctl`
 - station device scan
 - station device get-networks
 - station device connect SSID
-    
+
     - SSID is name of your WiFi network (eg. 'Dark Demon')
 
 ### Alternate:
@@ -42,19 +42,21 @@ Results ending in rom, loop or airoot may be ignored.
 
 The following partitions are required for a chosen device:
 
-    - One partition for the root directory /.
-    - For booting in UEFI mode: an EFI system partition.
-    - If you want to create any stacked block devices for LVM, system encryption or RAID, do it now.
+- One partition for the root directory /.
+- For booting in UEFI mode: an EFI system partition.
+- If you want to create any stacked block devices for LVM, system encryption or RAID, do it now.
 
 Example look UEFI with GPT
 
-| Mount point           | Partition                 | Partition type        | Suggested size            |
-| :-------------------- | :------------------------ | :-------------------  | :-----------------------  |
-| /mnt/boot or /mnt/efi | /dev/efi_system_partition | EFI system partition  |	At least 260 MiB        |
-| [SWAP]                | /dev/swap_partition       | Linux swap            | More than 512 MiB         |
-| /mnt	                | /dev/root_partition       | Linux x86-64 root (/) | Remainder of the device   |
+| Mount point                | Partition                 | Partition type        | Suggested size            |
+| :------------------------- | :------------------------ | :-------------------  | :-----------------------  |
+| /mnt/boot or /mnt/boot/efi | /dev/efi_system_partition | EFI system partition  |	At least 260 MiB         |
+| [SWAP]                     | /dev/swap_partition       | Linux swap            | More than 512 MiB         |
+| /mnt	                     | /dev/root_partition       | Linux x86-64 root (/) | Remainder of the device   |
 
 ## Format the partitions
+<!-- Include btrfs guide also -->
+
 Once the partitions have been created, each newly created partition must be formatted with an appropriate file system. For example, to create an Ext4 file system on /dev/root_partition, run:
 
 `mkfs.ext4 /dev/root_partition`
@@ -94,7 +96,9 @@ Update the system by `pacman -Syy`
 
 ## Install essential packages
 
-`pacstrap /mnt base linux linux-firmware vim networkmanager grub efibootmgr git`
+```
+pacstrap /mnt base base-devel linux-lts linux-firmware vim networkmanager btrfs-progs grub efibootmgr git
+```
 
 ## Configure the system
 
@@ -122,10 +126,8 @@ Change root into the new system:
 `locale-gen`
 - Create the locale.conf file, and set the LANG variable accordingly:
 
-```bash
-/etc/locale.conf
-LANG=en_US.UTF-8
-```
+`echo 'LANG=en_US.UTF-8' > /etc/locale.conf`
+
 Network configuration
 Create the hostname file:
 
@@ -134,14 +136,14 @@ Create the hostname file:
 `myhostname`
 
 
-Add matching entries to hosts:
+Add matching entries to hosts file:
 
 `vim /etc/hosts`
 
-```bash
-127.0.0.1	localhost
-::1		localhost
-127.0.1.1	myhostname.localdomain	myhostname
+```
+127.0.0.1   localhost
+::1         localhost
+127.0.1.1   myhostname.localdomain	myhostname
 ```
 
 ### Initramfs
@@ -155,7 +157,9 @@ For LVM, system encryption or RAID, modify mkinitcpio.conf(5) and recreate the i
 - Create root password using `passwd`
 - Create normal user
 
-    `usradd -G wheel,audio,video rishav`
+    `useradd -mG wheel,audio,video rishav`
+- Create password for this user
+    `passwd rishav`
 
 
 ## Install Grub Bootloader
@@ -169,10 +173,18 @@ grub-mkconfig -o /boot/grub/grub.cfg
 ```
 ## Other impoetant things
 
+### Starting important services
+
+```
+ststemctl enable NetworkManager
+```
+### Extra
 - Depending on the processor, install the following package:
 
-    -- amd-ucode for AMD processors
+    - amd-ucode for AMD processors
 
-    -- intel-ucode for Intel processors.
+        `pacman -S amd-ucode`
 
-    `pacman -S intel-ucode`
+    - intel-ucode for Intel processors.
+
+        `pacman -S intel-ucode`
