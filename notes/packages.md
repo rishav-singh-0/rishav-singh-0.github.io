@@ -34,7 +34,7 @@ pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
 pacman -S tlp powertop
 
 # Development
-pacman -S python-pip jdk8-openjdk jdk8-openjdk-headless
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless
 ```
 
 
