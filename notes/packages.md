@@ -24,6 +24,8 @@
 - python-pip    : The PyPA recommended tool for installing Python packages
 - jre8-openjdk          : OpenJDK Java 8 full runtime environment
 - jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment
+- wget          : Network utility to retrieve files from the Web
+- gnome-keyring : Stores passwords and encryption keys
 
 ### Arch
 ```
@@ -34,7 +36,7 @@ pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
 pacman -S tlp powertop
 
 # Development
-pacman -S python-pip jre8-openjdk jre8-openjdk-headless
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
 ```
 
 
