@@ -6,8 +6,9 @@ Here on this website I usually post guides, tutoials or notes based on my own en
 
 ## Articles
 
-- Git Undo Mistakes
-- Arch Installation
-- Packages on GNU/Linux
-- Linux Containers
-- What are diffrent xfiles
+- [Git Undo Mistakes](git_undo_mistakes.html)
+- [Arch Installation](Arch_Installation.html)
+- [Packages on GNU/Linux](packages.html)
+- [Linux Containers](Linux_Containers.html)
+- [What are diffrent xfiles](xfiles.html)
+
