@@ -69,12 +69,12 @@ pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
 - man-db	: A utility for reading man pages
 - bash-completion	: Programmable completion for the bash shell
 - zsh-completions	: Additional completion definitions for Zsh
-- zip,unzip,tar,bzip2	: Compression utils
+- zip,unzip,tar,bzip2,atool,unrar	: Compression utils
 
 ### Arch
 ```
 pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
-pacman -S zip unzip tar bzip2
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
 ```
 
 
@@ -127,6 +127,7 @@ pacman -S zip unzip tar bzip2
 - maim      : Utility to take a screenshot using imlib2
 - neovim    : text editor
 - brave-bin : internet browser
+- gparted   : A Partition Magic clone, frontend to GNU Parted
 
 ### Arch
 ```
@@ -160,10 +161,16 @@ pacman -S nvidia nvidia-utils nvidia-settings nvidia-prime
 ### Arch
 ```
 # For linux lts kernel
-pacman -S virtualbox virtualbox-host-dkms linux-headers-lts
+pacman -S virtualbox virtualbox-host-dkms linux-lts-headers
 
 # For latest linux kernel
 pacman -S virtualbox virtualbox-host-modules-arch linux-headers
+
+# Add user into `vboxusers` group, here user is `rishav`
+gpasswd -a rishav vboxusers
+
+# load the `vboxdrv` module manually
+modprobe vboxdrv
 ```
 
 > Note: If you are on `linux` kernel then make sure you have `linux-headers` installed. Similarly if you are on `linux-lts` kernel then `linux-ltx-headers` should be installed.
@@ -178,3 +185,31 @@ pacman -S virtualbox virtualbox-host-modules-arch linux-headers
 ```
 pacman -S figlet cmatrix neofetch
 ```
+
+## Latex
+
+- texlive-core  : TeX Live core distribution
+- texlive-latexextra : Large collection of add-on packages for LaTeX
+- texlive-science    : Typesetting for mathematics, natural and computer sciences
+- texlive-publishers : LaTeX classes and packages for specific publishers
+- texlive-formatsextra : Collection of extra TeX 'formats'
+- pandoc        : Conversion between markup formats
+
+## Development
+
+- redis         : An in-memory database that persists on disk
+
+    ```
+    pacman -S redis
+    ```
+
+- postgresql    : Sophisticated object-relational DBMS ([link](https://wiki.archlinux.org/title/PostgreSQL))
+
+    ```
+    pacman -S postgresql
+    sudo -iu postgres       # login as postgres user
+    initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
+
+    # start the service
+    systemctl enable --now postgresql.service
+    ```
