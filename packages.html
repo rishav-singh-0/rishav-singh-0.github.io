@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+		<script src="https://kit.fontawesome.com/93866eaaa9.js" crossorigin="anonymous"></script>
+		<title>Rishav's Blog</title>
+	</head>
+		<body class="light-mode">
+
+		<nav class="menu">
+			<div class="nav-left">
+				<ul>
+					<li><a href="index.html"><img class="logo" src="favicon.png" alt=""><span class="sitename">rishav's blog</span></a></li>
+				</ul>
+			</div>
+			<div class="nav-right">
+				<ul>
+					<li style="padding: 9px"><a id="darkmodetoggle" class="fas fa-moon" onclick="switchTheme()"></a></li>
+					<li><a href="mailto:rishav.zero@pm.me">contact</a></li>
+					<!-- <li><a href="https://www.youtube.com/channel/UCeql5HBmcs8d0OFT30erYkw">youtube</a></li> -->
+					<li><a href="https://github.com/rishav-singh-0">github</a></li>
+					<li><a href="https://twitter.com/RishavSingh0">twitter</a></li>
+					<li><a href="https://www.linkedin.com/in/rishav-singh-0/">linkedin</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<article>
+<h1 id="Packages%20on%20Arch">Packages on Arch</h1>
+
+<h2 id="pacstrap">pacstrap</h2>
+
+<ul>
+<li>base</li>
+<li>linux-lts</li>
+<li>linux-lts-headers</li>
+<li>base-devel</li>
+<li>btrfs</li>
+<li>btrfs-progs</li>
+<li>vim</li>
+<li>networkmanager</li>
+<li>grub</li>
+<li>efibootmgr</li>
+<li>intel-ucode</li>
+</ul>
+
+<h2 id="Utils">Utils</h2>
+
+<ul>
+<li>mtpfs         : Reading and Writing from any MTP device</li>
+<li>ntfs-3g       : NTFS filesystem driver and utilities</li>
+<li>gvfs-mtp      : Virtual filesystem implementation for GIO (MTP backend; Android, media player)</li>
+<li>gvfs-gphoto2  : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)</li>
+<li>tlp           : Linux Advanced Power Management</li>
+<li>powertop      : A tool to diagnose issues with power consumption and power management</li>
+<li>python-pip    : The PyPA recommended tool for installing Python packages</li>
+<li>jre8-openjdk          : OpenJDK Java 8 full runtime environment</li>
+<li>jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment</li>
+<li>wget          : Network utility to retrieve files from the Web</li>
+<li>gnome-keyring : Stores passwords and encryption keys</li>
+</ul>
+
+<h3 id="Arch">Arch</h3>
+
+<pre><code># Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+
+# Power Management
+pacman -S tlp powertop
+
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+</code></pre>
+
+<h2 id="xorg">xorg</h2>
+
+<ul>
+<li>libx11        : X11 client-side library</li>
+<li>xorg-xinit    : X.Org initialisation program</li>
+<li>libxinerama   : X11 Xinerama extension library</li>
+<li>libxft        : FreeType-based font drawing library for X</li>
+<li>xorg-server   : Xorg X server</li>
+<li>xorg-xrandr   : Primitive command line interface to RandR extension</li>
+<li>xorg-xrdb     : X server resource database utility</li>
+<li>xorg-xinput   : Small commandline tool to configure devices</li>
+<li>xorg-xbacklight   : RandR-based backlight control application</li>
+<li>xf86-video-intel  : X.org Intel i810&#47;i830&#47;i915&#47;945G&#47;G965+ video drivers</li>
+<li>xclip             : Command line interface to the X11 clipboard</li>
+</ul>
+
+<h3 id="Arch-2">Arch</h3>
+
+<p><code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip</code></p>
+
+<h3 id="Gentoo">Gentoo</h3>
+
+<p><code>emerge x11-libs&#47;libX11 x11-base&#47;xorg-server x11-libs&#47;libXrandr x11-libs&#47;libXinerama x11-libs&#47;libXft x11-apps&#47;xinit x11-apps&#47;xrdb x11-apps&#47;mesa-progs x11-apps&#47;xrandr x11-misc&#47;unclutter x11-misc&#47;xclip</code></p>
+
+<h2 id="Basic">Basic</h2>
+
+<ul>
+<li>picom     : X compositor that may fix tearing issues</li>
+<li>unclutter : A small program for hiding the mouse cursor</li>
+<li>os-prober : Utility to detect other OSes on a set of drives</li>
+<li>man-db    : A utility for reading man pages</li>
+<li>bash-completion   : Programmable completion for the bash shell</li>
+<li>zsh-completions   : Additional completion definitions for Zsh</li>
+<li>zip,unzip,tar,bzip2,atool,unrar   : Compression utils</li>
+</ul>
+
+<h3 id="Arch-3">Arch</h3>
+
+<pre><code>pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+</code></pre>
+
+<h2 id="Fonts">Fonts</h2>
+
+<ul>
+<li>noto-fonts        : Google Noto TTF fonts</li>
+<li>noto-fonts-cjk    : Google Noto CJK fonts</li>
+<li>ttf-joypixels     : Emoji as a Service (formerly EmojiOne)</li>
+</ul>
+
+<h3 id="Arch-4">Arch</h3>
+
+<p><code>pacman -S noto-fonts ttf-joypixels</code></p>
+
+<h2 id="Music">Music</h2>
+
+<ul>
+<li>alsa-utils    : Advanced Linux Sound Architecture - Utilities</li>
+<li>pulseaudio    : A featureful, general-purpose sound server</li>
+<li>pamixer       : Pulseaudio command-line mixer like amixer</li>
+<li>pulsemixer    : CLI and curses mixer for pulseaudio</li>
+<li>mpd           : Flexible, powerful, server-side application for playing music</li>
+<li>mpc           : Minimalist command line interface to MPD</li>
+<li>ncmpcpp       : terminal music player</li>
+<li>mpv           : video player</li>
+</ul>
+
+<h3 id="Arch-5">Arch</h3>
+
+<p><code>pacman -S alsa-utils pulseaudio pamixer pulsemixer mpd mpc ncmpcpp mpv</code></p>
+
+<h2 id="Shell">Shell</h2>
+
+<ul>
+<li>dash      : POSIX compliant shell that aims to be as small as possible</li>
+<li>dashbinsh : redirects sh to dash (aur package)</li>
+<li>zsh       : advanced and programmable shell</li>
+</ul>
+
+<h2 id="General">General</h2>
+
+<ul>
+<li>fd        : find replacement in rust</li>
+<li>ripgrep   : grep replacement in rust</li>
+<li>fzf       : fuzzy finder</li>
+<li>htop      : system manager</li>
+<li>nitrogen  : wallpaper manager</li>
+<li>ranger    : Vim-like file fanager</li>
+<li>pcmanfm   : File manager</li>
+<li>neomutt   : email client</li>
+<li>dunst     : notification demon</li>
+<li>libnotify : notification client</li>
+<li>xarchiver : GTK+ frontend to command line archivers</li>
+<li>xterm     : default terminal for various program</li>
+<li>evince    : document viewer</li>
+<li>sxiv      : image viewer</li>
+<li>ueberzug  : image previewer</li>
+<li>maim      : Utility to take a screenshot using imlib2</li>
+<li>neovim    : text editor</li>
+<li>brave-bin : internet browser</li>
+<li>gparted   : A Partition Magic clone, frontend to GNU Parted</li>
+</ul>
+
+<h3 id="Arch-6">Arch</h3>
+
+<pre><code>pacman -S fd ripgrep fzf htop nitrogen ranger pcmanfm dunst libnotify xarchiver xterm evince sxiv ueberzug maim
+yay -S neovim-nightly-bin brave-bin
+</code></pre>
+
+<h2 id="Nvidia">Nvidia</h2>
+
+<ul>
+<li>nvidia-lts</li>
+<li>nvidia-utils</li>
+<li>nvidia-settings</li>
+<li>nvidia-prime</li>
+<li>optimus-manager (yay)</li>
+</ul>
+
+<h3 id="Arch-7">Arch</h3>
+
+<pre><code># For linux lts kernel
+pacman -S nvidia-lts nvidia-utils nvidia-settings nvidia-prime
+
+# For latest linux kernel
+pacman -S nvidia nvidia-utils nvidia-settings nvidia-prime
+</code></pre>
+
+<h2 id="Virtual%20Box">Virtual Box</h2>
+
+<ul>
+<li>virtualbox</li>
+<li>virtualbox-host-dkms (for lts and other kernels)</li>
+<li>virtualbox-host-modules-arch (for latest linux kernels)</li>
+</ul>
+
+<h3 id="Arch-8">Arch</h3>
+
+<pre><code># For linux lts kernel
+pacman -S virtualbox virtualbox-host-dkms linux-lts-headers
+
+# For latest linux kernel
+pacman -S virtualbox virtualbox-host-modules-arch linux-headers
+
+# Add user into `vboxusers` group, here user is `rishav`
+gpasswd -a rishav vboxusers
+
+# load the `vboxdrv` module manually
+modprobe vboxdrv
+</code></pre>
+
+<blockquote>
+<p>Note: If you are on <code>linux</code> kernel then make sure you have <code>linux-headers</code> installed. Similarly if you are on <code>linux-lts</code> kernel then <code>linux-ltx-headers</code> should be installed.</p>
+</blockquote>
+
+<h2 id="Fun">Fun</h2>
+
+<ul>
+<li>figlet        :   A program for making large letters out of ordinary text</li>
+<li>cmatrix       :   A curses-based scrolling &#8216;Matrix&#8217;-like screen</li>
+<li>neofetch      :   A CLI system information tool</li>
+</ul>
+
+<h3 id="Arch-9">Arch</h3>
+
+<pre><code>pacman -S figlet cmatrix neofetch
+</code></pre>
+
+<h2 id="Latex">Latex</h2>
+
+<ul>
+<li>texlive-core  : TeX Live core distribution</li>
+<li>texlive-latexextra : Large collection of add-on packages for LaTeX</li>
+<li>texlive-science    : Typesetting for mathematics, natural and computer sciences</li>
+<li>texlive-publishers : LaTeX classes and packages for specific publishers</li>
+<li>texlive-formatsextra : Collection of extra TeX &#8216;formats&#8217;</li>
+<li>pandoc        : Conversion between markup formats</li>
+</ul>
+
+<h2 id="Development">Development</h2>
+
+<ul>
+<li><p>redis         : An in-memory database that persists on disk</p>
+
+<pre><code>pacman -S redis
+</code></pre></li>
+<li><p>postgresql    : Sophisticated object-relational DBMS (<a href="https://wiki.archlinux.org/title/PostgreSQL">link</a>)</p>
+
+<pre><code>pacman -S postgresql
+sudo -iu postgres       # login as postgres user
+initdb --locale=en_US.UTF-8 -E UTF8 -D &#47;var&#47;lib&#47;postgres&#47;data
+
+# start the service
+systemctl enable --now postgresql.service
+</code></pre></li>
+</ul>
+</article>
+
+<footer id="footnote-definition">
+    <p>Creaed by <a href="https://github.com/rishav-singh-0/">Rishav Singh</a> by slightly modified version of <a href="https://www.romanzolotarev.com/ssg.html">ssg6</a>
+</footer>
+<script>
+// Get the theme toggle input
+const currentTheme = localStorage.getItem("theme");// If the current local storage item can be found
+
+// Function that will switch the theme based on the if the theme toggle is checked or not
+function switchTheme() {
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    document.documentElement.setAttribute("data-theme", "light");
+    // Set the user's theme preference to dark
+    localStorage.setItem("theme", "light");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    // Set the user's theme preference to light
+    localStorage.setItem("theme", "dark");
+  }
+}
+
+// Get the current theme from local storage
+if (currentTheme) {
+        // Set the body data-theme attribute to match the local storage item
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+        }
+}
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        console.log('user prefers dark scheme, going dark');
+        document.documentElement.setAttribute("data-theme", "dark");
+        }
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+		<script src="https://kit.fontawesome.com/93866eaaa9.js" crossorigin="anonymous"></script>
+		<title>Rishav's Blog</title>
+	</head>
+		<body class="light-mode">
+
+		<nav class="menu">
+			<div class="nav-left">
+				<ul>
+					<li><a href="index.html"><img class="logo" src="favicon.png" alt=""><span class="sitename">rishav's blog</span></a></li>
+				</ul>
+			</div>
+			<div class="nav-right">
+				<ul>
+					<li style="padding: 9px"><a id="darkmodetoggle" class="fas fa-moon" onclick="switchTheme()"></a></li>
+					<li><a href="mailto:rishav.zero@pm.me">contact</a></li>
+					<!-- <li><a href="https://www.youtube.com/channel/UCeql5HBmcs8d0OFT30erYkw">youtube</a></li> -->
+					<li><a href="https://github.com/rishav-singh-0">github</a></li>
+					<li><a href="https://twitter.com/RishavSingh0">twitter</a></li>
+					<li><a href="https://www.linkedin.com/in/rishav-singh-0/">linkedin</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<article>
+<h1 id="Undo%20Mistakes%20%F0%9F%98%B1">Undo Mistakes 😱</h1>
+
+<h2 id="git%20restore%20filename">git restore filename</h2>
+
+<ul>
+<li>will discard uncommited change for this file</li>
+<li>cannot be undone afterward</li>
+</ul>
+
+<h3 id="git%20restore%20-p%20filename">git restore -p filename</h3>
+
+<ul>
+<li>p stands for patches</li>
+<li>will ask for each change in this file to be restore or not</li>
+</ul>
+
+<h3 id="git%20restore%20.">git restore .</h3>
+
+<ul>
+<li>undo all changes since last commit</li>
+</ul>
+
+<h2 id="git%20commit%20&amp;#8211;ammend%20-m%20&amp;#8220;Commit%20Message&amp;#8221;">git commit &#8211;ammend -m &#8220;Commit Message&#8221;</h2>
+
+<ul>
+<li>change commit message of last commit</li>
+<li>do not change already pushed commit</li>
+</ul>
+
+<h2 id="git%20revert%20&amp;#60;SHA&amp;#62;">git revert &#60;SHA&#62;</h2>
+
+<ul>
+<li>it reverts specified single commit</li>
+<li>&#60;SHA&#62; can be seen through <code>git log</code>, eg. 74e3b2b</li>
+<li>it makes new commit by exactly doing opposite changes, so it is very safe</li>
+</ul>
+
+<h2 id="git%20reset%20&amp;#8211;hard%2074e3b2b">git reset &#8211;hard 74e3b2b</h2>
+
+<ul>
+<li>it resets HEAD to certain commit in history while deleting all the commits after it</li>
+<li>if commits just local then they are gone forever</li>
+</ul>
+
+<h3 id="git%20reset%20&amp;#8211;mixed%2074e3b2b">git reset &#8211;mixed 74e3b2b</h3>
+
+<ul>
+<li>same as previous one but it will store all the changes from the removed commits as uncommited changes</li>
+</ul>
+
+<h2 id="git%20restore%20&amp;#8211;source%2074e3b2b%20filename">git restore &#8211;source 74e3b2b filename</h2>
+
+<ul>
+<li>will restore this file to certain commit (just 1 file)</li>
+</ul>
+
+<h2 id="git%20reflog">git reflog</h2>
+
+<ul>
+<li>it is advance version of <code>git log</code></li>
+</ul>
+
+<h3 id="Restore%20after%20hard%20reset">Restore after hard reset</h3>
+
+<ul>
+<li>it even stores history for certain time after <code>git reset --hard</code></li>
+<li>you can <code>git reset 74e3b2b</code> but creating mew branch is preferred by <code>git branch branch_name 74e3b2b</code></li>
+</ul>
+
+<h3 id="Restore%20after%20deleting%20entire%20branch">Restore after deleting entire branch</h3>
+
+<ul>
+<li>look for &#60;SHA&#62; from <code>git reflog</code></li>
+<li>then <code>git branch branch_name 36a46a1</code></li>
+</ul>
+
+<h2 id="Moving%20commit%20to%20another%20branch">Moving commit to another branch</h2>
+
+<ul>
+<li>if you want to <em>move</em> cirtain commits from current branch to new branch
+<code>
+git branch new_branch_name
+git reset HEAD~1 --hard
+</code></li>
+<li>if moving commit to already present branch
+<code>
+git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+</code></li>
+</ul>
+
+<h2 id="Interactive%20rebase">Interactive rebase</h2>
+
+<ul>
+<li>is very advance, <em>dangerous</em> and powerful tool</li>
+<li>read comments during the process</li>
+</ul>
+
+<h3 id="Change%20commit%20history">Change commit history</h3>
+
+<ul>
+<li>for example if you want to change commit history upto 3 commits before current HEAD</li>
+<li><code>git rebase -i HEAD~3</code></li>
+<li>you can change&#47;<em>reword</em> commit messages, delete&#47;<em>drop</em> commits, <em>squash</em> multiple commits together</li>
+</ul>
+</article>
+
+<footer id="footnote-definition">
+    <p>Creaed by <a href="https://github.com/rishav-singh-0/">Rishav Singh</a> by slightly modified version of <a href="https://www.romanzolotarev.com/ssg.html">ssg6</a>
+</footer>
+<script>
+// Get the theme toggle input
+const currentTheme = localStorage.getItem("theme");// If the current local storage item can be found
+
+// Function that will switch the theme based on the if the theme toggle is checked or not
+function switchTheme() {
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    document.documentElement.setAttribute("data-theme", "light");
+    // Set the user's theme preference to dark
+    localStorage.setItem("theme", "light");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    // Set the user's theme preference to light
+    localStorage.setItem("theme", "dark");
+  }
+}
+
+// Get the current theme from local storage
+if (currentTheme) {
+        // Set the body data-theme attribute to match the local storage item
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+        }
+}
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        console.log('user prefers dark scheme, going dark');
+        document.documentElement.setAttribute("data-theme", "dark");
+        }
+</script>
+</body>
+</html>
