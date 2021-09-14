@@ -25,7 +25,7 @@ jobs:
           ./configure
           make
           make regress
-          make install
+          sudo make install
 
       - name: Build 🔧
         run: |
