@@ -1,7 +1,7 @@
 Hey there!
 
 [![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rishav-singh-0/)
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/rishav-singh-0/rishav-singh-0.github.io)
 
 My name is **Rishav Singh** and I am yet another Tech Enthusiast.I am also an Electronics and Communication Engineer.
 I like and promote Open Source Softwares, GNU/Linux and other related stuff.
