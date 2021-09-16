@@ -19,12 +19,10 @@ jobs:
 
       - name: Install
         run: |
-          curl https://kristaps.bsd.lv/lowdown/snapshots/lowdown.tar.gz -o lowdown.tar.gz
-          tar -xf lowdown.tar.gz
+          tar -xf bin/lowdown.tar.gz
           cd lowdown-0.8.6
           ./configure
-          make
-          make regress
+          make && make regress
           sudo make install
 
       - name: Build 🔧
