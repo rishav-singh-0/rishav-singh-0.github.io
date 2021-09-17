@@ -2,20 +2,6 @@
 
 Date: 17 Sept. 2021
 
-2
-2.1	Default Arch configuration
-2.2	Advanced configuration
-3	Compilation
-4	Installation
-4.1	Install the modules
-4.2	Copy the kernel to /boot directory
-4.3	Make initial RAM disk
-4.3.1	Automated preset method
-4.3.2	Manual method
-4.4	Copy System.map
-5	Bootloader configuration
-
-
 ## Preparation
 
 ### Install Dependencies
@@ -178,4 +164,9 @@ After completing all steps above, you should have the following 3 files and 1 so
 ```
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+## Refrences
+
+1. https://wiki.archlinux.org/title/Kernel/Traditional_compilation
+2. https://www.kernel.org/
 
