@@ -16,4 +16,5 @@ idea is to make easy to follow and highly effective methods using as less words 
 - [Packages on GNU/Linux](packages.html)
 - [Linux Containers](Linux_Containers.html)
 - [What are diffrent xfiles](xfiles.html)
+- [Custom Linux Kernel(Arch)](custom_linux_kernel.html)
 
