@@ -125,7 +125,7 @@ When all the required configurations are done, save your configurations in <code
 
 <p>Once the kernel has been compiled, the modules for it must follow. First build the modules:</p>
 
-<pre><code>make modules
+<pre><code>make modules -j4
 </code></pre>
 
 <p>Change to root user
@@ -135,10 +135,10 @@ sudo su
 
 <p>Then install the modules.</p>
 
-<pre><code>make modules_install
+<pre><code>make modules_install -j4
 </code></pre>
 
-<p>This will copy the compiled modules into <code>&#47;lib&#47;modules&#47;&#60;kernel_version&#62;-&#60;config_local_version&#62;</code>. For example, for kernel version 5.14 installed above, they would be copied to <code>&#47;lib&#47;modules&#47;5.14.5-CUSTOM</code>. This keeps the modules for individual kernels used separated.</p>
+<p>This will copy the compiled modules into <code>&#47;lib&#47;modules&#47;&#60;kernel_version&#62;-&#60;config_local_version&#62;</code>. For example, for kernel version 5.14 installed above, they would be copied to <code>&#47;lib&#47;modules&#47;5.14.5-ARCH</code>. This keeps the modules for individual kernels used separated.</p>
 
 <!-- Now that the kernel modules are build successfully, we will proceed to install kernel itself -->
 
@@ -146,7 +146,9 @@ sudo su
 
 <p>The kernel compilation process will generate a compressed <code>bzImage</code> (big zImage) of that kernel, which must be copied to the &#47;boot directory and renamed in the process. Provided the name is prefixed with <code>vmlinuz-</code>, you may name the kernel as you wish.</p>
 
-<pre><code>cp -v arch&#47;x86_64&#47;boot&#47;bzImage &#47;boot&#47;vmlinuz-linux-5.14.5
+<pre><code># cp -v arch&#47;x86_64&#47;boot&#47;bzImage &#47;boot&#47;vmlinuz-&#60;kernel_name&#62;
+
+cp -v arch&#47;x86_64&#47;boot&#47;bzImage &#47;boot&#47;vmlinuz-linux514
 </code></pre>
 
 <h3 id="Make%20initial%20RAM%20disk">Make initial RAM disk</h3>
@@ -154,7 +156,7 @@ sudo su
 <p>Generate initramfs image file
 You are free to name the initramfs image file whatever you wish when generating it. However, it is recommended to use the <code>linux&#60;major_revision&#62;&#60;minor_revision&#62;</code> convention. For example, the name &#8216;linux514&#8217; was given as &#8216;5&#8217; is the major revision and &#8216;14&#8217; is the minor revision of the 5.14 kernel. This convention will make it easier to maintain multiple kernels, regularly use mkinitcpio, and build third-party modules.</p>
 
-<pre><code># mkinitcpio -k &#60;kernel_version&#62; -g &#47;boot&#47;initramfs-&#60;file_name&#62;.img
+<pre><code># mkinitcpio -k &#60;kernel_version&#62; -g &#47;boot&#47;initramfs-&#60;kernel_name&#62;.img
 
 mkinitcpio -k 5.14.5 -g &#47;boot&#47;initramfs-linux514.img
 </code></pre>
