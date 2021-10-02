@@ -100,7 +100,7 @@ This process will normally take some time so grab a cup of coffee(it took around
 Once the kernel has been compiled, the modules for it must follow. First build the modules:
 
 ```
-make modules
+make modules -j4
 ```
 
 Change to root user
@@ -111,10 +111,10 @@ sudo su
 Then install the modules.
 
 ```
-make modules_install
+make modules_install -j4
 ```
 
-This will copy the compiled modules into `/lib/modules/<kernel_version>-<config_local_version>`. For example, for kernel version 5.14 installed above, they would be copied to `/lib/modules/5.14.5-CUSTOM`. This keeps the modules for individual kernels used separated.
+This will copy the compiled modules into `/lib/modules/<kernel_version>-<config_local_version>`. For example, for kernel version 5.14 installed above, they would be copied to `/lib/modules/5.14.5-ARCH`. This keeps the modules for individual kernels used separated.
 
 <!-- Now that the kernel modules are build successfully, we will proceed to install kernel itself -->
 
@@ -123,7 +123,9 @@ This will copy the compiled modules into `/lib/modules/<kernel_version>-<config_
 The kernel compilation process will generate a compressed `bzImage` (big zImage) of that kernel, which must be copied to the /boot directory and renamed in the process. Provided the name is prefixed with `vmlinuz-`, you may name the kernel as you wish.
 
 ```
-cp -v arch/x86_64/boot/bzImage /boot/vmlinuz-linux-5.14.5
+# cp -v arch/x86_64/boot/bzImage /boot/vmlinuz-<kernel_name>
+
+cp -v arch/x86_64/boot/bzImage /boot/vmlinuz-linux514
 ```
 
 ### Make initial RAM disk
@@ -132,7 +134,7 @@ Generate initramfs image file
 You are free to name the initramfs image file whatever you wish when generating it. However, it is recommended to use the `linux<major_revision><minor_revision>` convention. For example, the name 'linux514' was given as '5' is the major revision and '14' is the minor revision of the 5.14 kernel. This convention will make it easier to maintain multiple kernels, regularly use mkinitcpio, and build third-party modules.
 
 ```
-# mkinitcpio -k <kernel_version> -g /boot/initramfs-<file_name>.img
+# mkinitcpio -k <kernel_version> -g /boot/initramfs-<kernel_name>.img
 
 mkinitcpio -k 5.14.5 -g /boot/initramfs-linux514.img
 ```
