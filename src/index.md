@@ -1,3 +1,5 @@
+# Rishav's Minimal Website
+
 Hey there!
 
 [![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rishav-singh-0/)
@@ -18,3 +20,6 @@ idea is to make easy to follow and highly effective methods using as less words 
 - [What are diffrent xfiles](xfiles.html)
 - [Custom Linux Kernel(Arch)](custom_linux_kernel.html)
 
+## Book Summary
+
+- [Rich Dad, Poor Dad](rich_dad_poor_dad.html)
