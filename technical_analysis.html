@@ -174,12 +174,16 @@
 
 <h3 id="Bullish%20Engulfing">Bullish Engulfing</h3>
 
+<p><img src="./images/technical_analysis/bullish_engulfing.png" alt="bullish_engulfing" /></p>
+
 <ul>
 <li>In this case, the second candle&#8217;s body (a bullish one) completely engulfs the previous day&#8217;s candle. Both the tail or the wick of the caldle of first bar are covered by the second one.</li>
 <li>Such patterns are powerful if they are formed at the bottom of the correction in a bullish move or near the bottom of a bear move. Such patterns are also seen at the end of a consolidation.</li>
 </ul>
 
 <h3 id="Morning%20Star">Morning Star</h3>
+
+<p><img src="./images/technical_analysis/morning_evening_star.png" alt="morning_evening_star" /></p>
 
 <ul>
 <li>A Morning star is a bullish three candle pattern which is formed at the bottom of a down move&#47;trend.</li>
@@ -214,6 +218,8 @@
 <h2 id="Candlestick%20bearish%20patterns">Candlestick bearish patterns</h2>
 
 <h3 id="Bearish%20Engulfing">Bearish Engulfing</h3>
+
+<p><img src="./images/technical_analysis/bearish_engulfing.png" alt="bearish_engulfing" /></p>
 
 <ul>
 <li>In this case, the second candle&#8217;s body (a bearish one) completely engulfs the previous day&#8217;s candle. Both the tail or the wick of the caldle of first bar are covered by the second one.</li>
@@ -265,7 +271,225 @@
 
 <p>Moving average is an effective indecator, however it is treated as lagging indecator i.e. it generates delayed buy&#47;sell calls</p>
 
-<!-- ## MACD(Moving Averages Convergence Divergence) -->
+<h2 id="MACD(Moving%20Averages%20Convergence%20Divergence)">MACD(Moving Averages Convergence Divergence)</h2>
+
+<p><img src="./images/technical_analysis/MACD.gif" alt="MACD" /></p>
+
+<ul>
+<li><p>MACD is calculated by subtracting 26 days moving average from moving average of 12 days</p></li>
+<li><p>I.e. MACD = 12 DEMA - 26 DEMA</p></li>
+<li><p>We get various amounts by subtracting the EMAs. MACD line is formed by joining all these dots.</p></li>
+<li><p>MACD &#62; 0 &#8211;&#62; strength</p></li>
+<li><p>MACD &#60; 0 &#8211;&#62; weakness</p></li>
+<li><p>When the MACD is above 0, it means that 12 days moving average is higher than the 26 days moving average</p></li>
+<li><p>This is bullish since current trend is more bullish as compared to a medium term trend.</p></li>
+<li><p>Ideally we see weakness first and then price falls</p></li>
+<li><p>Similarly, we see strength first and then price rises</p></li>
+<li><p>Signal line is 9 DEMA of MACD</p></li>
+<li><p>MACD Line — Blue line (Fast line)</p></li>
+<li><p>Signal Line — Orange line (Slow line)</p></li>
+<li><p>Histogram — Bars (Indicates the difference between MACD line and Signal Line)</p></li>
+</ul>
+
+<h3 id="Statergy">Statergy</h3>
+
+<ul>
+<li>If MACD line cuts the signal line from above = <strong>SELL</strong></li>
+<li>If MACD line cuts the signal line from below = <strong>Buy</strong></li>
+</ul>
+
+<h2 id="RSI(Relative%20Strength%20Index)">RSI(Relative Strength Index)</h2>
+
+<p><img src="./images/technical_analysis/RSI.jpg" alt="RSI" /></p>
+
+<ul>
+<li><p>The relative strength index (RSI) is a momentum indicator that measures the magnitude of recent price changes.</p></li>
+<li><p>RS1 is an oscillator ie it moves to and fro within a range. The range is from 0 to 100.</p></li>
+<li><p>The indicator was originally developed by J. Welles Wilder Jr. and introduced in his seminal 1978 book, New Concepts in Technical Trading Systems.</p></li>
+<li><p>It evaluates overbought or oversold conditions in the price of a stock or other assets.</p>
+
+<pre><code>RSI = 100 - 100&#47;(1+RS)
+
+RS = Average Gain over specified Period &#47; Average Loss over the same period
+</code></pre></li>
+<li><p>Generally RSI is calculated for 14 days</p></li>
+<li><p>RSI will rise as the number and size of positive closes increase, and it will fall as the number and size of losses increases</p></li>
+</ul>
+
+<h3 id="Statergy-2">Statergy</h3>
+
+<h4 id="Traditional">Traditional</h4>
+
+<ul>
+<li>RSI &#60; 30 indicates an oversold position (Buy Signal)</li>
+<li>RSI &#62; 70 indicates an overbought position (Sell Signal)</li>
+</ul>
+
+<p>However, if the security&#47; overall market is very bullish, it may remain in the overbought position for a long period of time. In such a situation, 80 can be taken as an overbought signal.</p>
+
+<p>Similarly, if the security&#47; overall market is very bearish, it may remain in the oversold position for a long period of time. In such a situation, 20 can be taken as an oversold signal.</p>
+
+<h4 id="The%20new%20way">The new way</h4>
+
+<ul>
+<li>RSI &#62; 60 = Uptrend continues = <strong>BUY</strong></li>
+<li>RSI taking support at 60 = Bullish</li>
+<li>RSI &#60; 40 = Downtrend = Stop Loss or <strong>SELL</strong></li>
+<li>RSI facing resistance at 40 = Bearish</li>
+<li>RSI between 40 &#38; 60 is sideways trend</li>
+</ul>
+
+<blockquote>
+<p>Ideally take 8 to 10 months data</p>
+</blockquote>
+
+<h4 id="Statergy%20for%20MACD%20+%20RSI">Statergy for MACD + RSI</h4>
+
+<ul>
+<li>Target price should be around 3-5% returns in timespan of maximum 10 days (swing)</li>
+<li>StopLoss will be equal to median of the breakout trend (<code>opening+closing &#47; 2</code>)</li>
+<li>When there is:
+
+<ul>
+<li>MACD bullish crossower</li>
+<li>RSI is above 60</li>
+</ul></li>
+</ul>
+
+<h2 id="Bollinger%20Bands">Bollinger Bands</h2>
+
+<p><img src="./images/technical_analysis/bollinger_bands.png" alt="bollinger_bands" /></p>
+
+<ul>
+<li>20 DEMA line acts as basic support if current price is above 20 DEMA</li>
+<li>Upper Bollinger band which stands at 2 standard deviations will act like resistance in 95% cases</li>
+<li>Lower BB which stands at 2 std will act as support in 95% cases</li>
+<li>BB Squeeze: If the squeeze is for longer duration and if the current candle breakes the upper bb then it is a <strong>BUY</strong> call
+&#62; Higher squeeze the better (min 1 month)</li>
+<li>StopLoss will be determind in the same way and trailing stoploss will be privious day&#8217;s candle&#8217;s low</li>
+</ul>
+
+<h2 id="Fibonacci%20Retracement">Fibonacci Retracement</h2>
+
+<p><img src="./images/technical_analysis/fibonacci_retracement.png" alt="fibonacci_retracement" /></p>
+
+<ul>
+<li>This theory is based upon the Fibonacci number sequence. Fibonacci numbers are such that they tend to repeat themselves in nature. These numbers were used to determine breeding cycles of rabbits and are now being used in architecture, art and trading. From petals of flowers to prices of stocks everything is said to be in this pattern.</li>
+<li>The number series starts with 0,1 and then the next numbers are derived by adding the previous two number and goes like 1,2,3,5,8,13,21,34,55,89,144,233, &#8230;.</li>
+<li>Heard about the GOLDEN RATIO? Yes, that&#8217;s another creation of the Fibonacci number sequence it is the succeeding number divided by the preceding number eg: - 233&#47;144= 1.6180.</li>
+<li>As far as technical analysis is concerned we have to look out for the % patterns that these numbers follow which is given below.
+
+<ul>
+<li>21&#47;89= 0.2360 (23.60%)</li>
+<li>34&#47;89= 0.3820 (38.20%)</li>
+<li>55&#47;89= 0.6120 (61.20%)</li>
+</ul></li>
+<li>In stock market Golden Ratio can be used for the level from which stock can retrace</li>
+</ul>
+
+<h3 id="How%20to%20draw%20fibonachi">How to draw fibonachi</h3>
+
+<ul>
+<li>In an uptrend join the lowest point on the screen to the highest point on the screen(same for downtred)</li>
+<li>Take around 9 months data for better results
+&#62; Research some more</li>
+</ul>
+
+<h2 id="Bullish%20Chart%20Pattern">Bullish Chart Pattern</h2>
+
+<h3 id="Up%20Flag">Up Flag</h3>
+
+<p><img src="./images/technical_analysis/up_flag.png" alt="up_flag" /></p>
+
+<ul>
+<li>It is seen by
+
+<ul>
+<li>Up move</li>
+<li>Sideways trend(cloth of the flag)</li>
+<li>Close above resistance</li>
+<li>If it is accompined by increase in volume, it is better</li>
+</ul></li>
+<li>Calculstion o price target:</li>
+<li>Calculate the distance from start of the pole(upmove) till the resistance(upper part of flag)</li>
+<li>Assume this distance as <code>x</code>, then price target will be <code>x + support(lower cloth of flag)</code></li>
+<li>Time target = Number of candles from candle to breakout candle divided by 3</li>
+</ul>
+
+<h3 id="Inverted%20Head%20and%20Shoulder">Inverted Head and Shoulder</h3>
+
+<p><img src="./images/technical_analysis/inverse_head_shoulder.gif" alt="inverse_head_shoulder" /></p>
+
+<ul>
+<li>Close is above neckline</li>
+<li>Increased volumes on Breakout candle</li>
+<li>X = Vertical distance frorn Low of Head to Neckline</li>
+<li>Price Target = Intersection point of the neckline and Breakout candle + X</li>
+<li>Time Target = Number of candles from &#47;1st Neck Point to Breakout candle divided by 3.</li>
+</ul>
+
+<h3 id="Double%20bottom%20(W)">Double bottom (W)</h3>
+
+<p><img src="./images/technical_analysis/double_bottom.png" alt="double_bottom" /></p>
+
+<ul>
+<li>Equal bottoms from the same downtrend</li>
+<li>White candle with increased volumes after 2nd bottom</li>
+<li>X = Vertical distance from double bottom level to highest point between 2 bottoms</li>
+<li>Target = Bottom Level + (X&#47;2)</li>
+<li>Time = No. of candles from 1st bottom to white candle, divided by 3</li>
+</ul>
+
+<h3 id="Rounding%20Bottom">Rounding Bottom</h3>
+
+<p><img src="./images/technical_analysis/rounding_bottom.png" alt="rounding_bottom" /></p>
+
+<ul>
+<li><p>Criteria:</p></li>
+<li><p>Historically highly priced</p></li>
+<li><p>Sharp fall</p></li>
+<li><p>Consolidation for minimum 2 years</p></li>
+<li><p>Breakout above the resistance from consolidation</p></li>
+<li><p>This is a MULTI BAGGER Pattern</p></li>
+<li><p>The study is to be done only on a monthly chart.</p></li>
+<li><p>Price Target = Historic high, expected to be achived within 1 year</p></li>
+<li><p>2nd Price Target = 5 times of the breakout level, expected to be achived in 2 years from the breakout</p></li>
+</ul>
+
+<h3 id="Listing%20Breakout">Listing Breakout</h3>
+
+<ul>
+<li>Market euphoria at the time of listing</li>
+<li>Price begins to consolidate after which it makes a new high</li>
+<li>Price is overvalued &#38; thus drifts downwards for next 2 years. Price will justify the business valuations and will trade at this level for the next 8 to 10 months.</li>
+<li>As the business improves, the price will start moving upwards</li>
+<li>Price will reach an all time high level.</li>
+<li>Breakout above the old resistance.</li>
+</ul>
+
+<h2 id="Bearish%20Chart%20Pattern">Bearish Chart Pattern</h2>
+
+<h3 id="Head%20and%20Shoulders">Head and Shoulders</h3>
+
+<ul>
+<li>This formation is characterized by 2 small peaks on either side of a larger peak</li>
+<li>Close is below neckline</li>
+<li>Increased volumes on Breakout candle</li>
+<li>X = Vertical distance from High of Head to Neckline</li>
+<li>Price Target = Intersection point of the neckline and Breakout candle — X</li>
+<li>Time Target = Number of candles from 1st Neck Point to Breakout candle divided by 3.</li>
+</ul>
+
+<h3 id="Double%20Top">Double Top</h3>
+
+<ul>
+<li>Similar to H&#38;S with no head</li>
+<li>Equal bottoms from the same uptrend</li>
+<li>Black candle with increased volumes after 2nd top</li>
+<li>X = Vertical distance from double top level to the lowest point between 2 tops</li>
+<li>Target = Double Top Level - (X&#47;2)</li>
+<li>Time = No. of candles from 1st top to black candle, divided by 3</li>
+</ul>
 
 <!-- trend, candlestick patterns, volume, support, resistance -->
 
