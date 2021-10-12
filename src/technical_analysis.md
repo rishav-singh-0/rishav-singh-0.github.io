@@ -112,14 +112,19 @@ Things to be kept in mind while drawing a trend line are:
 - Volumes provide us with the intensity of a given price move(very **important** element of technical analysis)
 - If current day's volume is higher than imidiate five previous volume bars, its a good confirmation on volumes.
 
+
 ## Candlestick bullish patterns
 
 ### Bullish Engulfing
+
+![bullish_engulfing](./images/technical_analysis/bullish_engulfing.png)
 
 - In this case, the second candle's body (a bullish one) completely engulfs the previous day's candle. Both the tail or the wick of the caldle of first bar are covered by the second one.
 - Such patterns are powerful if they are formed at the bottom of the correction in a bullish move or near the bottom of a bear move. Such patterns are also seen at the end of a consolidation.
 
 ### Morning Star
+
+![morning_evening_star](./images/technical_analysis/morning_evening_star.png)
 
 - A Morning star is a bullish three candle pattern which is formed at the bottom of a down move/trend.
 - The first candle = a big bearish candle which clearly defines the down move.
@@ -143,9 +148,12 @@ Things to be kept in mind while drawing a trend line are:
 
 > Note: Hammer/Inverted Hammer formed at the end of down trend with a bullish candle are a bit powerful as compared to bearish candles
 
+
 ## Candlestick bearish patterns
 
 ### Bearish Engulfing
+
+![bearish_engulfing](./images/technical_analysis/bearish_engulfing.png)
 
 - In this case, the second candle's body (a bearish one) completely engulfs the previous day's candle. Both the tail or the wick of the caldle of first bar are covered by the second one.
 - It is more powerful if they are formed at the top of a up trend/move.
@@ -159,6 +167,7 @@ Things to be kept in mind while drawing a trend line are:
 
 ![hammer_hanging_man](./images/technical_analysis/hammer_hanging_man.png)
 ![inverted_hammer_shooting_star](./images/technical_analysis/inverted_hammer_shooting_star.png)
+
 
 ## Indicators
 
@@ -186,7 +195,194 @@ Things to be kept in mind while drawing a trend line are:
 
 Moving average is an effective indecator, however it is treated as lagging indecator i.e. it generates delayed buy/sell calls
 
-<!-- ## MACD(Moving Averages Convergence Divergence) -->
+
+## MACD(Moving Averages Convergence Divergence)
+
+![MACD](./images/technical_analysis/MACD.gif)
+
+- MACD is calculated by subtracting 26 days moving average from moving average of 12 days
+- I.e. MACD = 12 DEMA - 26 DEMA
+- We get various amounts by subtracting the EMAs. MACD line is formed by joining all these dots.
+- MACD > 0 --> strength
+- MACD < 0 --> weakness
+- When the MACD is above 0, it means that 12 days moving average is higher than the 26 days moving average
+- This is bullish since current trend is more bullish as compared to a medium term trend.
+- Ideally we see weakness first and then price falls
+- Similarly, we see strength first and then price rises
+
+- Signal line is 9 DEMA of MACD
+
+- MACD Line — Blue line (Fast line)
+- Signal Line — Orange line (Slow line)
+- Histogram — Bars (Indicates the difference between MACD line and Signal Line)
+
+### Statergy
+
+- If MACD line cuts the signal line from above = **SELL**
+- If MACD line cuts the signal line from below = **Buy**
+
+
+## RSI(Relative Strength Index)
+
+![RSI](./images/technical_analysis/RSI.jpg)
+
+- The relative strength index (RSI) is a momentum indicator that measures the magnitude of recent price changes.
+- RS1 is an oscillator ie it moves to and fro within a range. The range is from 0 to 100.
+- The indicator was originally developed by J. Welles Wilder Jr. and introduced in his seminal 1978 book, New Concepts in Technical Trading Systems.
+- It evaluates overbought or oversold conditions in the price of a stock or other assets.
+
+    ```
+    RSI = 100 - 100/(1+RS)
+
+    RS = Average Gain over specified Period / Average Loss over the same period
+    ```
+- Generally RSI is calculated for 14 days
+- RSI will rise as the number and size of positive closes increase, and it will fall as the number and size of losses increases
+
+### Statergy
+
+#### Traditional
+
+- RSI < 30 indicates an oversold position (Buy Signal)
+- RSI > 70 indicates an overbought position (Sell Signal)
+
+However, if the security/ overall market is very bullish, it may remain in the overbought position for a long period of time. In such a situation, 80 can be taken as an overbought signal.
+
+Similarly, if the security/ overall market is very bearish, it may remain in the oversold position for a long period of time. In such a situation, 20 can be taken as an oversold signal.
+
+#### The new way
+
+- RSI > 60 = Uptrend continues = **BUY**
+- RSI taking support at 60 = Bullish
+- RSI < 40 = Downtrend = Stop Loss or **SELL**
+- RSI facing resistance at 40 = Bearish
+- RSI between 40 & 60 is sideways trend
+
+> Ideally take 8 to 10 months data
+
+#### Statergy for MACD + RSI
+
+- Target price should be around 3-5% returns in timespan of maximum 10 days (swing)
+- StopLoss will be equal to median of the breakout trend (`opening+closing / 2`)
+- When there is:
+    - MACD bullish crossower
+    - RSI is above 60
+
+
+## Bollinger Bands
+
+![bollinger_bands](./images/technical_analysis/bollinger_bands.png)
+
+- 20 DEMA line acts as basic support if current price is above 20 DEMA
+- Upper Bollinger band which stands at 2 standard deviations will act like resistance in 95% cases
+- Lower BB which stands at 2 std will act as support in 95% cases
+- BB Squeeze: If the squeeze is for longer duration and if the current candle breakes the upper bb then it is a **BUY** call
+    > Higher squeeze the better (min 1 month)
+- StopLoss will be determind in the same way and trailing stoploss will be privious day's candle's low
+
+
+## Fibonacci Retracement
+
+![fibonacci_retracement](./images/technical_analysis/fibonacci_retracement.png)
+
+- This theory is based upon the Fibonacci number sequence. Fibonacci numbers are such that they tend to repeat themselves in nature. These numbers were used to determine breeding cycles of rabbits and are now being used in architecture, art and trading. From petals of flowers to prices of stocks everything is said to be in this pattern.
+- The number series starts with 0,1 and then the next numbers are derived by adding the previous two number and goes like 1,2,3,5,8,13,21,34,55,89,144,233, ....
+- Heard about the GOLDEN RATIO? Yes, that's another creation of the Fibonacci number sequence it is the succeeding number divided by the preceding number eg: - 233/144= 1.6180.
+- As far as technical analysis is concerned we have to look out for the % patterns that these numbers follow which is given below.
+    - 21/89= 0.2360 (23.60%)
+    - 34/89= 0.3820 (38.20%)
+    - 55/89= 0.6120 (61.20%)
+- In stock market Golden Ratio can be used for the level from which stock can retrace
+
+### How to draw fibonachi
+
+- In an uptrend join the lowest point on the screen to the highest point on the screen(same for downtred)
+- Take around 9 months data for better results
+> Research some more
+
+
+## Bullish Chart Pattern
+
+### Up Flag
+
+![up_flag](./images/technical_analysis/up_flag.png)
+
+- It is seen by
+    - Up move
+    - Sideways trend(cloth of the flag)
+    - Close above resistance
+    - If it is accompined by increase in volume, it is better
+- Calculstion o price target:
+- Calculate the distance from start of the pole(upmove) till the resistance(upper part of flag)
+- Assume this distance as `x`, then price target will be `x + support(lower cloth of flag)`
+- Time target = Number of candles from candle to breakout candle divided by 3
+
+### Inverted Head and Shoulder
+
+![inverse_head_shoulder](./images/technical_analysis/inverse_head_shoulder.gif)
+
+- Close is above neckline
+- Increased volumes on Breakout candle
+- X = Vertical distance frorn Low of Head to Neckline
+- Price Target = Intersection point of the neckline and Breakout candle + X
+- Time Target = Number of candles from /1st Neck Point to Breakout candle divided by 3.
+
+### Double bottom (W)
+
+![double_bottom](./images/technical_analysis/double_bottom.png)
+
+- Equal bottoms from the same downtrend
+- White candle with increased volumes after 2nd bottom
+- X = Vertical distance from double bottom level to highest point between 2 bottoms
+- Target = Bottom Level + (X/2)
+- Time = No. of candles from 1st bottom to white candle, divided by 3
+
+### Rounding Bottom
+
+![rounding_bottom](./images/technical_analysis/rounding_bottom.png)
+
+- Criteria:
+- Historically highly priced
+- Sharp fall
+- Consolidation for minimum 2 years
+- Breakout above the resistance from consolidation
+- This is a MULTI BAGGER Pattern
+- The study is to be done only on a monthly chart.
+
+- Price Target = Historic high, expected to be achived within 1 year
+- 2nd Price Target = 5 times of the breakout level, expected to be achived in 2 years from the breakout
+
+### Listing Breakout
+
+- Market euphoria at the time of listing
+- Price begins to consolidate after which it makes a new high
+- Price is overvalued & thus drifts downwards for next 2 years. Price will justify the business valuations and will trade at this level for the next 8 to 10 months.
+- As the business improves, the price will start moving upwards
+- Price will reach an all time high level.
+- Breakout above the old resistance.
+
+
+## Bearish Chart Pattern
+
+### Head and Shoulders
+
+- This formation is characterized by 2 small peaks on either side of a larger peak
+- Close is below neckline
+- Increased volumes on Breakout candle
+- X = Vertical distance from High of Head to Neckline
+- Price Target = Intersection point of the neckline and Breakout candle — X
+- Time Target = Number of candles from 1st Neck Point to Breakout candle divided by 3.
+
+### Double Top
+
+- Similar to H&S with no head
+- Equal bottoms from the same uptrend
+- Black candle with increased volumes after 2nd top
+- X = Vertical distance from double top level to the lowest point between 2 tops
+- Target = Double Top Level - (X/2)
+- Time = No. of candles from 1st top to black candle, divided by 3
+
+
 
 
 <!-- trend, candlestick patterns, volume, support, resistance -->
