@@ -20,14 +20,14 @@
 
 ### Uptrends
 
-![uptrend](./images/technical_analysis/uptrend.png)
+![uptrend](./images/technical_analysis/uptrend.jpg)
 
 - It is a collection of moves and down moves.
 - Uptrend is evidenced by creation of higher highs and higher lows.
 
 ### Downtrends
 
-![downtrend](./images/technical_analysis/downtrend.png)
+![downtrend](./images/technical_analysis/downtrend.jpg)
 
 - It is a collection of Down moves and Up moves.
 - Downtrend is evidenced by creation of Lower highs and Lower lows.
@@ -35,7 +35,7 @@
 
 ### Sideways trend
 
-![sideways_trend](./images/technical_analysis/sideways_trend.png)
+![sideways_trend](./images/technical_analysis/sideways_trend.jpg)
 
 - Downtrend is evidenced by prices moving within a range.
 - Thumb rule: NEVER TRADE IN AN SIDEWAYS TREND! WAIT AND WATCH FOR THE DIRECTION OF BREAKOUT!
@@ -47,7 +47,7 @@ Charts and patterns are integral part of technical analysis
 
 ### Line chart
 
-![line_chart](./images/technical_analysis/line_chart.png)
+![line_chart](./images/technical_analysis/line_chart.jpg)
 
 - It is a most basic of all charts
 - Just like line that connects the closing price over a time frame
@@ -55,7 +55,7 @@ Charts and patterns are integral part of technical analysis
 
 ### Bar charts
 
-![bar_chart](./images/technical_analysis/bar_chart.png)
+![bar_chart](./images/technical_analysis/bar_chart.jpg)
 
 - Left line represents opening price
 - Right line represents closing price
@@ -64,14 +64,14 @@ Charts and patterns are integral part of technical analysis
 
 ### Volume Bar chart
 
-![volume_bar_chart](./images/technical_analysis/volume_bar_chart.png)
+![volume_bar_chart](./images/technical_analysis/volume_bar_chart.jpg)
 
 - Number of shares that change hands between sellers and buyers
 - Price movement is more sinificant when volume is above average
 
 ### Candlestick chart
 
-![candlestick_chart](./images/technical_analysis/candlestick_chart.png)
+![candlestick_chart](./images/technical_analysis/candlestick_chart.jpg)
 
 - Vertical line represents the trading range
 - Green/White Chadlestick = Bullish
@@ -89,7 +89,7 @@ Things to be kept in mind while drawing a trend line are:
 
 ## Support and Resistance
 
-![support](./images/technical_analysis/support.png)
+![support](./images/technical_analysis/support.jpg)
 
 - Support level is a price level where the price trends to find support as it is going down
 
@@ -105,7 +105,7 @@ Things to be kept in mind while drawing a trend line are:
 
 - The penetration of support and resistance level is called breakout
 
-![breakout](./images/technical_analysis/breakout.png)
+![breakout](./images/technical_analysis/breakout.jpg)
 
 ## Volumes
 
@@ -117,14 +117,14 @@ Things to be kept in mind while drawing a trend line are:
 
 ### Bullish Engulfing
 
-![bullish_engulfing](./images/technical_analysis/bullish_engulfing.png)
+![bullish_engulfing](./images/technical_analysis/bullish_engulfing.jpg)
 
 - In this case, the second candle's body (a bullish one) completely engulfs the previous day's candle. Both the tail or the wick of the caldle of first bar are covered by the second one.
 - Such patterns are powerful if they are formed at the bottom of the correction in a bullish move or near the bottom of a bear move. Such patterns are also seen at the end of a consolidation.
 
 ### Morning Star
 
-![morning_evening_star](./images/technical_analysis/morning_evening_star.png)
+![morning_evening_star](./images/technical_analysis/morning_evening_star.jpg)
 
 - A Morning star is a bullish three candle pattern which is formed at the bottom of a down move/trend.
 - The first candle = a big bearish candle which clearly defines the down move.
@@ -153,7 +153,7 @@ Things to be kept in mind while drawing a trend line are:
 
 ### Bearish Engulfing
 
-![bearish_engulfing](./images/technical_analysis/bearish_engulfing.png)
+![bearish_engulfing](./images/technical_analysis/bearish_engulfing.jpg)
 
 - In this case, the second candle's body (a bearish one) completely engulfs the previous day's candle. Both the tail or the wick of the caldle of first bar are covered by the second one.
 - It is more powerful if they are formed at the top of a up trend/move.
@@ -165,8 +165,8 @@ Things to be kept in mind while drawing a trend line are:
 
 ### Similar but Different
 
-![hammer_hanging_man](./images/technical_analysis/hammer_hanging_man.png)
-![inverted_hammer_shooting_star](./images/technical_analysis/inverted_hammer_shooting_star.png)
+![hammer_hanging_man](./images/technical_analysis/hammer_hanging_man.jpg)
+![inverted_hammer_shooting_star](./images/technical_analysis/inverted_hammer_shooting_star.jpg)
 
 
 ## Indicators
@@ -198,7 +198,7 @@ Moving average is an effective indecator, however it is treated as lagging indec
 
 ## MACD(Moving Averages Convergence Divergence)
 
-![MACD](./images/technical_analysis/MACD.gif)
+![MACD](./images/technical_analysis/MACD.jpg)
 
 - MACD is calculated by subtracting 26 days moving average from moving average of 12 days
 - I.e. MACD = 12 DEMA - 26 DEMA
@@ -271,7 +271,7 @@ Similarly, if the security/ overall market is very bearish, it may remain in the
 
 ## Bollinger Bands
 
-![bollinger_bands](./images/technical_analysis/bollinger_bands.png)
+![bollinger_bands](./images/technical_analysis/bollinger_bands.jpg)
 
 - 20 DEMA line acts as basic support if current price is above 20 DEMA
 - Upper Bollinger band which stands at 2 standard deviations will act like resistance in 95% cases
@@ -283,7 +283,7 @@ Similarly, if the security/ overall market is very bearish, it may remain in the
 
 ## Fibonacci Retracement
 
-![fibonacci_retracement](./images/technical_analysis/fibonacci_retracement.png)
+![fibonacci_retracement](./images/technical_analysis/fibonacci_retracement.jpg)
 
 - This theory is based upon the Fibonacci number sequence. Fibonacci numbers are such that they tend to repeat themselves in nature. These numbers were used to determine breeding cycles of rabbits and are now being used in architecture, art and trading. From petals of flowers to prices of stocks everything is said to be in this pattern.
 - The number series starts with 0,1 and then the next numbers are derived by adding the previous two number and goes like 1,2,3,5,8,13,21,34,55,89,144,233, ....
@@ -305,7 +305,7 @@ Similarly, if the security/ overall market is very bearish, it may remain in the
 
 ### Up Flag
 
-![up_flag](./images/technical_analysis/up_flag.png)
+![up_flag](./images/technical_analysis/up_flag.jpg)
 
 - It is seen by
     - Up move
@@ -319,7 +319,7 @@ Similarly, if the security/ overall market is very bearish, it may remain in the
 
 ### Inverted Head and Shoulder
 
-![inverse_head_shoulder](./images/technical_analysis/inverse_head_shoulder.gif)
+![inverse_head_shoulder](./images/technical_analysis/inverse_head_shoulder.jpg)
 
 - Close is above neckline
 - Increased volumes on Breakout candle
@@ -329,7 +329,7 @@ Similarly, if the security/ overall market is very bearish, it may remain in the
 
 ### Double bottom (W)
 
-![double_bottom](./images/technical_analysis/double_bottom.png)
+![double_bottom](./images/technical_analysis/double_bottom.jpg)
 
 - Equal bottoms from the same downtrend
 - White candle with increased volumes after 2nd bottom
@@ -339,7 +339,7 @@ Similarly, if the security/ overall market is very bearish, it may remain in the
 
 ### Rounding Bottom
 
-![rounding_bottom](./images/technical_analysis/rounding_bottom.png)
+![rounding_bottom](./images/technical_analysis/rounding_bottom.jpg)
 
 - Criteria:
 - Historically highly priced
