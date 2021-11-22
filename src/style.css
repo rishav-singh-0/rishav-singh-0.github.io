@@ -13,6 +13,8 @@ html {
 	--link_h: #06e;
 	--bg_grey: #eee;
 	--dark_grey: #999;
+	--code_bg: #afb8c133;
+	--code_fg: #5a2e59;
 }
 [data-theme="dark"] {
 	--bg: #222;
@@ -22,6 +24,8 @@ html {
 	--link_h: #4c7ecf;
 	--bg_grey: #333;
 	--dark_grey: #333;
+	--code_bg: #111222;
+	--code_fg: lime;
 }
 
 
@@ -62,8 +66,7 @@ a:focus {
 	outline: thin dotted;
 }
 
-a:hover,
-a:active {
+a:hover, a:active {
 	outline: 0;
 }
 
@@ -75,29 +78,34 @@ img {
 	max-width: 100%;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
 	font-weight: 600;
 	color: var(--fg);
+	text-transform: capitalize;
 	line-height: 1em;
 }
 
-h4,
-h5,
-h6 {
+h4, h5, h6 {
 	font-weight: bold;
 }
 
 h1 {
-	font-size: 1.8em;
+	text-align: center;
+	color: #21acec;
+	letter-spacing: 1px;
+	font-size: 2em;
+	margin: 1em auto;
+	text-shadow: 1px 1px 0 var(--bg_grey), 2px 2px var(--fg);
 }
 
 h2 {
-	font-size: 1.5em;
+	text-align: center;
+	color: deeppink;
+	font-variant: small-caps;
+	font-size: 22pt;
+	border-bottom: dashed var(--fg) 1px;
+	max-width: 500px;
+	margin: 1em auto;
 }
 
 h3 {
@@ -123,29 +131,29 @@ blockquote {
 	border-left: 0.5em var(--dark_grey) solid;
 }
 
-pre,
-code,
-kbd,
-samp {
+pre, code, kbd, samp {
 	font-family: 'Fira Code', monospace;
 	font-size: 1.0em;
 }
-
+pre {
+    background: var(--code_bg);
+    border: 1px solid var(--code_fg);
+    border-radius: 20px;
+    padding: 1em;
+    overflow-wrap: break-word;
+    max-width: 680px;
+    margin: auto;
+}
 code {
-	white-space: pre;
-	white-space: pre-wrap;
-	word-wrap: break-word;
-	background: var(--bg_grey);
-	color: var(--fg);
-	padding: 3px;
-	border-radius: 3px;
+    background: var(--code_bg);
+	color: var(--code_fg);
+	border-radius: 5px;
+    white-space: pre-wrap;
 }
 pre > code {
-	display: block;
-	padding: 10px 15px;
+	background: fixed;
 }
-b,
-strong {
+b, strong {
 	font-weight: bold;
 }
 
@@ -154,8 +162,7 @@ dfn {
 }
 
 
-sub,
-sup {
+sub, sup {
 	font-size: 75%;
 	line-height: 0;
 	position: relative;
@@ -170,8 +177,7 @@ sub {
 	bottom: -0.25em;
 }
 
-ul,
-ol {
+ul, ol {
 	margin: 1em 0;
 	padding: 0 0 0 2em;
 }
