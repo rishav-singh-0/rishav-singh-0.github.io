@@ -28,7 +28,7 @@ jobs:
       - name: Build 🔧
         run: |
           rm -f build/.files
-          bin/ssg6 src build "Rishav" "https://rishav.codes"
+          bin/ssg6 src build "Rishav" "https://rishav-singh-0.github.io"
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5
