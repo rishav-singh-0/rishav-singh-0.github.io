@@ -19,6 +19,17 @@ idea is to make easy to follow and highly effective methods using as less words 
 - [Linux Containers](Linux_Containers.html)
 - [What are diffrent xfiles](xfiles.html)
 - [Custom Linux Kernel(Arch)](custom_linux_kernel.html)
+- [degoogle_rom](degoogle_rom.html)
+
+
+## Agriculture
+
+- [understanding_farmers](understanding_farmers.html)
+- [agriculture_ideas](agriculture_ideas.html)
+
+## Finance
+
+- [technical_analysis](technical_analysis.html)
 
 ## Book Summary
 
