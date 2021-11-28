@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: rishav-singh-0.github.io
+Token: 34e71a974c416103b43d635858c69b11c485e8b150ee5f1299cd2dac0d432a9c
