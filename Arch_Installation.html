@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+		<script src="https://kit.fontawesome.com/93866eaaa9.js" crossorigin="anonymous"></script>
+		<title>Rishav's Blog</title>
+	</head>
+		<body class="dark-mode">
+
+		<nav class="menu">
+			<div class="nav-left">
+				<ul>
+					<li><a href="index.html"><img class="logo" src="favicon.png" alt=""><span class="sitename">rishav's blog</span></a></li>
+				</ul>
+			</div>
+			<div class="nav-right">
+				<ul>
+					<li style="padding: 9px"><a id="darkmodetoggle" class="fas fa-moon" onclick="switchTheme()"></a></li>
+					<li><a href="mailto:rishav.zero@pm.me">contact</a></li>
+					<!-- <li><a href="https://www.youtube.com/channel/UCeql5HBmcs8d0OFT30erYkw">youtube</a></li> -->
+					<li><a href="https://github.com/rishav-singh-0">github</a></li>
+					<li><a href="https://twitter.com/RishavSingh0">twitter</a></li>
+					<li><a href="https://www.linkedin.com/in/rishav-singh-0/">linkedin</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<article>
+<h1 id="Arch%20installation%20Guide">Arch installation Guide</h1>
+
+<p>Ofcource my notes are are derived from <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Wiki</a>. And I highly recommend to read it too. These notes contains all the things which i do at the fime of new Arch Installation, so it is well tested.</p>
+
+<h2 id="Create%20Bootable%20usb">Create Bootable usb</h2>
+
+<p><code>sudo dd bs=4 if=&#47;mnt&#47;Tools&#47;linux&#47;distros&#47;archlinux-2021.02.01-x86_64.iso of=&#47;dev&#47;sdb conv=fdatasync status=progress</code></p>
+
+<h2 id="Verify%20the%20boot%20mode">Verify the boot mode</h2>
+
+<p>To verify the boot mode, list the efivars directory:
+<code>ls &#47;sys&#47;firmware&#47;efi&#47;efivars</code></p>
+
+<p>If the command shows the directory without error, then the system is booted in UEFI mode. If the directory does not exist, the system may be booted in BIOS (or CSM) mode. If the system did not boot in the mode you desired, refer to your motherboard&#8217;s manual.</p>
+
+<h2 id="Connect%20to%20the%20internet">Connect to the internet</h2>
+
+<p><code>ip link</code>
+WiFi - <code>iwctl</code></p>
+
+<ul>
+<li><p>device list</p></li>
+<li><p>station device scan</p></li>
+<li><p>station device get-networks</p></li>
+<li><p>station device connect SSID</p>
+
+<ul>
+<li>SSID is name of your WiFi network (eg. &#8216;Dark Demon&#8217;)</li>
+</ul></li>
+</ul>
+
+<h3 id="Alternate:">Alternate:</h3>
+
+<p><code>iwctl --passphrase passphrase station device connect SSID</code></p>
+
+<h3 id="Test">Test</h3>
+
+<p><code>ping gnu.org</code></p>
+
+<h2 id="Update%20the%20system%20clock">Update the system clock</h2>
+
+<p><code>timedatectl set-ntp true</code></p>
+
+<h2 id="Partition%20the%20disks">Partition the disks</h2>
+
+<p>When recognized by the live system, disks are assigned to a block device such as &#47;dev&#47;sda, &#47;dev&#47;nvme0n1 or &#47;dev&#47;mmcblk0. To identify these devices, use lsblk or fdisk.</p>
+
+<p><code>fdisk -l</code>
+Results ending in rom, loop or airoot may be ignored.</p>
+
+<p>The following partitions are required for a chosen device:</p>
+
+<ul>
+<li>One partition for the root directory &#47;.</li>
+<li>For booting in UEFI mode: an EFI system partition.</li>
+<li>If you want to create any stacked block devices for LVM, system encryption or RAID, do it now.</li>
+</ul>
+
+<p>Example look UEFI with GPT</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Mount point</th>
+<th style="text-align: left">Partition</th>
+<th style="text-align: left">Partition type</th>
+<th style="text-align: left">Suggested size</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">&#47;mnt&#47;boot or &#47;mnt&#47;boot&#47;efi</td>
+<td style="text-align: left">&#47;dev&#47;efi<em>system</em>partition</td>
+<td style="text-align: left">EFI system partition</td>
+<td style="text-align: left">At least 260 MiB</td>
+</tr>
+<tr>
+<td style="text-align: left">[SWAP]</td>
+<td style="text-align: left">&#47;dev&#47;swap_partition</td>
+<td style="text-align: left">Linux swap</td>
+<td style="text-align: left">More than 512 MiB</td>
+</tr>
+<tr>
+<td style="text-align: left">&#47;mnt</td>
+<td style="text-align: left">&#47;dev&#47;root_partition</td>
+<td style="text-align: left">Linux x86-64 root (&#47;)</td>
+<td style="text-align: left">Remainder of the device</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="Format%20the%20partitions">Format the partitions</h2>
+
+<!-- Include btrfs guide also -->
+
+<p>Once the partitions have been created, each newly created partition must be formatted with an appropriate file system. For example, to create an Ext4 file system on &#47;dev&#47;root_partition, run:</p>
+
+<p><code>mkfs.ext4 &#47;dev&#47;root_partition</code></p>
+
+<p>If you created a partition for swap, initialize it with mkswap:</p>
+
+<p><code>mkswap &#47;dev&#47;swap_partition</code></p>
+
+<p>Note: For stacked block devices replace &#47;dev&#47;*_partition with the appropriate block device path.</p>
+
+<h2 id="Mount%20the%20file%20systems">Mount the file systems</h2>
+
+<p>Mount the root volume to &#47;mnt. For example, if the root volume is &#47;dev&#47;root_partition:</p>
+
+<p><code>mount &#47;dev&#47;root_partition &#47;mnt</code>
+Create any remaining mount points (such as &#47;mnt&#47;efi) using mkdir and mount their corresponding volumes.</p>
+
+<p>If you created a swap volume, enable it with swapon:</p>
+
+<p><code>swapon &#47;dev&#47;swap_partition</code></p>
+
+<h2 id="Installation">Installation</h2>
+
+<p>Update the system by <code>pacman -Syy</code></p>
+
+<h3 id="Select%20the%20mirrors%20(Optional)">Select the mirrors (Optional)</h3>
+
+<ul>
+<li><p>Install reflector by <code>pacman -S reflector</code></p></li>
+<li><p>If you want you can backup default mirror list</p></li>
+</ul>
+
+<p><code>cp &#47;etc&#47;pacman.d&#47;mirrorlist &#47;etc&#47;pacman.d&#47;mirrorlist.bak</code></p>
+
+<ul>
+<li>Getting good mirror list for your location</li>
+</ul>
+
+<p><code>reflector -c "IN" -f 12 -l 10 -n 12 --save &#47;etc&#47;pacman.d&#47;mirrorlist</code></p>
+
+<h2 id="Install%20essential%20packages">Install essential packages</h2>
+
+<pre><code>pacstrap &#47;mnt base base-devel linux-lts linux-firmware vim networkmanager btrfs-progs grub efibootmgr git
+</code></pre>
+
+<h2 id="Configure%20the%20system">Configure the system</h2>
+
+<h3 id="Fstab">Fstab</h3>
+
+<p>Generate an fstab file (use -U to define by UUID):</p>
+
+<p><code>genfstab -U &#47;mnt &#62;&#62; &#47;mnt&#47;etc&#47;fstab</code></p>
+
+<h3 id="Chroot">Chroot</h3>
+
+<p>Change root into the new system:</p>
+
+<p><code>arch-chroot &#47;mnt</code></p>
+
+<h3 id="Set%20the%20time%20zone:">Set the time zone:</h3>
+
+<p><code>ln -sf &#47;usr&#47;share&#47;zoneinfo&#47;Asia&#47;Kolkata &#47;etc&#47;localtime</code></p>
+
+<ul>
+<li>Run hwclock to generate &#47;etc&#47;adjtime:</li>
+</ul>
+
+<p><code>hwclock --systohc</code></p>
+
+<ul>
+<li>Edit &#47;etc&#47;locale.gen and uncomment en_US.UTF-8 UTF-8 and other needed locales. Generate the locales by running:</li>
+</ul>
+
+<p><code>locale-gen</code>
+- Create the locale.conf file, and set the LANG variable accordingly:</p>
+
+<p><code>echo &#39;LANG=en_US.UTF-8&#39; &#62; &#47;etc&#47;locale.conf</code></p>
+
+<p>Network configuration
+Create the hostname file:</p>
+
+<p><code>vim &#47;etc&#47;hostname</code></p>
+
+<p><code>myhostname</code></p>
+
+<p>Add matching entries to hosts file:</p>
+
+<p><code>vim &#47;etc&#47;hosts</code></p>
+
+<pre><code>127.0.0.1   localhost
+::1         localhost
+127.0.1.1   myhostname.localdomain  myhostname
+</code></pre>
+
+<h3 id="Initramfs">Initramfs</h3>
+
+<p>Creating a new initramfs is usually not required, because mkinitcpio was run on installation of the kernel package with pacstrap.</p>
+
+<p>For LVM, system encryption or RAID, modify mkinitcpio.conf(5) and recreate the initramfs image:</p>
+
+<p><code>mkinitcpio -P</code></p>
+
+<h2 id="Set%20users">Set users</h2>
+
+<ul>
+<li><p>Create root password using <code>passwd</code></p></li>
+<li><p>Create normal user</p>
+
+<p><code>useradd -mG wheel,audio,video rishav</code></p></li>
+<li><p>Create password for this user
+<code>passwd rishav</code></p></li>
+</ul>
+
+<h2 id="Install%20Grub%20Bootloader">Install Grub Bootloader</h2>
+
+<p>We already installed grub and efibootmgr which are necessary to install grub in efi boot filesystem</p>
+
+<pre><code class="language-bash">mkdir &#47;boot&#47;efi
+mount &#47;dev&#47;sda1 &#47;boot&#47;efi
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=&#47;boot&#47;efi
+grub-mkconfig -o &#47;boot&#47;grub&#47;grub.cfg
+</code></pre>
+
+<h2 id="Other%20impoetant%20things">Other impoetant things</h2>
+
+<h3 id="Starting%20important%20services">Starting important services</h3>
+
+<pre><code>ststemctl enable NetworkManager
+</code></pre>
+
+<h3 id="Extra">Extra</h3>
+
+<ul>
+<li><p>Depending on the processor, install the following package:</p>
+
+<ul>
+<li><p>amd-ucode for AMD processors</p>
+
+<p><code>pacman -S amd-ucode</code></p></li>
+<li><p>intel-ucode for Intel processors.</p>
+
+<p><code>pacman -S intel-ucode</code></p></li>
+</ul></li>
+</ul>
+</article>
+
+<footer id="footnote-definition">
+    <p>Creaed by <a href="https://github.com/rishav-singh-0/">Rishav Singh</a> by slightly modified version of <a href="https://www.romanzolotarev.com/ssg.html">ssg6</a>
+</footer>
+<script>
+// Get the theme toggle input
+const currentTheme = localStorage.getItem("theme");// If the current local storage item can be found
+
+// Function that will switch the theme based on the if the theme toggle is checked or not
+function switchTheme() {
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    document.documentElement.setAttribute("data-theme", "light");
+    // Set the user's theme preference to dark
+    localStorage.setItem("theme", "light");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    // Set the user's theme preference to light
+    localStorage.setItem("theme", "dark");
+  }
+}
+
+// Get the current theme from local storage
+if (currentTheme) {
+        // Set the body data-theme attribute to match the local storage item
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+        }
+}
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        console.log('user prefers dark scheme, going dark');
+        document.documentElement.setAttribute("data-theme", "dark");
+        }
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+		<script src="https://kit.fontawesome.com/93866eaaa9.js" crossorigin="anonymous"></script>
+		<title>Rishav's Blog</title>
+	</head>
+		<body class="dark-mode">
+
+		<nav class="menu">
+			<div class="nav-left">
+				<ul>
+					<li><a href="index.html"><img class="logo" src="favicon.png" alt=""><span class="sitename">rishav's blog</span></a></li>
+				</ul>
+			</div>
+			<div class="nav-right">
+				<ul>
+					<li style="padding: 9px"><a id="darkmodetoggle" class="fas fa-moon" onclick="switchTheme()"></a></li>
+					<li><a href="mailto:rishav.zero@pm.me">contact</a></li>
+					<!-- <li><a href="https://www.youtube.com/channel/UCeql5HBmcs8d0OFT30erYkw">youtube</a></li> -->
+					<li><a href="https://github.com/rishav-singh-0">github</a></li>
+					<li><a href="https://twitter.com/RishavSingh0">twitter</a></li>
+					<li><a href="https://www.linkedin.com/in/rishav-singh-0/">linkedin</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<article>
+<h1 id="Agricultural%20Ideas">Agricultural Ideas</h1>
+
+<h2 id="Vision">Vision</h2>
+
+<ul>
+<li>Ease of use that even i can be farmer</li>
+<li>High yield</li>
+<li>Low cost</li>
+<li>Long term solution for farmers as well as environment</li>
+</ul>
+
+<h2 id="Imagination">Imagination</h2>
+
+<ul>
+<li>Greenhouse</li>
+<li>Drone&#47;Balloon used for monitoring disease, weeds, etc. and make a report</li>
+<li>Based on this report automatically spray in those areas</li>
+<li>Use biofertilizers</li>
+<li>Use sensors for reporting what and when nuterients are needed</li>
+</ul>
+</article>
+
+<footer id="footnote-definition">
+    <p>Creaed by <a href="https://github.com/rishav-singh-0/">Rishav Singh</a> by slightly modified version of <a href="https://www.romanzolotarev.com/ssg.html">ssg6</a>
+</footer>
+<script>
+// Get the theme toggle input
+const currentTheme = localStorage.getItem("theme");// If the current local storage item can be found
+
+// Function that will switch the theme based on the if the theme toggle is checked or not
+function switchTheme() {
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    document.documentElement.setAttribute("data-theme", "light");
+    // Set the user's theme preference to dark
+    localStorage.setItem("theme", "light");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    // Set the user's theme preference to light
+    localStorage.setItem("theme", "dark");
+  }
+}
+
+// Get the current theme from local storage
+if (currentTheme) {
+        // Set the body data-theme attribute to match the local storage item
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+        }
+}
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        console.log('user prefers dark scheme, going dark');
+        document.documentElement.setAttribute("data-theme", "dark");
+        }
+</script>
+</body>
+</html>

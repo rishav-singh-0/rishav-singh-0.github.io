@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+		<script src="https://kit.fontawesome.com/93866eaaa9.js" crossorigin="anonymous"></script>
+		<title>Rishav's Blog</title>
+	</head>
+		<body class="dark-mode">
+
+		<nav class="menu">
+			<div class="nav-left">
+				<ul>
+					<li><a href="index.html"><img class="logo" src="favicon.png" alt=""><span class="sitename">rishav's blog</span></a></li>
+				</ul>
+			</div>
+			<div class="nav-right">
+				<ul>
+					<li style="padding: 9px"><a id="darkmodetoggle" class="fas fa-moon" onclick="switchTheme()"></a></li>
+					<li><a href="mailto:rishav.zero@pm.me">contact</a></li>
+					<!-- <li><a href="https://www.youtube.com/channel/UCeql5HBmcs8d0OFT30erYkw">youtube</a></li> -->
+					<li><a href="https://github.com/rishav-singh-0">github</a></li>
+					<li><a href="https://twitter.com/RishavSingh0">twitter</a></li>
+					<li><a href="https://www.linkedin.com/in/rishav-singh-0/">linkedin</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<article>
+<h1 id="Compile%20your%20custom%20linux%20kernel">Compile your custom linux kernel</h1>
+
+<p>Date: 17 Sept. 2021</p>
+
+<h2 id="Preparation">Preparation</h2>
+
+<h3 id="Install%20Dependencies">Install Dependencies</h3>
+
+<pre><code>sudo pacman -S base-devel xmlto kmod inetutils bc libelf git --needed
+</code></pre>
+
+<h3 id="Downloading%20source%20and%20local%20setup">Downloading source and local setup</h3>
+
+<p>It is recommended to create a separate build directory for your kernel(s). In this example, the directory kernelbuild will be created in the home directory:</p>
+
+<pre><code>mkdir ~&#47;kernelbuild
+cd ~&#47;kernelbuild
+</code></pre>
+
+<p>Goto <a href="https://www.kernel.org/">kernel.org</a> and download kernel source</p>
+
+<pre><code>wget https:&#47;&#47;cdn.kernel.org&#47;pub&#47;linux&#47;kernel&#47;v5.x&#47;linux-5.14.5.tar.xz
+</code></pre>
+
+<blockquote>
+<p>Note: you can verify signature of the downloaded tarball if you want</p>
+</blockquote>
+
+<p>Extract tarball</p>
+
+<pre><code>tar -xvJf linux-5.14.5.tar.xz
+</code></pre>
+
+<p>Check</p>
+
+<p><img src="./images/custom_linux_kernel/0.png" alt="ls command output" /></p>
+
+<h2 id="Kernel%20configuration">Kernel configuration</h2>
+
+<p>To finalise the preparation, ensure that the kernel tree is absolutely clean; do not rely on the source tree being clean after unpacking. To do so, first change into the new kernel source directory created, and then run the make mrproper command:</p>
+
+<pre><code>cd linux-5.14.5
+
+# cean up the tree
+make mrproper
+</code></pre>
+
+<p>copy config file</p>
+
+<pre><code>zcat &#47;proc&#47;config.gz &#62; .config
+</code></pre>
+
+<p>make sure all configuration options have values that are required</p>
+
+<pre><code>make olddefconfig
+</code></pre>
+
+<h3 id="Another%20option(not%20recommended)">Another option(not recommended)</h3>
+
+<p>automatically detect the hardware and creates config based on just that
+downside is that its not gonna detect anything which is not currently connected</p>
+
+<pre><code>make localmodconfig
+</code></pre>
+
+<h3 id="Menu%20driven%20configuration%20utility(best%20option)">Menu driven configuration utility(best option)</h3>
+
+<pre><code>make menuconfig
+</code></pre>
+
+<p>This should look somewhat like:</p>
+
+<p><img src="./images/custom_linux_kernel/1.png" alt="make menuconfig" /></p>
+
+<p>Here is the main part of research and knowing your hardware, Good Luck 👍 with that.
+When all the required configurations are done, save your configurations in <code>.config</code> file.</p>
+
+<h2 id="Build%20the%20kernel">Build the kernel</h2>
+
+<p>We can use -j flag to use multiple cores of cpu while compiling</p>
+
+<pre><code>make -j4
+</code></pre>
+
+<p>This process will normally take some time so grab a cup of coffee(it took around 1 hour for me)</p>
+
+<h2 id="Installation">Installation</h2>
+
+<h3 id="Install%20the%20modules">Install the modules</h3>
+
+<!-- This will build any modules that do not exist otherwise it will copy your modules to kernel modules directory -->
+
+<p>Once the kernel has been compiled, the modules for it must follow. First build the modules:</p>
+
+<pre><code>make modules -j4
+</code></pre>
+
+<p>Change to root user
+<code>
+sudo su
+</code></p>
+
+<p>Then install the modules.</p>
+
+<pre><code>make modules_install -j4
+</code></pre>
+
+<p>This will copy the compiled modules into <code>&#47;lib&#47;modules&#47;&#60;kernel_version&#62;-&#60;config_local_version&#62;</code>. For example, for kernel version 5.14 installed above, they would be copied to <code>&#47;lib&#47;modules&#47;5.14.5-ARCH</code>. This keeps the modules for individual kernels used separated.</p>
+
+<!-- Now that the kernel modules are build successfully, we will proceed to install kernel itself -->
+
+<h3 id="Copy%20the%20kernel%20to%20&amp;#47;boot%20directory">Copy the kernel to &#47;boot directory</h3>
+
+<p>The kernel compilation process will generate a compressed <code>bzImage</code> (big zImage) of that kernel, which must be copied to the &#47;boot directory and renamed in the process. Provided the name is prefixed with <code>vmlinuz-</code>, you may name the kernel as you wish.</p>
+
+<pre><code># cp -v arch&#47;x86_64&#47;boot&#47;bzImage &#47;boot&#47;vmlinuz-&#60;kernel_name&#62;
+
+cp -v arch&#47;x86_64&#47;boot&#47;bzImage &#47;boot&#47;vmlinuz-linux514
+</code></pre>
+
+<h3 id="Make%20initial%20RAM%20disk">Make initial RAM disk</h3>
+
+<p>Generate initramfs image file
+You are free to name the initramfs image file whatever you wish when generating it. However, it is recommended to use the <code>linux&#60;major_revision&#62;&#60;minor_revision&#62;</code> convention. For example, the name &#8216;linux514&#8217; was given as &#8216;5&#8217; is the major revision and &#8216;14&#8217; is the minor revision of the 5.14 kernel. This convention will make it easier to maintain multiple kernels, regularly use mkinitcpio, and build third-party modules.</p>
+
+<pre><code># mkinitcpio -k &#60;kernel_version&#62; -g &#47;boot&#47;initramfs-&#60;kernel_name&#62;.img
+
+mkinitcpio -k 5.14.5 -g &#47;boot&#47;initramfs-linux514.img
+</code></pre>
+
+<h3 id="Copy%20System.map%20file">Copy System.map file</h3>
+
+<p>The <code>System.map</code> file is not required for booting Linux. It is a type of &#8220;phone directory&#8221; list of functions in a particular build of a kernel. The System.map contains a list of kernel symbols (i.e function names, variable names etc) and their corresponding addresses.</p>
+
+<p>Copy <code>System.map</code> to <code>&#47;boot</code>, appending your kernel&#8217;s name to the destination file. Then create a symlink from <code>&#47;boot&#47;System.map</code> to point to <code>&#47;boot&#47;System.map-&#60;kernel_name&#62;</code>:</p>
+
+<pre><code>cp System.map &#47;boot&#47;System.map-&#60;kernel_name&#62;
+ln -sf &#47;boot&#47;System.map-&#60;kernel_name&#62; &#47;boot&#47;System.map
+</code></pre>
+
+<h2 id="Summary">Summary</h2>
+
+<p>After completing all steps above, you should have the following 3 files and 1 soft symlink in your <code>&#47;boot</code> directory along with any other previously existing files:</p>
+
+<ul>
+<li>Kernel: <code>vmlinuz-&#60;kernel_name&#62;</code></li>
+<li>Initramfs: <code>Initramfs-&#60;kernel_name&#62;.img</code></li>
+<li>System Map: <code>System.map-&#60;kernel_name&#62;</code></li>
+<li>System Map kernel symlink</li>
+</ul>
+
+<h2 id="Bootloader%20configuration">Bootloader configuration</h2>
+
+<h3 id="For%20grub%20bootloader">For grub bootloader</h3>
+
+<pre><code>grub-mkconfig -o &#47;boot&#47;grub&#47;grub.cfg
+</code></pre>
+
+<h2 id="Refrences">Refrences</h2>
+
+<ol>
+<li>https:&#47;&#47;wiki.archlinux.org&#47;title&#47;Kernel&#47;Traditional_compilation</li>
+<li>https:&#47;&#47;www.kernel.org&#47;</li>
+</ol>
+</article>
+
+<footer id="footnote-definition">
+    <p>Creaed by <a href="https://github.com/rishav-singh-0/">Rishav Singh</a> by slightly modified version of <a href="https://www.romanzolotarev.com/ssg.html">ssg6</a>
+</footer>
+<script>
+// Get the theme toggle input
+const currentTheme = localStorage.getItem("theme");// If the current local storage item can be found
+
+// Function that will switch the theme based on the if the theme toggle is checked or not
+function switchTheme() {
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    document.documentElement.setAttribute("data-theme", "light");
+    // Set the user's theme preference to dark
+    localStorage.setItem("theme", "light");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    // Set the user's theme preference to light
+    localStorage.setItem("theme", "dark");
+  }
+}
+
+// Get the current theme from local storage
+if (currentTheme) {
+        // Set the body data-theme attribute to match the local storage item
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+        }
+}
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        console.log('user prefers dark scheme, going dark');
+        document.documentElement.setAttribute("data-theme", "dark");
+        }
+</script>
+</body>
+</html>
