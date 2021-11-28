@@ -6,8 +6,10 @@ html {
 }
 
 :root {
-	--bg: #fefefe;
+	--bg: #dedede;
 	--fg: #444;
+	--h2: #1ca342;
+	--h3: #444;
 	--link: #0645ad;
 	--link_v: #0b0080;
 	--link_h: #06e;
@@ -19,6 +21,8 @@ html {
 [data-theme="dark"] {
 	--bg: #222;
 	--fg: #fefefe;
+	--h2: deeppink;
+	--h3: #f8d301;
 	--link: #4d7dcb;
 	--link_v: #99a5d3;
 	--link_h: #4c7ecf;
@@ -100,7 +104,7 @@ h1 {
 
 h2 {
 	text-align: center;
-	color: deeppink;
+	color: var(--h2);
 	font-variant: small-caps;
 	font-size: 22pt;
 	border-bottom: dashed var(--fg) 1px;
@@ -110,6 +114,7 @@ h2 {
 
 h3 {
 	font-size: 1.2em;
+	color: var(--h3);
 }
 
 h4 {
