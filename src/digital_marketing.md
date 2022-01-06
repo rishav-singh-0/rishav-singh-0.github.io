@@ -17,7 +17,9 @@ a premium product, like a course or something. And we take that revenue and put
 it back into ads, not to advertise the product but to advertise the content
 itself because we first need the attention of people. 
 
-------------------------
+<details>
+<summary>Further Discussion</summary>
+
 But what if let's say tomorrow, as of today, I don't want to sell
 anything. I don't want to sell my audience like a premium product. I don't have
 it. Maybe tomorrow I will. But today I don't. But just to reach that point, I
@@ -32,8 +34,12 @@ like a live webinar. And if they have attended your live webinar, they will
 probably remember you for the next 30 days. And within the 30 days, if you do
 not get them onto a higher engagement, they will friend zone you. If you can't
 monetize the attention, then you can't grow your reach. 
+</details>
 
 ------------------------
+
+## Understand the mindset of your audience
+
 So let's say today we have attention. But because of Instagram or because of
 YouTube or because of Twitter, how do we monetize this attention now? First, is
 to build the email list. 
@@ -44,34 +50,30 @@ and they make sure that they are not bored. So they are scrolling through
 things. And it is said that **the doom of mankind will be scrawling**. There is
 no limit to it. 
 
-And there is this experiment where researchers came together. They took like a
-bunch of lab rats and they put some electrodes on their brain in such a way
-that it will release dopamine if they click the switch. And then they observed
-that these rats will keep clicking the switch until they got exhausted and they
-passed out. So our brain always wants dopamine and whatever we do it's for
-dopamine, whether we do socializing or partying or like, browsing through
-social media and everything. So that is what Instagram and Facebook and all the
-social media channels are capitalizing on. But as people's attention spans go
-lower and lower, advertising on these platforms is also very difficult. They
-don't pay attention to the ads either. In fact, now people have filtered the
-moment we see ads faster. There is automatic ad blindness, so people just don't
-pay attention to it. 
+Whatever we do it's for dopamine, whether we do socializing or partying or
+browsing through social media. So that is what Instagram and Facebook and all
+the social media channels are capitalizing on. But as people's attention spans
+go lower and lower, advertising on these platforms is also very difficult. They
+don't pay attention to the ads either. There is automatic ad blindness, so
+people just don't pay attention to it. 
 
 So my goal is that how do you give people something to consume, which is
 something like a one or two or piece of content. And people watching this
 podcast may have that kind of attention span, but not everybody is like that.
-And how do you make everyone pay that kind of attention? You have to pull them
-in with what they want and give them what they need. It's like if you have to
-become fit, you have to eat healthy foods. But even if you give healthy foods
-for free, it's not like everybody is going to eat it. People still need your
-junk foods, lays, pizzas and everything because it gives you instant dopamine
-hit. So learn today's goal, at least, is to structure people's day in such a
-way that they spend less time on social media and more time going through
-courses, training programs and something that is in depth, something that has
-an activity around it so that they learn in a deeper way, not just glaze over
-motivational content all the time. 
+And how do you make everyone pay that kind of attention? **You have to pull
+them in with what they want and give them what they need**. It's like if you
+have to become fit, you have to eat healthy foods. But even if you give healthy
+foods for free, it's not like everybody is going to eat it. People still need
+your junk foods, lays, pizzas and everything because it gives you instant
+dopamine hit. So learn today's goal, at least, is to structure people's day in
+such a way that they spend less time on social media and more time going
+through courses, training programs and something that is in depth, something
+that has an activity around it so that they learn in a deeper way, not just
+glaze over motivational content all the time. 
 
-------------------------
+
+## Make your purpose clear
+
 Why do you say that they need to engage in a deeper level? Probably because
 when they engage better, they learn better that's there. And they'll understand
 it in a much better way. But how can you make sure with content you're giving
