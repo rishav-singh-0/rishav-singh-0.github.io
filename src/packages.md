@@ -213,3 +213,8 @@ pacman -S figlet cmatrix neofetch
     # start the service
     systemctl enable --now postgresql.service
     ```
+
+## Random
+
+xdotools
+tesseract - OCR
