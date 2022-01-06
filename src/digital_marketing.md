@@ -36,7 +36,6 @@ not get them onto a higher engagement, they will friend zone you. If you can't
 monetize the attention, then you can't grow your reach. 
 </details>
 
-------------------------
 
 ## Understand the mindset of your audience
 
@@ -99,7 +98,9 @@ feed and every day they are getting what next. It's like you are getting the
 phone number, but then you have to get to the date. You can't keep talking on
 the phone forever. 
 
-------------------------
+<details>
+<summary>Further Discussion</summary>
+
 So how do we get on date? Now that people are engaging with me on my Instagram,
 what should be my next step? If you were at my place, what would you do? 
 
@@ -136,8 +137,11 @@ ads, YouTube ads, wherever. Then basically the whole world is your content
 marketing team. You are interrupting them while they are creating content. So I
 don't want to scale content creation. I want to scale the depth of the content
 that they go through, the depth of influence. 
+</details>
 
-------------------------
+<details>
+<summary>Further Discussion</summary>
+
 I have to get sick, but I've never thought of having a funnel. My maximum
 funnel is. What I do is I ask people on Instagram first, like, do a 32nd thing.
 Whoever likes it goes to my YouTube on YouTube. I make three different kind of
@@ -173,10 +177,12 @@ this has been done in experiments where the same wine was delivered in Crystal
 glasses and rich glasses. And people thought that this wine actually tastes
 better. So you need to get people to pay for content is what I believe to
 really get them to pay attention. 
+</details>
 
-It makes sense. But there are two contradictive points. One is on the attention
-point of view, and I'll come down to later. But I feel this really makes sense
-because the amount of attention you're going to get from someone directly
+
+## Get paid for your content
+
+The amount of attention you're going to get from someone directly
 depends on how much is he earning and how much is he paying out of the money,
 which he's earning? From the gym membership. Someone who's, like, really rich,
 wouldn't even go after paying a gym membership, but would go if you pay for a
@@ -192,8 +198,8 @@ regularly. So when you get people to pay for content, it pays for your time,
 your team's time and everything. And they also end up subsidizing the free
 content that you create for the wider audience. 
 
-------------------------
-How do you filter out what to give for free and what not to give for free? 
+
+## How do you filter out what to give for free and what not to?
 
 So the basic formula for that is that you **teach them the what for free, and
 you charge for the how**. Okay. So if it is digital marketing, so I teach
@@ -299,7 +305,8 @@ even if it is RS5, there is a positive behavior change and you get it done. So
 that is how you hack this whole Dopamine effect and still try to get people to
 consume in depth content. 
 
-------------------------
+## Law of Large Numbers
+
 With your experience in digital marketing, you have been experimenting a lot of
 stuff, how to make more and more people click how to make more and more people
 buy this one particular product. Reach more people. Is there some common trait
@@ -358,7 +365,9 @@ click I'm paying. What is your revenue per click? What is your revenue per
 visitor? If you get the math right now, then scaling is just a matter of
 adding.
 
-------------------------
+<details>
+<summary>Role of Human Beings</summary>
+
 Do you think all of these things will be relevant now in future as well or all
 of this once the AI fits in? Do you think all of this person who's doing all of
 this is going to be relevant as well? 
@@ -376,8 +385,10 @@ less than it will try reducing if it reduces to less than the quality might
 reduce. The leads might not convert. So that kind of AI definitely has come.
 It's like you can have a self driving car, which is AI to take you from one
 place to another. But where to go is something you have to decide. 
+</details>
 
-------------------------
+## Making people feel connected
+
 So how can you make sure that people come up with better ideas and they become
 more creative? Is there a field of study which people can come up with because
 it cannot be completely random? 
