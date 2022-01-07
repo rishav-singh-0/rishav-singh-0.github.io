@@ -95,11 +95,17 @@ pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
 
 <h3 id="Arch-2">Arch</h3>
 
-<p><code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip</code></p>
+<pre><code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+
+pacman -S xf86-video-intel
+
+yay -S libxft-bgra-git
+</code></pre>
 
 <h3 id="Gentoo">Gentoo</h3>
 
-<p><code>emerge x11-libs&#47;libX11 x11-base&#47;xorg-server x11-libs&#47;libXrandr x11-libs&#47;libXinerama x11-libs&#47;libXft x11-apps&#47;xinit x11-apps&#47;xrdb x11-apps&#47;mesa-progs x11-apps&#47;xrandr x11-misc&#47;unclutter x11-misc&#47;xclip</code></p>
+<pre><code>emerge x11-libs&#47;libX11 x11-base&#47;xorg-server x11-libs&#47;libXrandr x11-libs&#47;libXinerama x11-libs&#47;libXft x11-apps&#47;xinit x11-apps&#47;xrdb x11-apps&#47;mesa-progs x11-apps&#47;xrandr x11-misc&#47;unclutter x11-misc&#47;xclip
+</code></pre>
 
 <h2 id="Basic">Basic</h2>
 
@@ -146,7 +152,12 @@ pacman -S atool zip unzip tar bzip2 gzip lzip unrar
 
 <h3 id="Arch-5">Arch</h3>
 
-<p><code>pacman -S alsa-utils pulseaudio pamixer pulsemixer mpd mpc ncmpcpp mpv</code></p>
+<pre><code>pacman -S alsa-utils pulseaudio pamixer pulsemixer
+
+pacman -S alsa-utils pipewire pipewire-alsa pipewire-pulse pulsemixer pamixer
+
+pacman -S mpd mpc ncmpcpp mpv
+</code></pre>
 
 <h2 id="Shell">Shell</h2>
 
@@ -259,11 +270,15 @@ modprobe vboxdrv
 <h2 id="Development">Development</h2>
 
 <ul>
-<li><p>redis         : An in-memory database that persists on disk</p>
+<li>redis         : An in-memory database that persists on disk</li>
+</ul>
 
 <pre><code>pacman -S redis
-</code></pre></li>
-<li><p>postgresql    : Sophisticated object-relational DBMS (<a href="https://wiki.archlinux.org/title/PostgreSQL">link</a>)</p>
+</code></pre>
+
+<ul>
+<li>postgresql    : Sophisticated object-relational DBMS (<a href="https://wiki.archlinux.org/title/PostgreSQL">link</a>)</li>
+</ul>
 
 <pre><code>pacman -S postgresql
 sudo -iu postgres       # login as postgres user
@@ -271,8 +286,7 @@ initdb --locale=en_US.UTF-8 -E UTF8 -D &#47;var&#47;lib&#47;postgres&#47;data
 
 # start the service
 systemctl enable --now postgresql.service
-</code></pre></li>
-</ul>
+</code></pre>
 
 <h2 id="Random">Random</h2>
 
