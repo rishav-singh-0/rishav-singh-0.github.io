@@ -57,6 +57,10 @@ Example look UEFI with GPT
 ## Format the partitions
 <!-- Include btrfs guide also -->
 
+```
+mount -o noatime,compress=lzo,space_cache=v2,discard=async,subvol=@ /dev/sdb1 /mnt
+```
+
 Once the partitions have been created, each newly created partition must be formatted with an appropriate file system. For example, to create an Ext4 file system on /dev/root_partition, run:
 
 `mkfs.ext4 /dev/root_partition`
