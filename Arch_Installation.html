@@ -127,6 +127,9 @@ Results ending in rom, loop or airoot may be ignored.</p>
 
 <!-- Include btrfs guide also -->
 
+<pre><code>mount -o noatime,compress=lzo,space_cache=v2,discard=async,subvol=@ &#47;dev&#47;sdb1 &#47;mnt
+</code></pre>
+
 <p>Once the partitions have been created, each newly created partition must be formatted with an appropriate file system. For example, to create an Ext4 file system on &#47;dev&#47;root_partition, run:</p>
 
 <p><code>mkfs.ext4 &#47;dev&#47;root_partition</code></p>
