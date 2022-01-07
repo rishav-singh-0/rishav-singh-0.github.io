@@ -55,11 +55,18 @@ pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
 - xclip             : Command line interface to the X11 clipboard
 
 ### Arch
-`pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip`
+```
+pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+
+pacman -S xf86-video-intel
+
+yay -S libxft-bgra-git
+```
 
 ### Gentoo
-`emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip`
-
+```
+emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+```
 
 ## Basic
 
@@ -76,7 +83,6 @@ pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
 pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
 pacman -S atool zip unzip tar bzip2 gzip lzip unrar
 ```
-
 
 ## Fonts
 
@@ -99,7 +105,13 @@ pacman -S atool zip unzip tar bzip2 gzip lzip unrar
 - mpv           : video player
 
 ### Arch
-`pacman -S alsa-utils pulseaudio pamixer pulsemixer mpd mpc ncmpcpp mpv`
+```
+pacman -S alsa-utils pulseaudio pamixer pulsemixer
+
+pacman -S alsa-utils pipewire pipewire-alsa pipewire-pulse pulsemixer pamixer
+
+pacman -S mpd mpc ncmpcpp mpv
+```
 
 ## Shell
 
@@ -199,20 +211,20 @@ pacman -S figlet cmatrix neofetch
 
 - redis         : An in-memory database that persists on disk
 
-    ```
-    pacman -S redis
-    ```
+```
+pacman -S redis
+```
 
 - postgresql    : Sophisticated object-relational DBMS ([link](https://wiki.archlinux.org/title/PostgreSQL))
 
-    ```
-    pacman -S postgresql
-    sudo -iu postgres       # login as postgres user
-    initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
+```
+pacman -S postgresql
+sudo -iu postgres       # login as postgres user
+initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
 
-    # start the service
-    systemctl enable --now postgresql.service
-    ```
+# start the service
+systemctl enable --now postgresql.service
+```
 
 ## Random
 
