@@ -236,6 +236,11 @@ initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
 systemctl enable --now postgresql.service
 ```
 
+## Bluetooth
+
+- bluez - Daemons for the bluetooth protocol stack
+- bluez-utils - Development and debugging utilities
+
 ## Random
 
 xdotools
