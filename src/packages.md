@@ -19,6 +19,7 @@
 - ntfs-3g       : NTFS filesystem driver and utilities
 - gvfs-mtp      : Virtual filesystem implementation for GIO (MTP backend; Android, media player)
 - gvfs-gphoto2  : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)
+- nfs-utils     : Support programs for Network File Systems
 - tlp           : Linux Advanced Power Management
 - powertop      : A tool to diagnose issues with power consumption and power management
 - python-pip    : The PyPA recommended tool for installing Python packages
