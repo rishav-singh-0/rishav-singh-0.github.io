@@ -188,6 +188,15 @@ modprobe vboxdrv
 
 > Note: If you are on `linux` kernel then make sure you have `linux-headers` installed. Similarly if you are on `linux-lts` kernel then `linux-ltx-headers` should be installed.
 
+## QEMU
+
+- qemu : A generic and open source machine emulator and virtualizer
+- vert-manager : Desktop user interface for managing virtual machines
+
+```
+pacman -S qemu virt-manager dnsmasq ebtables
+```
+
 ## Fun
 
 - figlet        :   A program for making large letters out of ordinary text
