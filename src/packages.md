@@ -245,3 +245,4 @@ systemctl enable --now postgresql.service
 
 xdotools
 tesseract - OCR
+tesseract-data-eng
