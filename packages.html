@@ -56,6 +56,7 @@
 <li>ntfs-3g       : NTFS filesystem driver and utilities</li>
 <li>gvfs-mtp      : Virtual filesystem implementation for GIO (MTP backend; Android, media player)</li>
 <li>gvfs-gphoto2  : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)</li>
+<li>nfs-utils     : Support programs for Network File Systems</li>
 <li>tlp           : Linux Advanced Power Management</li>
 <li>powertop      : A tool to diagnose issues with power consumption and power management</li>
 <li>python-pip    : The PyPA recommended tool for installing Python packages</li>
@@ -243,6 +244,16 @@ modprobe vboxdrv
 <p>Note: If you are on <code>linux</code> kernel then make sure you have <code>linux-headers</code> installed. Similarly if you are on <code>linux-lts</code> kernel then <code>linux-ltx-headers</code> should be installed.</p>
 </blockquote>
 
+<h2 id="QEMU">QEMU</h2>
+
+<ul>
+<li>qemu : A generic and open source machine emulator and virtualizer</li>
+<li>vert-manager : Desktop user interface for managing virtual machines</li>
+</ul>
+
+<pre><code>pacman -S qemu virt-manager dnsmasq ebtables
+</code></pre>
+
 <h2 id="Fun">Fun</h2>
 
 <ul>
@@ -288,10 +299,18 @@ initdb --locale=en_US.UTF-8 -E UTF8 -D &#47;var&#47;lib&#47;postgres&#47;data
 systemctl enable --now postgresql.service
 </code></pre>
 
+<h2 id="Bluetooth">Bluetooth</h2>
+
+<ul>
+<li>bluez - Daemons for the bluetooth protocol stack</li>
+<li>bluez-utils - Development and debugging utilities</li>
+</ul>
+
 <h2 id="Random">Random</h2>
 
 <p>xdotools
-tesseract - OCR</p>
+tesseract - OCR
+tesseract-data-eng</p>
 </article>
 
 <footer id="footnote-definition">
