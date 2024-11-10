@@ -1,4 +1,8 @@
-# Arch installation Guide
++++
+date = '2024-11-10T16:37:39+05:30'
+draft = true
+title = 'Arch installation Guide'
++++
 
 Ofcource my notes are are derived from [Arch Wiki](https://wiki.archlinux.org/index.php/Installation_guide). And I highly recommend to read it too. These notes contains all the things which i do at the fime of new Arch Installation, so it is well tested.
 

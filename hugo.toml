@@ -3,3 +3,32 @@ languageCode = 'en-us'
 title = "Rishav's Digital Garden"
 theme = 'PaperMod'
 
+########### PaperMod ###########
+[params.homeInfoParams]
+Title = "Welcome to My Digital Garden"
+Content = "Can be Info, links, about..."
+
+[[params.socialIcons]]
+name = "linkedin"
+url = "https://www.linkedin.com/in/rishav-singh-0"
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/rishav-singh-0"
+
+[[params.socialIcons]]
+name = "instagram"
+url = "https://www.instagram.com/_.rishav.singh._"
+
+[params]
+ShowShareButtons = false
+ShowReadingTime = true
+#ShowToc = true
+#ShowBreadCrumbs = true
+ShowPostNavLinks = true
+ShowCodeCopyButtons = true
+
+[outputs]
+home = [ "HTML", "RSS", "JSON" ]
+
+################################
