@@ -1,5 +1,9 @@
++++
+date = '2024-11-10T16:37:39+05:30'
+draft = true
+title = 'Agricultural Ideas'
++++
 
-# Agricultural Ideas
 
 ## Vision
 
@@ -15,4 +19,3 @@
 - Based on this report automatically spray in those areas
 - Use biofertilizers
 - Use sensors for reporting what and when nuterients are needed
-

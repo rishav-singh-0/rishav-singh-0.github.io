@@ -1,4 +1,9 @@
-# Technical Analysis
++++
+date = '2024-11-10T16:38:39+05:30'
+draft = true
+title = 'Technical Analysis'
+tags = ['Finance', 'Tech']
++++
 
 ## Analyzing the past
 
@@ -20,14 +25,14 @@
 
 ### Uptrends
 
-![uptrend](./images/technical_analysis/uptrend.jpg)
+![uptrend](/images/technical_analysis/uptrend.jpg)
 
 - It is a collection of moves and down moves.
 - Uptrend is evidenced by creation of higher highs and higher lows.
 
 ### Downtrends
 
-![downtrend](./images/technical_analysis/downtrend.jpg)
+![downtrend](/images/technical_analysis/downtrend.jpg)
 
 - It is a collection of Down moves and Up moves.
 - Downtrend is evidenced by creation of Lower highs and Lower lows.
@@ -35,7 +40,7 @@
 
 ### Sideways trend
 
-![sideways_trend](./images/technical_analysis/sideways_trend.jpg)
+![sideways_trend](/images/technical_analysis/sideways_trend.jpg)
 
 - Downtrend is evidenced by prices moving within a range.
 - Thumb rule: NEVER TRADE IN AN SIDEWAYS TREND! WAIT AND WATCH FOR THE DIRECTION OF BREAKOUT!
@@ -47,7 +52,7 @@ Charts and patterns are integral part of technical analysis
 
 ### Line chart
 
-![line_chart](./images/technical_analysis/line_chart.jpg)
+![line_chart](/images/technical_analysis/line_chart.jpg)
 
 - It is a most basic of all charts
 - Just like line that connects the closing price over a time frame
@@ -55,7 +60,7 @@ Charts and patterns are integral part of technical analysis
 
 ### Bar charts
 
-![bar_chart](./images/technical_analysis/bar_chart.jpg)
+![bar_chart](/images/technical_analysis/bar_chart.jpg)
 
 - Left line represents opening price
 - Right line represents closing price
@@ -64,14 +69,14 @@ Charts and patterns are integral part of technical analysis
 
 ### Volume Bar chart
 
-![volume_bar_chart](./images/technical_analysis/volume_bar_chart.jpg)
+![volume_bar_chart](/images/technical_analysis/volume_bar_chart.jpg)
 
 - Number of shares that change hands between sellers and buyers
 - Price movement is more sinificant when volume is above average
 
 ### Candlestick chart
 
-![candlestick_chart](./images/technical_analysis/candlestick_chart.jpg)
+![candlestick_chart](/images/technical_analysis/candlestick_chart.jpg)
 
 - Vertical line represents the trading range
 - Green/White Chadlestick = Bullish
@@ -89,7 +94,7 @@ Things to be kept in mind while drawing a trend line are:
 
 ## Support and Resistance
 
-![support](./images/technical_analysis/support.jpg)
+![support](/images/technical_analysis/support.jpg)
 
 - Support level is a price level where the price trends to find support as it is going down
 
@@ -105,7 +110,7 @@ Things to be kept in mind while drawing a trend line are:
 
 - The penetration of support and resistance level is called breakout
 
-![breakout](./images/technical_analysis/breakout.jpg)
+![breakout](/images/technical_analysis/breakout.jpg)
 
 ## Volumes
 
@@ -117,14 +122,14 @@ Things to be kept in mind while drawing a trend line are:
 
 ### Bullish Engulfing
 
-![bullish_engulfing](./images/technical_analysis/bullish_engulfing.jpg)
+![bullish_engulfing](/images/technical_analysis/bullish_engulfing.jpg)
 
 - In this case, the second candle's body (a bullish one) completely engulfs the previous day's candle. Both the tail or the wick of the caldle of first bar are covered by the second one.
 - Such patterns are powerful if they are formed at the bottom of the correction in a bullish move or near the bottom of a bear move. Such patterns are also seen at the end of a consolidation.
 
 ### Morning Star
 
-![morning_evening_star](./images/technical_analysis/morning_evening_star.jpg)
+![morning_evening_star](/images/technical_analysis/morning_evening_star.jpg)
 
 - A Morning star is a bullish three candle pattern which is formed at the bottom of a down move/trend.
 - The first candle = a big bearish candle which clearly defines the down move.
