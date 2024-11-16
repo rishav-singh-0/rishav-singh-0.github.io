@@ -6,7 +6,7 @@ theme = 'PaperMod'
 ########### PaperMod ###########
 [params.homeInfoParams]
 Title = "Welcome to My Digital Garden"
-Content = "Can be Info, links, about..."
+Content = "Developer / Tinkerer"
 
 [[params.socialIcons]]
 name = "linkedin"
