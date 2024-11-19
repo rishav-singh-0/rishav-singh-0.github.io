@@ -2,15 +2,13 @@
 .temp
 
 # Generated files by hugo
-/public/
-/resources/_gen/
-/assets/jsconfig.json
-hugo_stats.json
+/hugo_root/public/
+/hugo_root/resources/_gen/
+/hugo_root/assets/jsconfig.json
+/hugo_root/hugo_stats.json
+/hugo_root/.hugo_build.lock
 
 # Executable may be added to repository
 hugo.exe
 hugo.darwin
 hugo.linux
-
-# Temporary lock file while building
-/.hugo_build.lock

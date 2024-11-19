@@ -57,6 +57,7 @@ jobs:
           HUGO_ENVIRONMENT: production
           TZ: Asia/Kolkata
         run: |
+          cd hugo_root && \
           hugo \
             --gc \
             --minify \
@@ -64,7 +65,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: ./hugo_root/public
 
   # Deployment job
   deploy:

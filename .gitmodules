@@ -1,6 +1,6 @@
 [submodule "vault"]
 	path = vault
 	url = https://github.com/rishav-singh-0/Rishav_Notes.git
-[submodule "themes/PaperMod"]
-	path = themes/PaperMod
+[submodule "hugo_root/themes/PaperMod"]
+	path = hugo_root/themes/PaperMod
 	url = https://github.com/adityatelange/hugo-PaperMod.git
