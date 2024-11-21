@@ -1,4 +1,17 @@
-<div id="mynetwork">
-    <script src="/js/vis-network.min.js"></script>
-    <script src="/js/toy-network.js"></script>
-</div>
+<!-- https://github.com/brege/brege.org/blob/master/content/post/network-graphs-with-images/index.md -->
+<!-- https://brege.org/post/network-graphs-in-hugo/ -->
+{{ $nodesPath := .Get "nodesPath" }}
+{{ $edgesPath := .Get "edgesPath" }}
+
+<style>
+	#mynetwork {
+	  background-color: #f5f5f5; /* a medium gray color */
+	  border-radius: 10px;
+	  border: 1px solid #cccccc;
+	  margin: 5px 0 40px 0;
+	}
+</style>
+
+<div id="mynetwork" data-nodes-path={{ $nodesPath }} data-edges-path={{ $edgesPath }}></div>
+<script src="/js/vis-network.min.js"></script>
+<script src="/js/toy-network.js"></script>
