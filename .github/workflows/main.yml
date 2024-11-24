@@ -57,6 +57,7 @@ jobs:
           HUGO_ENVIRONMENT: production
           TZ: Asia/Kolkata
         run: |
+          ./bin/script.sh && \
           cd hugo_root && \
           hugo \
             --gc \

@@ -2,10 +2,11 @@
 
 # omh - https://github.com/ukautz/obsidian-meets-hugo
 
-./bin/omh.linux-amd64 --recursive \
+./bin/oe --recursive \
  --obsidian-root vault \
  --hugo-root hugo_root \
  --sub-path posts \
+ --publish-field draft \
  --time-zone Asia/Kolkata
 #  --include-tag Platform \
 
