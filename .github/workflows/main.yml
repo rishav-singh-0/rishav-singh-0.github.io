@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+  repository_dispatch:
+    types: [notes-updated]  # Triggered by Notes repo
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -44,8 +46,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: '${{ secrets.PAT }}'
-          submodules: recursive
+          submodules: true
           fetch-depth: 0
+      - name: Pull latest Notes content
+        run: |
+          git submodule update --init --recursive
+          git submodule update --remote --merge  # Ensure latest changes are fetched
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
