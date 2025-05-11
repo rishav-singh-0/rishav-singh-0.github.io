@@ -11,5 +11,3 @@ I like and promote Open Source Softwares, GNU/Linux and other related stuff.
 
 Here on this website I usually post guides, tutorials or notes based on my own experience and uses, 
 idea is to make easy to follow and highly effective methods using as less words as possible.
-
-> Creaed by slightly modified version of [ssg6](https://www.romanzolotarev.com/ssg.html)
