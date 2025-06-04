@@ -84,7 +84,7 @@ jobs:
             ${{ runner.temp }}/hugo_cache
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: hugo-public
           path: ./hugo_root/public
@@ -92,19 +92,16 @@ jobs:
   # Deployment job
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     steps:
       - name: Download site artifact
         uses: actions/download-artifact@v4
         with:
           name: hugo-public
-          path: ./hugo_root/public
+          path: ./public
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.PAT_DEPLOY }}
-          publish_dir: ./hugo_root/public
+          github_token: ${{ secrets.PAT }}
+          publish_dir: ./public
           publish_branch: gh-pages

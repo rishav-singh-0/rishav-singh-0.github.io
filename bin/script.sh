@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 # omh - https://github.com/ukautz/obsidian-meets-hugo
 
