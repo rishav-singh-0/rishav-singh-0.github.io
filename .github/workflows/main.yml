@@ -84,7 +84,7 @@ jobs:
             ${{ runner.temp }}/hugo_cache
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: hugo-public
           path: ./hugo_root/public
@@ -99,8 +99,6 @@ jobs:
         with:
           name: hugo-public
           path: ./public
-      - name: Show contents for debugging
-        run: ls -R .
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
