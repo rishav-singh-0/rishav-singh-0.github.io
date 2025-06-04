@@ -99,6 +99,8 @@ jobs:
         with:
           name: hugo-public
           path: ./public
+      - name: Show contents for debugging
+        run: ls -R .
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
