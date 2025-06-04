@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Openssl on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/openssl/</link><description>Recent content in Openssl on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Tue, 10 Dec 2024 18:05:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/openssl/index.xml" rel="self" type="application/rss+xml"/><item><title>SSL Certificate</title><link>https://blog.rishavs.in/posts/0-inbox/ssl-certificate/</link><pubDate>Tue, 10 Dec 2024 18:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/ssl-certificate/</guid><description>&lt;p>An &lt;strong>SSL certificate&lt;/strong> is a digital certificate issued by a trusted third-party authority known as a &lt;strong>Certificate Authority (CA)&lt;/strong>. It verifies the identity of a website or server and enables secure, encrypted communication.&lt;/p>
+&lt;h3 id="components-of-an-ssl-certificate">Components of an SSL Certificate&lt;/h3>
+&lt;ul>
+&lt;li>Public Key:
+&lt;ul>
+&lt;li>Used for encryption and verifying the certificate&amp;rsquo;s authenticity.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Certificate Holder Information:
+&lt;ul>
+&lt;li>Details like the domain name, organization, and location.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Issuer Information:
+&lt;ul>
+&lt;li>The CA that issued the certificate.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Validity Period:
+&lt;ul>
+&lt;li>Specifies the time frame during which the certificate is valid.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Digital Signature:
+&lt;ul>
+&lt;li>Ensures the certificate was issued by a trusted CA and has not been tampered with.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="self-signed-certificates">Self-Signed Certificates&lt;/h2>
+&lt;hr>
+&lt;h3 id="examples-and-differences">Examples and Differences&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>Usage&lt;/th>
+&lt;th>Example&lt;/th>
+&lt;th>Difference&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>Self-Signed&lt;/strong>&lt;/td>
+&lt;td>Internal servers, testing&lt;/td>
+&lt;td>Generated via OpenSSL&lt;/td>
+&lt;td>Not trusted by default in browsers or OS.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>CA-Signed&lt;/strong>&lt;/td>
+&lt;td>Public-facing servers&lt;/td>
+&lt;td>Issued by DigiCert, Let&amp;rsquo;s Encrypt&lt;/td>
+&lt;td>Trusted by browsers and OS.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Wildcard Certificate&lt;/strong>&lt;/td>
+&lt;td>Secures a domain and its subdomains&lt;/td>
+&lt;td>&lt;code>*.example.com&lt;/code>&lt;/td>
+&lt;td>Can’t be self-signed, requires a CA.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Multi-Domain Certificate&lt;/strong>&lt;/td>
+&lt;td>Covers multiple domains&lt;/td>
+&lt;td>&lt;code>example.com&lt;/code>, &lt;code>test.com&lt;/code>&lt;/td>
+&lt;td>Self-signed possible but not widely used.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;h3 id="self-signed-certificates-1">Self-Signed Certificates&lt;/h3>
+&lt;p>A &lt;strong>self-signed certificate&lt;/strong> is a digital certificate that is not issued by a trusted Certificate Authority (CA) but is signed by the entity it is certifying (e.g., your own server). These certificates are primarily used for internal testing, development environments, or scenarios where external trust is not required.&lt;/p></description></item></channel></rss>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>About/Project on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/about/project/</link><description>Recent content in About/Project on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Thu, 30 Mar 2023 10:16:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/about/project/index.xml" rel="self" type="application/rss+xml"/><item><title>Hola Bot</title><link>https://blog.rishavs.in/posts/2-area/resume/hola-bot/</link><pubDate>Thu, 30 Mar 2023 10:16:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/resume/hola-bot/</guid><description>&lt;h2 id="holonomic-drive-robot-a-versatile-path-planning-machine">Holonomic Drive Robot: A Versatile Path-Planning Machine&lt;/h2>
+&lt;p>!assets/Pasted image 20241201191055.png&lt;/p>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is an innovative, three-wheeled robot designed for precision path planning and image-based drawing. It combines advanced robotics algorithms, custom hardware, and creative problem-solving to deliver exceptional performance in a variety of tasks, from geometric pattern generation to drawing intricate images like logos.&lt;/p>
+&lt;h3 id="key-highlights">Key Highlights&lt;/h3>
+&lt;h4 id="1-motion-planning-and-control">1. Motion Planning and Control&lt;/h4>
+&lt;ul>
+&lt;li>Implemented a novel path-planning approach to optimize motor velocity and trajectory precision.&lt;/li>
+&lt;li>Designed custom algorithms to address trajectory distortion caused by motor speed limitations.&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-hardware-and-software-integration">2. Hardware and Software Integration&lt;/h4>
+&lt;ul>
+&lt;li>Successfully integrated &lt;strong>ESP32&lt;/strong>, &lt;strong>eYFI Mega&lt;/strong>, stepper motors, and LiPo batteries into a cohesive system.&lt;/li>
+&lt;li>Overcame challenges such as faulty motor drivers and optimized power delivery for reliability.&lt;/li>
+&lt;/ul>
+&lt;h4 id="3-image-processing-and-simulation">3. Image Processing and Simulation&lt;/h4>
+&lt;ul>
+&lt;li>Extracted contours from images and translated them into robot motion commands.&lt;/li>
+&lt;li>Utilized &lt;strong>ROS&lt;/strong> and &lt;strong>Gazebo&lt;/strong> for testing and refining the system in a simulated environment.&lt;/li>
+&lt;/ul>
+&lt;h4 id="4-real-time-problem-solving">4. Real-Time Problem Solving&lt;/h4>
+&lt;ul>
+&lt;li>Debugged critical hardware issues, such as malfunctioning motor drivers and damaged LiPo cells.&lt;/li>
+&lt;li>Enhanced communication latency between the laptop and ESP32 from 1 second to 200ms by identifying and resolving protocol bottlenecks.&lt;/li>
+&lt;/ul>
+&lt;h4 id="5-creative-outputs">5. Creative Outputs&lt;/h4>
+&lt;ul>
+&lt;li>Enabled the robot to draw patterns such as Lissajous figures (infinity loops) and complex logos.&lt;/li>
+&lt;li>Developed a custom ink mixture to ensure visibility and erasability for pattern drawing.&lt;/li>
+&lt;/ul>
+&lt;h3 id="technologies-used">Technologies Used&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Hardware&lt;/strong>: ESP32, eYFI Mega, LiPo batteries, and stepper motors.&lt;/li>
+&lt;li>&lt;strong>Software&lt;/strong>: ROS for robot control, Gazebo for simulation, and Python, C for software logic.&lt;/li>
+&lt;li>&lt;strong>Tools &amp;amp; Libraries&lt;/strong>: OpenCV for image processing, AccelStepper for motor control, and custom ROS packages for integration.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="development-timeline">Development Timeline&lt;/h3>
+&lt;h4 id="january---february-2023-prototyping-and-hardware-development">January - February 2023: Prototyping and Hardware Development&lt;/h4>
+&lt;ul>
+&lt;li>Designed and built the physical robot body, integrating motor drivers, sensors, and controllers.&lt;/li>
+&lt;li>Calibrated the camera with over 100 samples for precise localization.&lt;/li>
+&lt;li>Debugged and optimized motor driver configurations, achieving simultaneous operation of all wheels.&lt;/li>
+&lt;li>Developed non-blocking motor control using the AccelStepper library.&lt;/li>
+&lt;/ul>
+&lt;h4 id="march-2023-software-refinement-and-final-tests">March 2023: Software Refinement and Final Tests&lt;/h4>
+&lt;ul>
+&lt;li>Created a contour extraction function for converting images into path points for drawing.&lt;/li>
+&lt;li>Integrated a servo-based pen mechanism for on/off control during drawing operations.&lt;/li>
+&lt;li>Conducted intensive testing, fixing indexing bugs, and optimizing scripts for various patterns, including the Snapchat logo and infinity shapes.&lt;/li>
+&lt;li>Demonstrated successful path-following in a simulation environment using Gazebo.
+!assets/hola-collage 1.jpg&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="challenges-overcome">Challenges Overcome&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Latency in Data Transmission&lt;/strong>: Resolved slow communication by identifying a missing newline character in transmitted data, reducing latency from 1 second to 200ms.&lt;/li>
+&lt;li>&lt;strong>Battery and Power Issues&lt;/strong>: Diagnosed and replaced faulty LiPo battery cells, ensuring uninterrupted operation.&lt;/li>
+&lt;li>&lt;strong>Hardware Failures&lt;/strong>: Addressed motor driver failures and loose connections with creative soldering solutions and robust wiring techniques.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="achievements">Achievements&lt;/h3>
+&lt;ul>
+&lt;li>Successfully implemented conditional path-following to optimize motor velocity during complex path execution.&lt;/li>
+&lt;li>Demonstrated precise image drawing with minimal distortion using camera-calibrated localization.&lt;/li>
+&lt;li>Created a detailed documentation repository and shared project outcomes through YouTube videos, showcasing the robot’s capabilities.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="media">Media&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Video Demonstrations&lt;/strong>: &lt;a href="https://youtu.be/6YWC5tnd194">Watch Demo Video&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="conclusion">Conclusion&lt;/h3>
+&lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is a testament to innovative thinking, technical expertise, and perseverance. It serves as a versatile platform for robotics experimentation, offering potential applications in art, industrial automation, and beyond.&lt;/p></description></item><item><title>Vitarana Drone</title><link>https://blog.rishavs.in/posts/2-area/resume/vitarana-drone/</link><pubDate>Thu, 01 Oct 2020 12:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/resume/vitarana-drone/</guid><description>&lt;p>&lt;strong>Duration:&lt;/strong> Oct 2020 – Feb 2021&lt;br>
+&lt;strong>Team Members:&lt;/strong> Rishav Singh, Kashyap Joshi&lt;br>
+&lt;strong>Technology:&lt;/strong> Python, ROS, Drone/Quadcopter, Gazebo, Git, Linux&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>Vitarana Drone was part of the e-Yantra Robotics Competition 2020-21, an international robotics outreach program hosted by IIT Bombay. Competing against 2,603 teams from 572 colleges, we designed an autonomous drone-based delivery system to execute precise object handling and delivery tasks in a simulated environment.&lt;/p>
+&lt;h2 id="project-journey">Project Journey&lt;/h2>
+&lt;h3 id="beginning">Beginning&lt;/h3>
+&lt;ul>
+&lt;li>Entered the competition in our 2nd year of B.Tech.&lt;/li>
+&lt;li>Started with 4 members but 2 left in between, we try to bring em on board but
+it was unavoidable. So work increased on 2 people.&lt;/li>
+&lt;li>But still managed to divide the task in smaller, easily doable parts and divided according to the skills&lt;/li>
+&lt;li>Focused on breaking tasks into manageable parts and acquiring new skills on the go.&lt;/li>
+&lt;/ul>
+&lt;h3 id="key-milestones">Key Milestones&lt;/h3>
+&lt;h4 id="task-1-position-and-altitude-control">Task 1: Position and Altitude Control&lt;/h4>
+&lt;ul>
+&lt;li>Developed and tuned PID controllers for roll, pitch, yaw, and throttle.&lt;/li>
+&lt;li>Achieved precise setpoint control after extensive testing and parameter tuning.&lt;/li>
+&lt;li>Took around 5 days to study and impliment the algorithm but tuning the PID required 10 days straight.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-2-obstacle-avoidance">Task 2: Obstacle Avoidance&lt;/h4>
+&lt;ul>
+&lt;li>Considering we were given 4 sensors on 4 sides with 25 meters range each, we searched and studied about many path planning algorithms.&lt;/li>
+&lt;li>Implemented a 2D custom Bug Algorithm for object avoidance using sensor inputs.&lt;/li>
+&lt;li>Designed ROS actions for barcode scanning and delivery location determination.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-3-advanced-pathfinding">Task 3: Advanced Pathfinding&lt;/h4>
+&lt;ul>
+&lt;li>Enhanced pathfinding for 3D environments to navigate complex obstacles by changing height(throttle).&lt;/li>
+&lt;li>Used image processing for accurate marker detection and landing precision.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-4-delivery-optimization">Task 4: Delivery Optimization&lt;/h4>
+&lt;ul>
+&lt;li>Developed a mechanism for retrieving delivery boxes from a warehouse grid and delivering them to specified locations.&lt;/li>
+&lt;li>Improved marker scanning by adjusting drone altitude to enhance accuracy during detection.&lt;/li>
+&lt;li>Enhanced the obstacle avoidance algorithm for more reliable navigation.&lt;/li>
+&lt;li>Despite being one day late for the deadline, implemented major improvements within a single day, incurring a 25% penalty while ensuring task completion.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-5-time-limited-arena-challenge">Task 5: Time-Limited Arena Challenge&lt;/h4>
+&lt;ul>
+&lt;li>Tasked with delivering and picking up as many boxes as possible within an 8-minute timeframe, with scoring based on delivery distance.&lt;/li>
+&lt;li>Prioritized delivering boxes to distant locations to maximize points, balancing quality and speed (race against time). We had 2 choices either to deliver near boxes first to increase number of boxes or to deliver furthest boxes first to maximize distance points. We selected the later one because our algo was taking more time to detect and
+land on marker.&lt;/li>
+&lt;li>Overcame many difficulties like sometimes the markers were so near to each
+roof that drone scanned wrong marker sometimes. So we had to resolve the
+issue by taking the nearest path to the provided approx location of marker.&lt;/li>
+&lt;li>Introduced a velocity controller to increase drone speed in obstacle-free zones, enhancing overall efficiency.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-6-final-round-challenge">Task 6: Final Round Challenge&lt;/h4>
+&lt;ul>
+&lt;li>Faced a more complex delivery and pickup task with tighter constraints and only two days for completion.&lt;/li>
+&lt;li>Focused on improving code robustness and refining interconnections between controllers to prevent errors and crashes.&lt;/li>
+&lt;li>Documented the code extensively on the final night of submission, working under high pressure with short power naps to maintain productivity. Me and my
+partner waking up each other after taking 10 min power naps.&lt;/li>
+&lt;li>Main difference between our solution and top 6 solution was that we focused
+more on stability over speed.&lt;/li>
+&lt;li>Although we missed the finals, the task highlighted the importance of stability and meticulous planning in achieving high performance.&lt;/li>
+&lt;/ul>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>Participating in this competition provided invaluable lessons in technical problem-solving, team collaboration, and time management. Despite the challenges of a reduced team and tight deadlines, we demonstrated resilience and adaptability, balancing stability with performance optimization. While we narrowly missed the finals, the experience significantly enhanced our expertise in control systems, path planning, and autonomous systems, preparing us for future complex engineering challenges.&lt;/p></description></item></channel></rss>

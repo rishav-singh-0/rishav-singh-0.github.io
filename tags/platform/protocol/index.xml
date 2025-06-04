@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Protocol on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/platform/protocol/</link><description>Recent content in Platform/Protocol on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Wed, 05 Feb 2025 23:06:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/platform/protocol/index.xml" rel="self" type="application/rss+xml"/><item><title>SPI</title><link>https://blog.rishavs.in/posts/3-resource/platform/spi/</link><pubDate>Wed, 05 Feb 2025 23:06:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/spi/</guid><description>&lt;h2 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)&lt;/h2>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>full-duplex&lt;/strong> serial bus.&lt;/li>
+&lt;li>&lt;strong>Master-slave&lt;/strong> architecture (1 master, multiple slaves).&lt;/li>
+&lt;li>Uses &lt;strong>4 wires&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>SCLK&lt;/strong> (clock), &lt;strong>MOSI&lt;/strong> (Master Out Slave In), &lt;strong>MISO&lt;/strong> (Master In Slave Out), &lt;strong>SS/CS&lt;/strong> (Slave Select).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-layer">Physical Layer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Push-pull outputs&lt;/strong> (faster than open-drain).&lt;/li>
+&lt;li>Each slave requires a dedicated &lt;strong>SS line&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>No start/stop bits&lt;/strong> – continuous stream synchronized to SCLK.&lt;/li>
+&lt;li>Data sampled on clock edges defined by &lt;strong>CPOL&lt;/strong> (clock polarity) and &lt;strong>CPHA&lt;/strong> (clock phase):
+&lt;ul>
+&lt;li>&lt;strong>Mode 0&lt;/strong>: CPOL=0 (idle low), CPHA=0 (sample on rising edge).&lt;/li>
+&lt;li>&lt;strong>Mode 3&lt;/strong>: CPOL=1 (idle high), CPHA=1 (sample on falling edge).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>SCLK | MOSI (Data from Master) | MISO (Data from Slave) | CS (Active Low)
+&lt;/code>&lt;/pre>&lt;h3 id="key-features">Key Features&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Full-duplex&lt;/strong> communication (simultaneous MOSI/MISO).&lt;/li>
+&lt;li>&lt;strong>No addressing&lt;/strong> – slaves selected via SS lines.&lt;/li>
+&lt;li>Speeds: Up to 100+ Mbps (depends on hardware).&lt;/li>
+&lt;/ul>
+&lt;h3 id="pros--cons">Pros &amp;amp; Cons&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;strong>Pros&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>Cons&lt;/strong>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>High-speed communication&lt;/td>
+&lt;td>High pin count (n+3 for n slaves)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Simple protocol, flexible modes&lt;/td>
+&lt;td>No built-in error detection&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Full-duplex support&lt;/td>
+&lt;td>No multi-master support&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>High-speed sensors (e.g., IMUs).&lt;/li>
+&lt;li>Display controllers (OLED, TFT).&lt;/li>
+&lt;li>SD cards, NOR flash memory.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="comparison-table">Comparison Table&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;strong>Feature&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>UART&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>I2C&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>SPI&lt;/strong>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>Clock&lt;/strong>&lt;/td>
+&lt;td>None (async)&lt;/td>
+&lt;td>Shared (SCL)&lt;/td>
+&lt;td>Shared (SCLK)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Duplex&lt;/strong>&lt;/td>
+&lt;td>Full-duplex&lt;/td>
+&lt;td>Half-duplex&lt;/td>
+&lt;td>Full-duplex&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Topology&lt;/strong>&lt;/td>
+&lt;td>Point-to-point&lt;/td>
+&lt;td>Multi-device&lt;/td>
+&lt;td>Master-slave&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Speed&lt;/strong>&lt;/td>
+&lt;td>Low (≤115kbps)&lt;/td>
+&lt;td>Moderate (≤3.4Mbps)&lt;/td>
+&lt;td>High (≥10Mbps)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Addressing&lt;/strong>&lt;/td>
+&lt;td>None&lt;/td>
+&lt;td>7/10-bit&lt;/td>
+&lt;td>Hardware (SS lines)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Pins&lt;/strong>&lt;/td>
+&lt;td>2 (TX/RX)&lt;/td>
+&lt;td>2 (SCL/SDA)&lt;/td>
+&lt;td>4 + n (SS per slave)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Error Handling&lt;/strong>&lt;/td>
+&lt;td>Parity bit&lt;/td>
+&lt;td>ACK/NACK&lt;/td>
+&lt;td>None&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>UART</title><link>https://blog.rishavs.in/posts/3-resource/platform/uart/</link><pubDate>Wed, 05 Feb 2025 22:14:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/uart/</guid><description>&lt;h2 id="uart-universal-asynchronous-receiver-transmitter">UART (Universal Asynchronous Receiver-Transmitter)&lt;/h2>
+&lt;p>UART is a simple, asynchronous serial communication protocol used for full-duplex communication between two devices.&lt;/p>
+&lt;h3 id="key-features">Key Features:&lt;/h3>
+&lt;ul>
+&lt;li>Asynchronous: &lt;strong>No clock signal&lt;/strong> – relies on pre-agreed &lt;strong>baud rate&lt;/strong> (e.g., 9600, 115200 bps).&lt;/li>
+&lt;li>Uses two main lines: &lt;strong>TX (Transmit)&lt;/strong> and &lt;strong>RX (Receive)&lt;/strong>.&lt;/li>
+&lt;li>Configurable baud rate (e.g., 9600, 115200 bps).&lt;/li>
+&lt;li>&lt;strong>Error detection&lt;/strong>: Parity bit (optional).&lt;/li>
+&lt;li>&lt;strong>Flow control&lt;/strong>: Hardware (RTS/CTS) or software (XON/XOFF).&lt;/li>
+&lt;li>&lt;strong>No addressing&lt;/strong> – only two devices per bus.&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Start bit&lt;/strong> (1 bit, logic low).&lt;/li>
+&lt;li>&lt;strong>Data bits&lt;/strong> (5–9 bits, LSB-first).&lt;/li>
+&lt;li>&lt;strong>Parity bit&lt;/strong> (optional, even/odd/none).&lt;/li>
+&lt;li>&lt;strong>Stop bit(s)&lt;/strong> (1 or 2 bits, logic high).&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>Start Bit | Data Bits (5-9) | Parity Bit (Optional) | Stop Bit (1-2)
+&lt;/code>&lt;/pre>&lt;h3 id="points-to-remember">Points to Remember&lt;/h3>
+&lt;ul>
+&lt;li>If the baud rate is set as 115200, then the recever will expect stop bit that is high state for 1 baud period(generally).&lt;/li>
+&lt;/ul>
+&lt;h3 id="usage-in-linux-kernel">Usage in Linux Kernel:&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;linux/serial_core.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">struct&lt;/span> uart_port &lt;span style="color:#f92672">*&lt;/span>port;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">uart_write&lt;/span>(port, &lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>, &lt;span style="color:#ae81ff">5&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>Debugging consoles (e.g., Linux kernel &lt;code>printk&lt;/code> via UART).&lt;/li>
+&lt;li>GPS modules, Bluetooth/Wi-Fi modules.&lt;/li>
+&lt;/ul></description></item><item><title>I2C</title><link>https://blog.rishavs.in/posts/3-resource/platform/i-2-c/</link><pubDate>Fri, 08 Nov 2024 21:40:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/i-2-c/</guid><description>&lt;h2 id="basics-of-i2c">Basics of I2C&lt;/h2>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>multi-master&lt;/strong>, &lt;strong>multi-slave&lt;/strong> serial bus.&lt;/li>
+&lt;li>&lt;strong>Half-duplex&lt;/strong> communication (bidirectional SDA line).&lt;/li>
+&lt;li>Uses &lt;strong>2 wires&lt;/strong>: SCL (clock), SDA (data).&lt;/li>
+&lt;li>Speeds: Standard (100 kHz), Fast (400 kHz), High-Speed (3.4 MHz).&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-layer">Physical Layer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Open-drain&lt;/strong> outputs – requires pull-up resistors.&lt;/li>
+&lt;li>&lt;strong>7-bit or 10-bit addressing&lt;/strong> (supports up to 128/1024 devices).&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Start condition&lt;/strong>: SDA ↓ while SCL is high.&lt;/li>
+&lt;li>&lt;strong>Address frame&lt;/strong>: 7/10-bit address + R/W bit.&lt;/li>
+&lt;li>&lt;strong>ACK/NACK&lt;/strong>: Slave pulls SDA low to acknowledge.&lt;/li>
+&lt;li>&lt;strong>Data frames&lt;/strong> (8-bit chunks, MSB-first).&lt;/li>
+&lt;li>&lt;strong>Stop condition&lt;/strong>: SDA ↑ while SCL is high.&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>Start | Address | Read/Write | ACK/NACK | Data | Stop
+&lt;/code>&lt;/pre>&lt;h3 id="key-features">Key Features&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Clock stretching&lt;/strong>: Slaves can hold SCL low to pause communication.&lt;/li>
+&lt;li>&lt;strong>Multi-master arbitration&lt;/strong>: Masters detect collisions via SDA monitoring.&lt;/li>
+&lt;li>Speeds: Standard (100 kbps), Fast (400 kbps), High-Speed (3.4 Mbps).&lt;/li>
+&lt;/ul>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>Sensors (temperature, accelerometers).&lt;/li>
+&lt;li>EEPROMs, RTC (Real-Time Clock) modules.&lt;/li>
+&lt;/ul>
+&lt;h2 id="device-tree">Device Tree&lt;/h2>
+&lt;ul>
+&lt;li>TODO&lt;/li>
+&lt;/ul>
+&lt;h2 id="writing-client-device-drivers">Writing client device drivers&lt;/h2>
+&lt;ul>
+&lt;li>TODO&lt;/li>
+&lt;/ul>
+&lt;h2 id="i2c-tools-package-in-userspace">I2C-Tools Package in Userspace&lt;/h2>
+&lt;ul>
+&lt;li>Useful for debugging, testing, some simple prototyping&lt;/li>
+&lt;li>Accesses the I²C bus via &lt;code>/dev/i2c-0&lt;/code>, &lt;code>/dev/i2c-1&lt;/code>…&lt;/li>
+&lt;li>Assume devices have registers, SMBus-like&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2cdetect">i2cdetect&lt;/h3>
+&lt;ul>
+&lt;li>scan an I2C bus for devices&lt;/li>
+&lt;li>No guarantee it works (I²C is not discoverable by the spec)&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>[rishav] ➜ ~ i2cdetect -l
+i2c-0 i2c i915 gmbus dpc I2C adapter
+i2c-1 i2c i915 gmbus dpb I2C adapter
+i2c-2 i2c i915 gmbus dpd I2C adapter
+i2c-3 i2c AUX A/DDI A/PHY A I2C adapter
+i2c-4 unknown Synopsys DesignWare I2C adapter N/A
+i2c-5 unknown Synopsys DesignWare I2C adapter N/A
+i2c-6 unknown SMBus I801 adapter at f040 N/A
+[rishav] ➜ ~ i2cdetect -y 2
+0 1 2 3 4 5 6 7 8 9 a b c d e f
+00: -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- 28 -- -- -- -- -- -- --
+30: -- -- -- UU -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;code>--&lt;/code> No response&lt;/li>
+&lt;li>&lt;code>28&lt;/code> Response from address 28&lt;/li>
+&lt;li>&lt;code>UU&lt;/code> Address in use (by driver)&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2cget-i2cset">i2cget, i2cset&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>i2cget&lt;/code>: read a register value&lt;/li>
+&lt;li>&lt;code>i2cset&lt;/code>: set a register value&lt;/li>
+&lt;li>Can use various types of SMBus and I2C transactions&lt;/li>
+&lt;li>Limited to 8-bit register address&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># i2cget -y 2 0x28 0x1b
+0x21
+# i2cset -y 2 0x28 0x55
+#
+&lt;/code>&lt;/pre>&lt;h3 id="i2cdump">i2cdump&lt;/h3>
+&lt;ul>
+&lt;li>dump value of all registers&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2ctransfer">i2ctransfer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>i2ctransfer&lt;/code>: the &amp;ldquo;swiss army knife of Linux I2C&amp;rdquo;, in userspace&lt;/li>
+&lt;li>Example: reimplement the i2cget -y 2 0x28 0x1b command:&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># i2ctransfer -y 2 w1@0x28 0x1b r1@0x28
+0x21
+#
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;code>w1@0x28&lt;/code> Write transaction, 1 byte, client address 0x28&lt;/li>
+&lt;li>&lt;code>0x1b&lt;/code> Data to send in the write transaction&lt;/li>
+&lt;li>&lt;code>r1@0x28&lt;/code> Read transaction, 1 byte, client address 0x28&lt;/li>
+&lt;/ul>
+&lt;h2 id="troubleshooting">Troubleshooting&lt;/h2>
+&lt;ol start="6">
+&lt;li>Return code from &lt;code>i2c_*()&lt;/code> functions — Never ignore errors!&lt;/li>
+&lt;li>Kernel logs&lt;/li>
+&lt;li>i2c-tools&lt;/li>
+&lt;li>Oscilloscope or logic analyzer&lt;/li>
+&lt;/ol>
+&lt;h3 id="no-ack-from-client---systematic">No ACK from client - systematic&lt;/h3>
+&lt;p>&lt;strong>Problem&lt;/strong>: a client &lt;strong>never&lt;/strong> responds to transactions&lt;/p></description></item></channel></rss>

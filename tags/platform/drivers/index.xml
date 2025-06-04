@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Drivers on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/platform/drivers/</link><description>Recent content in Platform/Drivers on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Sun, 04 May 2025 14:24:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/platform/drivers/index.xml" rel="self" type="application/rss+xml"/><item><title>System Call (Software Interrupt)</title><link>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</link><pubDate>Sun, 04 May 2025 14:24:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</guid><description>&lt;h2 id="1-system-call-basics">1. System Call Basics&lt;/h2>
+&lt;p>System calls (syscalls) are the interface for user-space programs to request services from the kernel. Examples include:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>File I/O&lt;/strong>: &lt;code>read()&lt;/code>, &lt;code>write()&lt;/code>, &lt;code>open()&lt;/code>, &lt;code>close()&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Device Control&lt;/strong>: &lt;code>ioctl()&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Signal Handling&lt;/strong>: &lt;code>kill()&lt;/code>, &lt;code>signal()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-system-call-table-and-registration">2. System Call Table and Registration&lt;/h2>
+&lt;h3 id="syscall-table">Syscall Table:&lt;/h3>
+&lt;ul>
+&lt;li>A table (&lt;code>sys_call_table&lt;/code>) maps syscall numbers to handler functions.&lt;/li>
+&lt;li>&lt;strong>Architecture-Specific&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>x86&lt;/strong>: Defined in &lt;code>arch/x86/entry/syscalls/syscall_64.tbl&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>ARM&lt;/strong>: Defined in &lt;code>arch/arm/tools/syscall.tbl&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Registration&lt;/strong>:
+&lt;ul>
+&lt;li>Syscalls are registered at compile time using macros like &lt;code>SYSCALL_DEFINE&lt;/code> (e.g., &lt;code>SYSCALL_DEFINE3(write, ...)&lt;/code> for &lt;code>write()&lt;/code>).&lt;/li>
+&lt;li>For custom syscalls (rare and discouraged), you would:
+&lt;ol>
+&lt;li>Add an entry to the syscall table.&lt;/li>
+&lt;li>Define the handler using &lt;code>SYSCALL_DEFINE&lt;/code>.&lt;/li>
+&lt;li>Recompile the kernel (or use modules for dynamic insertion).&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="3-flow-of-system-calls">3. Flow of System Calls&lt;/h2>
+&lt;h3 id="1-user-space-invocation">1. User-Space Invocation&lt;/h3>
+&lt;ul>
+&lt;li>The libc wrapper (e.g., &lt;code>read()&lt;/code>, &lt;code>ioctl()&lt;/code>) triggers a &lt;strong>software interrupt&lt;/strong> (&lt;code>int 0x80&lt;/code> on x86) or uses the &lt;code>syscall&lt;/code> instruction (modern x86/ARM).&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// User-space code
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>fd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">open&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/dev/mydevice&amp;#34;&lt;/span>, O_RDWR); &lt;span style="color:#75715e">// Syscall 1: open()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">read&lt;/span>(fd, buf, &lt;span style="color:#ae81ff">100&lt;/span>); &lt;span style="color:#75715e">// Syscall 2: read()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, MY_CMD, arg); &lt;span style="color:#75715e">// Syscall 3: ioctl()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">close&lt;/span>(fd); &lt;span style="color:#75715e">// Syscall 4: close()
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-transition-to-kernel-mode">2. Transition to Kernel Mode&lt;/h3>
+&lt;ul>
+&lt;li>Switches to kernel mode (ring 0 on x86, EL1 on ARM).&lt;/li>
+&lt;li>Saves user-space registers (e.g., RIP, RSP, EFLAGS).&lt;/li>
+&lt;li>Jumps to the kernel&amp;rsquo;s syscall entry point (e.g., &lt;code>entry_SYSCALL_64&lt;/code> on x86)&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-syscall-dispatching">3. Syscall Dispatching&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Syscall Number&lt;/strong>:
+&lt;ul>
+&lt;li>The syscall number is stored in a register (e.g., &lt;code>RAX&lt;/code> on x86, &lt;code>R7&lt;/code> on ARM).&lt;/li>
+&lt;li>Example: &lt;code>__NR_read&lt;/code> (syscall number for &lt;code>read()&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Syscall Table&lt;/strong>:
+&lt;ul>
+&lt;li>The kernel uses &lt;code>sys_call_table&lt;/code> (array of function pointers) to find the handler.&lt;/li>
+&lt;li>Example: &lt;code>sys_call_table[__NR_read]&lt;/code> points to &lt;code>sys_read()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-handler-execution-in-process-context">4. Handler Execution in Process Context&lt;/h3>
+&lt;h4 id="generic-steps-for-all-syscalls">Generic Steps for All Syscalls:&lt;/h4>
+&lt;ol>
+&lt;li>Argument Validation:
+&lt;ul>
+&lt;li>Check pointers (e.g., &lt;code>buf&lt;/code> in &lt;code>read()&lt;/code>) using &lt;code>access_ok()&lt;/code>&lt;/li>
+&lt;li>Copy arguments from user space with &lt;code>copy_from_user()&lt;/code> or &lt;code>get_user()&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Kernel Function Execution:
+&lt;ul>
+&lt;li>Perform the requested operation (e.g., read from a file, send an &lt;code>ioctl&lt;/code> command)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="file-operations-readwrite">File Operations (&lt;code>read&lt;/code>/&lt;code>write&lt;/code>):&lt;/h4>
+&lt;ul>
+&lt;li>File Descriptor Resolution:
+&lt;ul>
+&lt;li>Convert &lt;code>fd&lt;/code> to a &lt;code>struct file&lt;/code> using &lt;code>fdget()&lt;/code>.&lt;/li>
+&lt;li>Check file permissions (&lt;code>FMODE_READ&lt;/code>/&lt;code>FMODE_WRITE&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Driver Interaction:
+&lt;ul>
+&lt;li>Call the &lt;code>read&lt;/code>/&lt;code>write&lt;/code> method from the file’s &lt;code>file_operations&lt;/code> struct.&lt;/li>
+&lt;li>Example: For &lt;code>/dev/mydevice&lt;/code>, this invokes the driver’s &lt;code>.read&lt;/code> function.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="io-control-ioctl">I/O Control (&lt;code>ioctl&lt;/code>):&lt;/h4>
+&lt;ul>
+&lt;li>The &lt;code>ioctl&lt;/code> syscall (&lt;code>sys_ioctl()&lt;/code>) calls the driver&amp;rsquo;s &lt;code>.unlocked_ioctl&lt;/code> method.
+!../3-Resource/Platform/IOCTL in Kernel Device Drivers#3. Integrate into file_operations&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-return-to-user-space">5. Return to User Space:&lt;/h3>
+&lt;ul>
+&lt;li>Result is stored in &lt;code>eax&lt;/code>/&lt;code>r0&lt;/code>, and the kernel restores user registers&lt;/li>
+&lt;li>Execute &lt;code>iret&lt;/code> (x86) or exception return (ARM) to resume user-mode execution.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="4-device-file-operations">4. Device File Operations&lt;/h2>
+&lt;p>Character devices (e.g., &lt;code>/dev/char_dev&lt;/code>) expose operations via &lt;code>file_operations&lt;/code>:&lt;/p></description></item><item><title>Generic GPIO Management in Linux</title><link>https://blog.rishavs.in/posts/3-resource/platform/generic-gpio-management-in-linux/</link><pubDate>Wed, 19 Feb 2025 11:29:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/generic-gpio-management-in-linux/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>GPIO (General Purpose Input/Output) is a fundamental interface in embedded systems and Linux-based platforms. Linux provides multiple methods to control GPIOs, including the deprecated &lt;code>/sys/class/gpio/&lt;/code> interface and the modern &lt;code>libgpiod&lt;/code> (GPIO character device) API. This document provides a comprehensive guide to managing GPIOs in Linux.&lt;/p>
+&lt;h2 id="gpio-interfaces-in-linux">GPIO Interfaces in Linux&lt;/h2>
+&lt;p>Linux provides three primary ways to manage GPIOs:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Legacy Sysfs Interface (&lt;code>/sys/class/gpio/&lt;/code>)&lt;/strong> - Deprecated but still present on some systems.&lt;/li>
+&lt;li>&lt;strong>GPIO Character Device (&lt;code>/dev/gpiochipX&lt;/code>)&lt;/strong> - The recommended approach using &lt;code>libgpiod&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Direct Kernel Access&lt;/strong> - Through kernel drivers or device tree configurations.&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="1-sysfs-gpio-interface-deprecated">1. Sysfs GPIO Interface (Deprecated)&lt;/h2>
+&lt;p>The sysfs-based interface was historically used to control GPIOs but has been marked as deprecated in favor of &lt;code>gpiod&lt;/code>. If still available, it can be accessed via &lt;code>/sys/class/gpio/&lt;/code>.&lt;/p></description></item><item><title>Character Device Management in Kernel Drivers</title><link>https://blog.rishavs.in/posts/3-resource/platform/character-device-management-in-kernel-drivers/</link><pubDate>Fri, 24 Jan 2025 17:54:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/character-device-management-in-kernel-drivers/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>Character devices allow byte-by-byte communication between user-space applications and kernel drivers. They are commonly used for devices like serial ports, sensors, and custom hardware interfaces. The Linux kernel provides mechanisms for registering, managing, and interacting with character devices via a device file in &lt;code>/dev&lt;/code>.&lt;/p>
+&lt;hr>
+&lt;h2 id="registering-a-character-device">Registering a Character Device&lt;/h2>
+&lt;p>To register a character device, the driver needs to:&lt;/p>
+&lt;h4 id="1-allocate-a-major-and-minor-number">1. Allocate a Major and Minor Number:&lt;/h4>
+&lt;ul>
+&lt;li>Each character device is identified by a major number (device type) and a minor number (specific device). The major number indicates the driver associated with the device, while the minor number is used to differentiate between multiple devices handled by the same driver. If major and minor numbers are repeated, it can cause conflicts and lead to incorrect device identification. To avoid this, the kernel provides &lt;code>alloc_chrdev_region&lt;/code>, a function to dynamically allocate major and minor numbers, ensuring uniqueness. These numbers are used in the &lt;code>/dev&lt;/code> directory to associate device files with their corresponding drivers.&lt;/li>
+&lt;li>Use &lt;code>alloc_chrdev_region&lt;/code> to dynamically allocate a major number.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">dev_t&lt;/span> dev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// kernel/fs/char_dev.c
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// int alloc_chrdev_region(dev_t *dev, unsigned baseminor, unsigned count, const char *name)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">alloc_chrdev_region&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>dev, &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;my_char_device&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (result &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_err&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to allocate major number&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">pr_info&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Device registered with major %d, minor %d&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">MAJOR&lt;/span>(dev), &lt;span style="color:#a6e22e">MINOR&lt;/span>(dev));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-initialize-and-register-the-device">2. Initialize and Register the Device:&lt;/h4>
+&lt;ul>
+&lt;li>Define a &lt;code>cdev&lt;/code> structure and initialize it with file operations.&lt;/li>
+&lt;li>Use &lt;code>cdev_add&lt;/code> to register the device with the kernel.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">struct&lt;/span> cdev my_cdev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">cdev_init&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_cdev, &lt;span style="color:#f92672">&amp;amp;&lt;/span>my_fops);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>my_cdev.owner &lt;span style="color:#f92672">=&lt;/span> THIS_MODULE;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">cdev_add&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_cdev, dev, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (result &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_err&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to add cdev&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unregister_chrdev_region&lt;/span>(dev, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-create-a-device-file-optional">3. Create a Device File (Optional):&lt;/h4>
+&lt;ul>
+&lt;li>Creating a device file in &lt;code>/dev&lt;/code> is optional because character devices can be accessed directly using their major and minor numbers through system calls or user-space libraries, bypassing the need for a device file. However, creating a file in &lt;code>/dev&lt;/code> makes interaction more user-friendly by providing a standard interface.&lt;/li>
+&lt;li>To interact with a character device without creating a device file, you can use system calls like &lt;code>mknod&lt;/code> to create a temporary device node or interact with the device directly using its major and minor numbers programmatically.&lt;/li>
+&lt;li>Use &lt;code>class_create&lt;/code> and &lt;code>device_create&lt;/code> to automatically create a device file in &lt;code>/dev&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">struct&lt;/span> class &lt;span style="color:#f92672">*&lt;/span>my_class;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>my_class &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">class_create&lt;/span>(THIS_MODULE, &lt;span style="color:#e6db74">&amp;#34;my_device_class&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">IS_ERR&lt;/span>(my_class)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_err&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to create class&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cdev_del&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_cdev);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unregister_chrdev_region&lt;/span>(dev, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">PTR_ERR&lt;/span>(my_class);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">device_create&lt;/span>(my_class, NULL, dev, NULL, &lt;span style="color:#e6db74">&amp;#34;my_char_device&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="file-operations">File Operations&lt;/h2>
+&lt;p>Character devices are controlled through a set of file operations defined in a &lt;code>struct file_operations&lt;/code>. These operations determine how the device responds to system calls like &lt;code>open&lt;/code>, &lt;code>read&lt;/code>, &lt;code>write&lt;/code>, and &lt;code>ioctl&lt;/code>.&lt;/p></description></item><item><title>IOCTL in Kernel Device Drivers</title><link>https://blog.rishavs.in/posts/3-resource/platform/ioctl-in-kernel-device-drivers/</link><pubDate>Fri, 24 Jan 2025 17:24:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/ioctl-in-kernel-device-drivers/</guid><description>&lt;h2 id="ioctl-implementation-in-kernel-device-drivers">ioctl Implementation in Kernel Device Drivers&lt;/h2>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ioctl&lt;/code> (Input/Output Control) is a powerful system call in Linux used to perform device-specific operations that are not covered by standard system calls like &lt;code>read&lt;/code>, &lt;code>write&lt;/code>, or &lt;code>open&lt;/code>. It allows user-space applications to interact with kernel-space drivers for device-specific configurations and data exchanges.&lt;/p>
+&lt;hr>
+&lt;h2 id="how-ioctl-works">How ioctl Works&lt;/h2>
+&lt;h4 id="1-user-space-interaction">1. User-Space Interaction:&lt;/h4>
+&lt;ul>
+&lt;li>A user-space application invokes &lt;code>ioctl&lt;/code> using the following prototype:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">ioctl&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> fd, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> cmd, &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#f92672">*&lt;/span>arg);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>fd&lt;/code>: File descriptor for the device.&lt;/li>
+&lt;li>&lt;code>cmd&lt;/code>: Command defining the operation.&lt;/li>
+&lt;li>&lt;code>arg&lt;/code>: Pointer to the data or argument passed between user-space and kernel-space.&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-driver-side-handling">2. Driver-Side Handling:&lt;/h4>
+&lt;ul>
+&lt;li>The &lt;code>ioctl&lt;/code> system call is routed to the driver by the kernel.&lt;/li>
+&lt;li>The driver implements a specific &lt;code>unlocked_ioctl&lt;/code> or &lt;code>compat_ioctl&lt;/code> callback in the &lt;code>file_operations&lt;/code> structure.&lt;/li>
+&lt;/ul>
+&lt;h4 id="3-data-flow">3. Data Flow:&lt;/h4>
+&lt;ul>
+&lt;li>Arguments passed via &lt;code>arg&lt;/code> can be pointers to user-space data, requiring the driver to use helper functions like &lt;code>copy_from_user&lt;/code> and &lt;code>copy_to_user&lt;/code> for secure data transfer.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="steps-to-implement-ioctl-in-a-kernel-driver">Steps to Implement ioctl in a Kernel Driver&lt;/h2>
+&lt;h4 id="1-define-ioctl-commands">1. Define ioctl Commands:&lt;/h4>
+&lt;ul>
+&lt;li>Use macros to define command numbers, typically with the &lt;code>_IO&lt;/code>, &lt;code>_IOR&lt;/code>, &lt;code>_IOW&lt;/code>, and &lt;code>_IOWR&lt;/code> macros provided in &lt;code>&amp;lt;linux/ioctl.h&amp;gt;&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define MY_IOCTL_BASE &amp;#39;M&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_GET _IOR(MY_IOCTL_BASE, 1, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_SET _IOW(MY_IOCTL_BASE, 2, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>_IOR&lt;/code>: Read data from the kernel.&lt;/li>
+&lt;li>&lt;code>_IOW&lt;/code>: Write data to the kernel.&lt;/li>
+&lt;li>&lt;code>_IOWR&lt;/code>: Read and write data.&lt;/li>
+&lt;li>&lt;code>_IO&lt;/code>: Command without data.&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-implement-ioctl-callback">2. Implement ioctl Callback:&lt;/h4>
+&lt;ul>
+&lt;li>Define the &lt;code>unlocked_ioctl&lt;/code> function in the driver.&lt;/li>
+&lt;li>Handle commands appropriately based on &lt;code>cmd&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> &lt;span style="color:#a6e22e">my_ioctl&lt;/span>(&lt;span style="color:#66d9ef">struct&lt;/span> file &lt;span style="color:#f92672">*&lt;/span>file, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> cmd, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> arg) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> value;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">switch&lt;/span> (cmd) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">case&lt;/span> IOCTL_CMD_GET:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1234&lt;/span>; &lt;span style="color:#75715e">// Example value
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">copy_to_user&lt;/span>((&lt;span style="color:#66d9ef">int&lt;/span> __user &lt;span style="color:#f92672">*&lt;/span>)arg, &lt;span style="color:#f92672">&amp;amp;&lt;/span>value, &lt;span style="color:#66d9ef">sizeof&lt;/span>(value)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>EFAULT;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">case&lt;/span> IOCTL_CMD_SET:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">copy_from_user&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>value, (&lt;span style="color:#66d9ef">int&lt;/span> __user &lt;span style="color:#f92672">*&lt;/span>)arg, &lt;span style="color:#66d9ef">sizeof&lt;/span>(value)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>EFAULT;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_info&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Value set by user: %d&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, value);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">default&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>ENOTTY; &lt;span style="color:#75715e">// Command not supported
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-integrate-into-file_operations">3. Integrate into file_operations:&lt;/h4>
+&lt;ul>
+&lt;li>Register the ioctl handler in the &lt;code>file_operations&lt;/code> structure.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> file_operations my_fops &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .owner &lt;span style="color:#f92672">=&lt;/span> THIS_MODULE,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .open &lt;span style="color:#f92672">=&lt;/span> my_open,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .release &lt;span style="color:#f92672">=&lt;/span> my_release,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .unlocked_ioctl &lt;span style="color:#f92672">=&lt;/span> my_ioctl,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="4-test-the-ioctl-implementation">4. Test the ioctl Implementation:&lt;/h4>
+&lt;ul>
+&lt;li>Write a user-space application to interact with the driver.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;sys/ioctl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define MY_IOCTL_BASE &amp;#39;M&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_GET _IOR(MY_IOCTL_BASE, 1, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_SET _IOW(MY_IOCTL_BASE, 2, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> fd, value &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">42&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">open&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/dev/my_device&amp;#34;&lt;/span>, O_RDWR);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (fd &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">perror&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to open device&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, IOCTL_CMD_SET, &lt;span style="color:#f92672">&amp;amp;&lt;/span>value) &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">perror&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ioctl SET failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, IOCTL_CMD_GET, &lt;span style="color:#f92672">&amp;amp;&lt;/span>value) &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">perror&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ioctl GET failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Value from device: %d&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, value);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">close&lt;/span>(fd);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="best-practices-for-ioctl">Best Practices for ioctl&lt;/h2>
+&lt;ol>
+&lt;li>&lt;strong>Use Explicit Command Definitions&lt;/strong>:
+&lt;ul>
+&lt;li>Follow a consistent naming convention for command macros.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Secure User-Kernel Data Transfer&lt;/strong>:
+&lt;ul>
+&lt;li>Always validate pointers and sizes.&lt;/li>
+&lt;li>Use &lt;code>copy_from_user&lt;/code> and &lt;code>copy_to_user&lt;/code> for safe data exchange.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Error Handling&lt;/strong>:
+&lt;ul>
+&lt;li>Return appropriate error codes for unsupported commands or invalid inputs.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Limit ioctl Usage&lt;/strong>:
+&lt;ul>
+&lt;li>Avoid using &lt;code>ioctl&lt;/code> for operations that can be implemented using &lt;code>read&lt;/code> or &lt;code>write&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Magic Number&lt;/strong>: Ensure it’s unique (check &lt;code>Documentation/ioctl/ioctl-number.txt&lt;/code> in kernel sources).&lt;/li>
+&lt;li>&lt;strong>Atomicity&lt;/strong>: Use locks if hardware operations are not atomic.&lt;/li>
+&lt;li>&lt;strong>Cross-Platform&lt;/strong>: Handle 32/64-bit compatibility with &lt;code>compat_ioctl&lt;/code> if needed.&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="real-world-example-custom-arm-board">Real-World Example: Custom ARM Board&lt;/h2>
+&lt;p>For a custom ARM board, you might need an &lt;code>ioctl&lt;/code> to configure hardware parameters like GPIO modes or clock frequencies.&lt;/p></description></item><item><title>Kernel Log Level</title><link>https://blog.rishavs.in/posts/3-resource/platform/kernel-log-level/</link><pubDate>Wed, 20 Nov 2024 16:23:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/kernel-log-level/</guid><description>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Number&lt;/th>
+&lt;th>Macro&lt;/th>
+&lt;th>Log Level&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;th>Equivalent&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>&lt;code>pr_emerg&lt;/code>&lt;/td>
+&lt;td>Emergency&lt;/td>
+&lt;td>System is unusable.&lt;/td>
+&lt;td>&lt;code>KERN_EMERG&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>&lt;code>pr_alert&lt;/code>&lt;/td>
+&lt;td>Alert&lt;/td>
+&lt;td>Action must be taken immediately.&lt;/td>
+&lt;td>&lt;code>KERN_ALERT&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2&lt;/td>
+&lt;td>&lt;code>pr_crit&lt;/code>&lt;/td>
+&lt;td>Critical&lt;/td>
+&lt;td>Critical conditions.&lt;/td>
+&lt;td>&lt;code>KERN_CRIT&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>3&lt;/td>
+&lt;td>&lt;code>pr_err&lt;/code>&lt;/td>
+&lt;td>Error&lt;/td>
+&lt;td>Error conditions.&lt;/td>
+&lt;td>&lt;code>KERN_ERR&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4&lt;/td>
+&lt;td>&lt;code>pr_warn&lt;/code>&lt;/td>
+&lt;td>Warning&lt;/td>
+&lt;td>Warning conditions.&lt;/td>
+&lt;td>&lt;code>KERN_WARNING&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>5&lt;/td>
+&lt;td>&lt;code>pr_notice&lt;/code>&lt;/td>
+&lt;td>Notice&lt;/td>
+&lt;td>Normal but significant condition.&lt;/td>
+&lt;td>&lt;code>KERN_NOTICE&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6&lt;/td>
+&lt;td>&lt;code>pr_info&lt;/code>&lt;/td>
+&lt;td>Informational&lt;/td>
+&lt;td>Informational messages.&lt;/td>
+&lt;td>&lt;code>KERN_INFO&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7&lt;/td>
+&lt;td>&lt;code>pr_debug&lt;/code>&lt;/td>
+&lt;td>Debug&lt;/td>
+&lt;td>Debugging messages.&lt;/td>
+&lt;td>&lt;code>KERN_DEBUG&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>The &lt;strong>number&lt;/strong> corresponds to the log level used by the Linux kernel, with lower numbers indicating higher severity.&lt;/li>
+&lt;li>For example, if the log level is set to &lt;code>4&lt;/code> (Warning), only messages from &lt;code>pr_emerg&lt;/code> to &lt;code>pr_warn&lt;/code> will appear in the system logs. Default log level is generally set to 6.&lt;/li>
+&lt;li>&lt;/li>
+&lt;/ul></description></item><item><title>I2C</title><link>https://blog.rishavs.in/posts/3-resource/platform/i-2-c/</link><pubDate>Fri, 08 Nov 2024 21:40:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/i-2-c/</guid><description>&lt;h2 id="basics-of-i2c">Basics of I2C&lt;/h2>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>multi-master&lt;/strong>, &lt;strong>multi-slave&lt;/strong> serial bus.&lt;/li>
+&lt;li>&lt;strong>Half-duplex&lt;/strong> communication (bidirectional SDA line).&lt;/li>
+&lt;li>Uses &lt;strong>2 wires&lt;/strong>: SCL (clock), SDA (data).&lt;/li>
+&lt;li>Speeds: Standard (100 kHz), Fast (400 kHz), High-Speed (3.4 MHz).&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-layer">Physical Layer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Open-drain&lt;/strong> outputs – requires pull-up resistors.&lt;/li>
+&lt;li>&lt;strong>7-bit or 10-bit addressing&lt;/strong> (supports up to 128/1024 devices).&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Start condition&lt;/strong>: SDA ↓ while SCL is high.&lt;/li>
+&lt;li>&lt;strong>Address frame&lt;/strong>: 7/10-bit address + R/W bit.&lt;/li>
+&lt;li>&lt;strong>ACK/NACK&lt;/strong>: Slave pulls SDA low to acknowledge.&lt;/li>
+&lt;li>&lt;strong>Data frames&lt;/strong> (8-bit chunks, MSB-first).&lt;/li>
+&lt;li>&lt;strong>Stop condition&lt;/strong>: SDA ↑ while SCL is high.&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>Start | Address | Read/Write | ACK/NACK | Data | Stop
+&lt;/code>&lt;/pre>&lt;h3 id="key-features">Key Features&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Clock stretching&lt;/strong>: Slaves can hold SCL low to pause communication.&lt;/li>
+&lt;li>&lt;strong>Multi-master arbitration&lt;/strong>: Masters detect collisions via SDA monitoring.&lt;/li>
+&lt;li>Speeds: Standard (100 kbps), Fast (400 kbps), High-Speed (3.4 Mbps).&lt;/li>
+&lt;/ul>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>Sensors (temperature, accelerometers).&lt;/li>
+&lt;li>EEPROMs, RTC (Real-Time Clock) modules.&lt;/li>
+&lt;/ul>
+&lt;h2 id="device-tree">Device Tree&lt;/h2>
+&lt;ul>
+&lt;li>TODO&lt;/li>
+&lt;/ul>
+&lt;h2 id="writing-client-device-drivers">Writing client device drivers&lt;/h2>
+&lt;ul>
+&lt;li>TODO&lt;/li>
+&lt;/ul>
+&lt;h2 id="i2c-tools-package-in-userspace">I2C-Tools Package in Userspace&lt;/h2>
+&lt;ul>
+&lt;li>Useful for debugging, testing, some simple prototyping&lt;/li>
+&lt;li>Accesses the I²C bus via &lt;code>/dev/i2c-0&lt;/code>, &lt;code>/dev/i2c-1&lt;/code>…&lt;/li>
+&lt;li>Assume devices have registers, SMBus-like&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2cdetect">i2cdetect&lt;/h3>
+&lt;ul>
+&lt;li>scan an I2C bus for devices&lt;/li>
+&lt;li>No guarantee it works (I²C is not discoverable by the spec)&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>[rishav] ➜ ~ i2cdetect -l
+i2c-0 i2c i915 gmbus dpc I2C adapter
+i2c-1 i2c i915 gmbus dpb I2C adapter
+i2c-2 i2c i915 gmbus dpd I2C adapter
+i2c-3 i2c AUX A/DDI A/PHY A I2C adapter
+i2c-4 unknown Synopsys DesignWare I2C adapter N/A
+i2c-5 unknown Synopsys DesignWare I2C adapter N/A
+i2c-6 unknown SMBus I801 adapter at f040 N/A
+[rishav] ➜ ~ i2cdetect -y 2
+0 1 2 3 4 5 6 7 8 9 a b c d e f
+00: -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- 28 -- -- -- -- -- -- --
+30: -- -- -- UU -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;code>--&lt;/code> No response&lt;/li>
+&lt;li>&lt;code>28&lt;/code> Response from address 28&lt;/li>
+&lt;li>&lt;code>UU&lt;/code> Address in use (by driver)&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2cget-i2cset">i2cget, i2cset&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>i2cget&lt;/code>: read a register value&lt;/li>
+&lt;li>&lt;code>i2cset&lt;/code>: set a register value&lt;/li>
+&lt;li>Can use various types of SMBus and I2C transactions&lt;/li>
+&lt;li>Limited to 8-bit register address&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># i2cget -y 2 0x28 0x1b
+0x21
+# i2cset -y 2 0x28 0x55
+#
+&lt;/code>&lt;/pre>&lt;h3 id="i2cdump">i2cdump&lt;/h3>
+&lt;ul>
+&lt;li>dump value of all registers&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2ctransfer">i2ctransfer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>i2ctransfer&lt;/code>: the &amp;ldquo;swiss army knife of Linux I2C&amp;rdquo;, in userspace&lt;/li>
+&lt;li>Example: reimplement the i2cget -y 2 0x28 0x1b command:&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># i2ctransfer -y 2 w1@0x28 0x1b r1@0x28
+0x21
+#
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;code>w1@0x28&lt;/code> Write transaction, 1 byte, client address 0x28&lt;/li>
+&lt;li>&lt;code>0x1b&lt;/code> Data to send in the write transaction&lt;/li>
+&lt;li>&lt;code>r1@0x28&lt;/code> Read transaction, 1 byte, client address 0x28&lt;/li>
+&lt;/ul>
+&lt;h2 id="troubleshooting">Troubleshooting&lt;/h2>
+&lt;ol start="6">
+&lt;li>Return code from &lt;code>i2c_*()&lt;/code> functions — Never ignore errors!&lt;/li>
+&lt;li>Kernel logs&lt;/li>
+&lt;li>i2c-tools&lt;/li>
+&lt;li>Oscilloscope or logic analyzer&lt;/li>
+&lt;/ol>
+&lt;h3 id="no-ack-from-client---systematic">No ACK from client - systematic&lt;/h3>
+&lt;p>&lt;strong>Problem&lt;/strong>: a client &lt;strong>never&lt;/strong> responds to transactions&lt;/p></description></item></channel></rss>

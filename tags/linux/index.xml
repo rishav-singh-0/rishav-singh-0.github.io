@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/linux/</link><description>Recent content in Linux on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Wed, 07 Aug 2024 09:37:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Format Comparison</title><link>https://blog.rishavs.in/posts/3-resource/linux/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Format&lt;/th>
+&lt;th>Compression Ratio&lt;/th>
+&lt;th>Speed (Compression/&lt;!-- raw HTML omitted -->Decompression)&lt;/th>
+&lt;th>Encryption&lt;/th>
+&lt;th>Speciality/Uniqueness&lt;/th>
+&lt;th>Open Source/ License&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>gz (&lt;code>.gz&lt;/code>)&lt;/td>
+&lt;td>Moderate&lt;/td>
+&lt;td>Fast / Fast&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Widely supported and fast for most general uses.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>bzip2 (&lt;code>.bz2&lt;/code>)&lt;/td>
+&lt;td>Better than gzip&lt;/td>
+&lt;td>Slow / Moderate&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Higher compression ratio and robust error detection.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->BSD&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>xz (&lt;code>.xz&lt;/code>)&lt;/td>
+&lt;td>Best&lt;/td>
+&lt;td>Very slow / Fast&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Highest compression ratio; slow compression speed.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>zip (&lt;code>.zip&lt;/code>)&lt;/td>
+&lt;td>Moderate&lt;/td>
+&lt;td>Fast / Fast&lt;/td>
+&lt;td>Built-in encryption&lt;/td>
+&lt;td>Commonly used with built-in encryption and wide software support.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->Various (Info-ZIP)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>tar (&lt;code>.tar&lt;/code>)&lt;/td>
+&lt;td>Depends on method&lt;/td>
+&lt;td>Fast (archive only) / Fast (archive only)&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Primarily used for archiving; compression depends on additional tools.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7z (&lt;code>.7z&lt;/code>)&lt;/td>
+&lt;td>Excellent&lt;/td>
+&lt;td>Moderate / Slow at high settings&lt;/td>
+&lt;td>AES-256 encryption&lt;/td>
+&lt;td>Excellent compression with advanced encryption options.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->LGPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>rar (&lt;code>.rar&lt;/code>)&lt;/td>
+&lt;td>Good&lt;/td>
+&lt;td>Moderate / Moderate&lt;/td>
+&lt;td>AES-256 encryption&lt;/td>
+&lt;td>Includes error recovery and strong encryption; proprietary format.&lt;/td>
+&lt;td>No&lt;!-- raw HTML omitted -->Proprietary&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>lzma (&lt;code>.lzma&lt;/code>)&lt;/td>
+&lt;td>Very high&lt;/td>
+&lt;td>Very slow / Moderate&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>High compression ratio with reliable decompression; requires separate decompressor.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="key-points">Key Points&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>gz (.gz)&lt;/code>: Well-rounded for speed and compatibility, commonly used for general purposes.&lt;/li>
+&lt;li>&lt;code>bzip2 (.bz2)&lt;/code>: Provides a higher compression ratio compared to gzip, though slower.&lt;/li>
+&lt;li>&lt;code>xz (.xz)&lt;/code>: Offers the best compression ratio but at the cost of slower compression speed.&lt;/li>
+&lt;li>&lt;code>zip (.zip)&lt;/code>: Convenient with built-in encryption and broad compatibility.&lt;/li>
+&lt;li>&lt;code>tar (.tar)&lt;/code>: Primarily an archiving format; often used in combination with other compression methods.&lt;/li>
+&lt;li>&lt;code>7z (.7z)&lt;/code>: Excellent compression and strong encryption; requires specific software for full support.&lt;/li>
+&lt;li>&lt;code>rar (.rar)&lt;/code>: Known for robust recovery features and encryption, but is proprietary.&lt;/li>
+&lt;li>&lt;code>lzma (.lzma)&lt;/code>: Delivers a high compression ratio and reliable decompression, though it’s slow.&lt;/li>
+&lt;/ul></description></item><item><title>CU (call up another system)</title><link>https://blog.rishavs.in/posts/3-resource/linux/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
+&lt;p>The  cu  command is used to call up another system and act as a dial-in terminal (mostly on a serial line ie. serial monitor). It can also do simple file transfers with no error checking.&lt;/p>
+&lt;blockquote>
+&lt;p>cu is part of the UUCP(Unix to Unix Copy Program) source but has been split into its own package because it can be useful even if you do not do uucp.&lt;/p>&lt;/blockquote>
+&lt;h2 id="usage">Usage&lt;/h2>
+&lt;p>Start&lt;/p></description></item><item><title>CU (call up another system)</title><link>https://blog.rishavs.in/posts/3-resource/linux/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
+&lt;p>The  cu  command is used to call up another system and act as a dial-in terminal (mostly on a serial line ie. serial monitor). It can also do simple file transfers with no error checking.&lt;/p>
+&lt;blockquote>
+&lt;p>cu is part of the UUCP(Unix to Unix Copy Program) source but has been split into its own package because it can be useful even if you do not do uucp.&lt;/p>&lt;/blockquote>
+&lt;h2 id="usage">Usage&lt;/h2>
+&lt;p>Start&lt;/p></description></item><item><title>Man Pages</title><link>https://blog.rishavs.in/posts/3-resource/linux/man-pages/</link><pubDate>Tue, 18 Oct 2022 11:31:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/man-pages/</guid><description>&lt;h2 id="sections">Sections&lt;/h2>
+&lt;ol>
+&lt;li>Executable programs or shell commands&lt;/li>
+&lt;li>System calls (functions provided by the kernel)&lt;/li>
+&lt;li>Library calls (functions within program libraries)&lt;/li>
+&lt;li>Special files (usually found in &lt;code>/dev&lt;/code>)&lt;/li>
+&lt;li>File formats and conventions, e.g. &lt;code>/etc/passwd&lt;/code>&lt;/li>
+&lt;li>Games&lt;/li>
+&lt;li>Miscellaneous (including macro packages and conventions), e.g. &lt;code>man(7)&lt;/code>, &lt;code>groff(7)&lt;/code>, &lt;code>man-pages(7)&lt;/code>&lt;/li>
+&lt;li>System administration commands (usually only for root)&lt;/li>
+&lt;li>Kernel routines (Non standard)&lt;/li>
+&lt;/ol>
+&lt;p>To see if any &lt;code>COMMAND&lt;/code> has available sections use &lt;code>whatis&lt;/code> of &lt;code>man -f&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>man -f COMMAND
+&lt;/code>&lt;/pre></description></item><item><title>Introduction to Linux</title><link>https://blog.rishavs.in/posts/3-resource/linux/introduction-to-linux/</link><pubDate>Tue, 12 Jul 2022 23:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/introduction-to-linux/</guid><description>&lt;h2 id="what-is-operating-system-">What is Operating System ?&lt;/h2>
+&lt;p>An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs.&lt;/p>
+&lt;h2 id="what-is-kernel">What is Kernel?&lt;/h2>
+&lt;p>The kernel is a part of operating system which has complete control over everything in the system. It is the portion of the operating system code that is always resident in memory,[2] and facilitates interactions between hardware and software components.&lt;/p>
+&lt;h2 id="what-is-linux">What is &lt;a href="https://www.kernel.org/linux.html">Linux&lt;/a>?&lt;/h2>
+&lt;p>Linux is a clone of the operating system Unix, written from scratch by Linus Torvalds with assistance from a loosely-knit team of hackers across the Net. It aims towards &lt;a href="http://get.posixcertified.ieee.org/">POSIX&lt;/a> and Single UNIX Specification compliance.&lt;/p></description></item><item><title>Compile your Custom Linux Kernel</title><link>https://blog.rishavs.in/posts/3-resource/linux/compile-your-custom-linux-kernel/</link><pubDate>Fri, 17 Sep 2021 23:52:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/compile-your-custom-linux-kernel/</guid><description>&lt;h2 id="preparation">Preparation&lt;/h2>
+&lt;h3 id="install-dependencies">Install Dependencies&lt;/h3>
+&lt;pre tabindex="0">&lt;code>sudo pacman -S base-devel xmlto kmod inetutils bc libelf git --needed
+&lt;/code>&lt;/pre>&lt;h3 id="downloading-source-and-local-setup">Downloading source and local setup&lt;/h3>
+&lt;p>It is recommended to create a separate build directory for your kernel(s). In this example, the directory kernelbuild will be created in the home directory:&lt;/p>
+&lt;pre tabindex="0">&lt;code>mkdir ~/kernelbuild
+cd ~/kernelbuild
+&lt;/code>&lt;/pre>&lt;p>Goto &lt;a href="https://www.kernel.org/">kernel.org&lt;/a> and download kernel source&lt;/p>
+&lt;pre tabindex="0">&lt;code>wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.14.5.tar.xz
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>Note: you can verify signature of the downloaded tarball if you want&lt;/p>&lt;/blockquote>
+&lt;p>Extract tarball&lt;/p>
+&lt;pre tabindex="0">&lt;code>tar -xvJf linux-5.14.5.tar.xz
+&lt;/code>&lt;/pre>&lt;p>Check
+&lt;img src="https://blog.rishavs.in/posts/3-resource/linux/asserts/custom_kernel_tar_ls.png" alt="ls command output"/>&lt;/p></description></item><item><title>xfiles</title><link>https://blog.rishavs.in/posts/3-resource/linux/xfiles/</link><pubDate>Tue, 14 Sep 2021 22:56:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/xfiles/</guid><description>&lt;h2 id="xinitrc">.xinitrc&lt;/h2>
+&lt;p>The &lt;code>~/.xinitrc&lt;/code> file is a shell script read by xinit and by its front-end
+startx. It is mainly used to execute desktop environments, window managers and
+other programs when starting the X server (e.g., starting daemons and setting
+environment variables).&lt;/p>
+&lt;h2 id="xprofiles">.xprofiles&lt;/h2>
+&lt;p>An xprofile file, &lt;code>~/.xprofile&lt;/code> and &lt;code>/etc/xprofile&lt;/code>, allows you to execute commands
+at the beginning of the X user session - before the window manager is started.&lt;/p>
+&lt;h2 id="xresources">.Xresources&lt;/h2>
+&lt;p>Xresources is a user-level configuration dotfile, typically located at
+&lt;code>~/.Xresources&lt;/code>. It can be used to set X resources, which are configuration
+parameters for X client applications. (&lt;code>xrdb ~/.Xresources&lt;/code>)&lt;/p></description></item><item><title>Packages I use in any Linux based OS</title><link>https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/</link><pubDate>Mon, 12 Apr 2021 23:03:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/</guid><description>&lt;h1 id="packages-on-arch">Packages on Arch&lt;/h1>
+&lt;h2 id="pacstrap">pacstrap&lt;/h2>
+&lt;ul>
+&lt;li>base&lt;/li>
+&lt;li>linux-lts&lt;/li>
+&lt;li>linux-lts-headers&lt;/li>
+&lt;li>base-devel&lt;/li>
+&lt;li>btrfs&lt;/li>
+&lt;li>btrfs-progs&lt;/li>
+&lt;li>vim&lt;/li>
+&lt;li>networkmanager&lt;/li>
+&lt;li>grub&lt;/li>
+&lt;li>efibootmgr&lt;/li>
+&lt;li>intel-ucode&lt;/li>
+&lt;/ul>
+&lt;h2 id="utils">Utils&lt;/h2>
+&lt;ul>
+&lt;li>mtpfs : Reading and Writing from any MTP device&lt;/li>
+&lt;li>ntfs-3g : NTFS filesystem driver and utilities&lt;/li>
+&lt;li>gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player)&lt;/li>
+&lt;li>gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)&lt;/li>
+&lt;li>nfs-utils : Support programs for Network File Systems&lt;/li>
+&lt;li>tlp : Linux Advanced Power Management&lt;/li>
+&lt;li>powertop : A tool to diagnose issues with power consumption and power management&lt;/li>
+&lt;li>python-pip : The PyPA recommended tool for installing Python packages&lt;/li>
+&lt;li>jre8-openjdk : OpenJDK Java 8 full runtime environment&lt;/li>
+&lt;li>jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment&lt;/li>
+&lt;li>wget : Network utility to retrieve files from the Web&lt;/li>
+&lt;li>gnome-keyring : Stores passwords and encryption keys&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code># Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+# Power Management
+pacman -S tlp powertop
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+&lt;/code>&lt;/pre>&lt;h2 id="xorg">xorg&lt;/h2>
+&lt;ul>
+&lt;li>libx11 : X11 client-side library&lt;/li>
+&lt;li>xorg-xinit : X.Org initialisation program&lt;/li>
+&lt;li>libxinerama : X11 Xinerama extension library&lt;/li>
+&lt;li>libxft : FreeType-based font drawing library for X&lt;/li>
+&lt;li>xorg-server : Xorg X server&lt;/li>
+&lt;li>xorg-xrandr : Primitive command line interface to RandR extension&lt;/li>
+&lt;li>xorg-xrdb : X server resource database utility&lt;/li>
+&lt;li>xorg-xinput : Small commandline tool to configure devices&lt;/li>
+&lt;li>xorg-xbacklight : RandR-based backlight control application&lt;/li>
+&lt;li>xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers&lt;/li>
+&lt;li>xclip : Command line interface to the X11 clipboard&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-1">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+pacman -S xf86-video-intel
+yay -S libxft-bgra-git
+&lt;/code>&lt;/pre>&lt;h3 id="gentoo">Gentoo&lt;/h3>
+&lt;pre tabindex="0">&lt;code>emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+&lt;/code>&lt;/pre>&lt;h2 id="basic">Basic&lt;/h2>
+&lt;ul>
+&lt;li>picom : X compositor that may fix tearing issues&lt;/li>
+&lt;li>unclutter : A small program for hiding the mouse cursor&lt;/li>
+&lt;li>os-prober : Utility to detect other OSes on a set of drives&lt;/li>
+&lt;li>man-db : A utility for reading man pages&lt;/li>
+&lt;li>bash-completion : Programmable completion for the bash shell&lt;/li>
+&lt;li>zsh-completions : Additional completion definitions for Zsh&lt;/li>
+&lt;li>zip,unzip,tar,bzip2,atool,unrar : Compression utils&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-2">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code>pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+&lt;/code>&lt;/pre>&lt;h2 id="fonts">Fonts&lt;/h2>
+&lt;ul>
+&lt;li>noto-fonts : Google Noto TTF fonts&lt;/li>
+&lt;li>noto-fonts-cjk : Google Noto CJK fonts&lt;/li>
+&lt;li>ttf-joypixels : Emoji as a Service (formerly EmojiOne)&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-3">Arch&lt;/h3>
+&lt;p>&lt;code>pacman -S noto-fonts ttf-joypixels&lt;/code>&lt;/p></description></item><item><title>Arch installation Guide</title><link>https://blog.rishavs.in/posts/3-resource/linux/arch-installation-guide/</link><pubDate>Wed, 24 Mar 2021 22:47:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/arch-installation-guide/</guid><description>&lt;p>Ofcource my notes are are derived from &lt;a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Wiki&lt;/a>. And I highly recommend to read it too. These notes contains all the things which i do at the fime of new Arch Installation, so it is well tested.&lt;/p>
+&lt;h2 id="create-bootable-usb">Create Bootable usb&lt;/h2>
+&lt;pre tabindex="0">&lt;code>sudo dd bs=4 if=/mnt/Tools/linux/distros/archlinux-2021.02.01-x86_64.iso of=/dev/sdb conv=fdatasync status=progress
+&lt;/code>&lt;/pre>&lt;h2 id="verify-the-boot-mode">Verify the boot mode&lt;/h2>
+&lt;p>To verify the boot mode, list the efivars directory:
+&lt;code>ls /sys/firmware/efi/efivars&lt;/code>&lt;/p>
+&lt;p>If the command shows the directory without error, then the system is booted in UEFI mode. If the directory does not exist, the system may be booted in BIOS (or CSM) mode. If the system did not boot in the mode you desired, refer to your motherboard&amp;rsquo;s manual.&lt;/p></description></item></channel></rss>

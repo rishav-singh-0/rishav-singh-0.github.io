@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>About/Preparation on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/about/preparation/</link><description>Recent content in About/Preparation on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Tue, 04 Feb 2025 10:39:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/about/preparation/index.xml" rel="self" type="application/rss+xml"/><item><title>BSP Topics</title><link>https://blog.rishavs.in/posts/3-resource/platform/bsp-topics/</link><pubDate>Tue, 04 Feb 2025 10:39:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/bsp-topics/</guid><description>&lt;h2 id="1-linux-kernel-internals">1. Linux Kernel Internals&lt;/h2>
+&lt;h3 id="importance">Importance:&lt;/h3>
+&lt;p>Understanding kernel internals is crucial for BSP and driver development as it helps in debugging, optimizing performance, and modifying the kernel to meet hardware-specific requirements.&lt;/p>
+&lt;h3 id="topics">Topics:&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Kernel Architecture:&lt;/strong> &lt;a href="https://blog.rishavs.in/posts/3-resource/platform/monolithic-vs-microkernel/">Monolithic vs Microkernel&lt;/a>, &lt;a href="https://blog.rishavs.in/posts/3-resource/platform/kernel-space-vs-user-space/">Kernel and User Space interactions&lt;/a>.&lt;/li>
+&lt;li>&lt;strong>Process Management:&lt;/strong> Understanding &lt;code>task_struct&lt;/code>, process states, scheduling algorithms.&lt;/li>
+&lt;li>&lt;strong>Interrupt Handling:&lt;/strong> SoftIRQs, tasklets, bottom halves, handling IRQs efficiently.&lt;/li>
+&lt;li>&lt;strong>Memory Management:&lt;/strong> Paging, kmalloc/vmalloc, slab allocator, ARM MMU and memory regions.&lt;/li>
+&lt;li>&lt;strong>Syscalls:&lt;/strong> How system calls work, writing custom syscalls.&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://blog.rishavs.in/posts/3-resource/platform/kernel-synchronization-in-linux/">Kernel Synchronization&lt;/a>:&lt;/strong> Spinlocks, mutexes, semaphores, barriers, RCU.&lt;/li>
+&lt;li>&lt;strong>Workqueues and Timers:&lt;/strong> Deferred execution, using timers for scheduling tasks.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-linux-device-drivers">2. Linux Device Drivers&lt;/h2>
+&lt;h3 id="importance-1">Importance:&lt;/h3>
+&lt;p>Device drivers are the bridge between hardware and the OS. Understanding drivers is crucial for embedded systems and BSP development.&lt;/p></description></item></channel></rss>

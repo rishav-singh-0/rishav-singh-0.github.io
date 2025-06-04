@@ -1,0 +1,166 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Git Undo Mistakes | Rishav's Digital Garden</title><meta name=keywords content="Development/Git"><meta name=description content="Undo Mistakes 😱
+git restore filename
+
+will discard uncommited change for this file
+cannot be undone afterward
+
+git restore -p filename
+
+p stands for patches
+will ask for each change in this file to be restore or not
+
+git restore .
+
+undo all changes since last commit
+
+git commit &ndash;ammend -m &ldquo;Commit Message&rdquo;
+
+change commit message of last commit
+do not change already pushed commit
+
+git revert <SHA>
+
+it reverts specified single commit
+<SHA> can be seen through git log, eg. 74e3b2b
+it makes new commit by exactly doing opposite changes, so it is very safe
+
+git reset &ndash;hard 74e3b2b
+
+it resets HEAD to certain commit in history while deleting all the commits after it
+if commits just local then they are gone forever
+
+git reset &ndash;mixed 74e3b2b
+
+same as previous one but it will store all the changes from the removed commits as uncommited changes
+
+git restore &ndash;source 74e3b2b filename
+
+will restore this file to certain commit (just 1 file)
+
+git reflog
+
+it is advance version of git log
+
+Restore after hard reset
+
+it even stores history for certain time after git reset --hard
+you can git reset 74e3b2b but creating mew branch is preferred by git branch branch_name 74e3b2b
+
+Restore after deleting entire branch
+
+look for <SHA> from git reflog
+then git branch branch_name 36a46a1
+
+Moving commit to another branch
+
+if you want to move cirtain commits from current branch to new branch
+git branch new_branch_name
+git reset HEAD~1 --hard
+
+if moving commit to already present branch
+git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+
+
+Interactive rebase
+
+is very advance, dangerous and powerful tool
+read comments during the process
+
+Change commit history
+
+for example if you want to change commit history upto 3 commits before current HEAD
+git rebase -i HEAD~3
+you can change/reword commit messages, delete/drop commits, squash multiple commits together
+"><meta name=author content><link rel=canonical href=https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/><link crossorigin=anonymous href=/assets/css/stylesheet.93f625d739f1d6a5c6f20c146bc6a8d26b233492b34b2220c54b12fd46a04ded.css integrity="sha256-k/Yl1znx1qXG8gwUa8ao0msjNJKzSyIgxUsS/UagTe0=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.rishavs.in/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://blog.rishavs.in/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://blog.rishavs.in/favicon-32x32.png><link rel=apple-touch-icon href=https://blog.rishavs.in/apple-touch-icon.png><link rel=mask-icon href=https://blog.rishavs.in/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/"><meta property="og:site_name" content="Rishav's Digital Garden"><meta property="og:title" content="Git Undo Mistakes"><meta property="og:description" content="Undo Mistakes 😱 git restore filename will discard uncommited change for this file cannot be undone afterward git restore -p filename p stands for patches will ask for each change in this file to be restore or not git restore . undo all changes since last commit git commit –ammend -m “Commit Message” change commit message of last commit do not change already pushed commit git revert <SHA> it reverts specified single commit <SHA> can be seen through git log, eg. 74e3b2b it makes new commit by exactly doing opposite changes, so it is very safe git reset –hard 74e3b2b it resets HEAD to certain commit in history while deleting all the commits after it if commits just local then they are gone forever git reset –mixed 74e3b2b same as previous one but it will store all the changes from the removed commits as uncommited changes git restore –source 74e3b2b filename will restore this file to certain commit (just 1 file) git reflog it is advance version of git log Restore after hard reset it even stores history for certain time after git reset --hard you can git reset 74e3b2b but creating mew branch is preferred by git branch branch_name 74e3b2b Restore after deleting entire branch look for <SHA> from git reflog then git branch branch_name 36a46a1 Moving commit to another branch if you want to move cirtain commits from current branch to new branch git branch new_branch_name git reset HEAD~1 --hard if moving commit to already present branch git checkout branch_name git cherry-pick 36a46a1 git checkout previous_branch_name git reset --hard HEAD~1 Interactive rebase is very advance, dangerous and powerful tool read comments during the process Change commit history for example if you want to change commit history upto 3 commits before current HEAD git rebase -i HEAD~3 you can change/reword commit messages, delete/drop commits, squash multiple commits together "><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-03-24T23:12:00+00:00"><meta property="article:modified_time" content="2021-03-24T23:12:00+00:00"><meta property="article:tag" content="Development/Git"><meta name=twitter:card content="summary"><meta name=twitter:title content="Git Undo Mistakes"><meta name=twitter:description content="Undo Mistakes 😱
+git restore filename
+
+will discard uncommited change for this file
+cannot be undone afterward
+
+git restore -p filename
+
+p stands for patches
+will ask for each change in this file to be restore or not
+
+git restore .
+
+undo all changes since last commit
+
+git commit &ndash;ammend -m &ldquo;Commit Message&rdquo;
+
+change commit message of last commit
+do not change already pushed commit
+
+git revert <SHA>
+
+it reverts specified single commit
+<SHA> can be seen through git log, eg. 74e3b2b
+it makes new commit by exactly doing opposite changes, so it is very safe
+
+git reset &ndash;hard 74e3b2b
+
+it resets HEAD to certain commit in history while deleting all the commits after it
+if commits just local then they are gone forever
+
+git reset &ndash;mixed 74e3b2b
+
+same as previous one but it will store all the changes from the removed commits as uncommited changes
+
+git restore &ndash;source 74e3b2b filename
+
+will restore this file to certain commit (just 1 file)
+
+git reflog
+
+it is advance version of git log
+
+Restore after hard reset
+
+it even stores history for certain time after git reset --hard
+you can git reset 74e3b2b but creating mew branch is preferred by git branch branch_name 74e3b2b
+
+Restore after deleting entire branch
+
+look for <SHA> from git reflog
+then git branch branch_name 36a46a1
+
+Moving commit to another branch
+
+if you want to move cirtain commits from current branch to new branch
+git branch new_branch_name
+git reset HEAD~1 --hard
+
+if moving commit to already present branch
+git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+
+
+Interactive rebase
+
+is very advance, dangerous and powerful tool
+read comments during the process
+
+Change commit history
+
+for example if you want to change commit history upto 3 commits before current HEAD
+git rebase -i HEAD~3
+you can change/reword commit messages, delete/drop commits, squash multiple commits together
+"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://blog.rishavs.in/posts/"},{"@type":"ListItem","position":2,"name":"Git Undo Mistakes","item":"https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Git Undo Mistakes","name":"Git Undo Mistakes","description":"Undo Mistakes 😱 git restore filename will discard uncommited change for this file cannot be undone afterward git restore -p filename p stands for patches will ask for each change in this file to be restore or not git restore . undo all changes since last commit git commit \u0026ndash;ammend -m \u0026ldquo;Commit Message\u0026rdquo; change commit message of last commit do not change already pushed commit git revert \u0026lt;SHA\u0026gt; it reverts specified single commit \u0026lt;SHA\u0026gt; can be seen through git log, eg. 74e3b2b it makes new commit by exactly doing opposite changes, so it is very safe git reset \u0026ndash;hard 74e3b2b it resets HEAD to certain commit in history while deleting all the commits after it if commits just local then they are gone forever git reset \u0026ndash;mixed 74e3b2b same as previous one but it will store all the changes from the removed commits as uncommited changes git restore \u0026ndash;source 74e3b2b filename will restore this file to certain commit (just 1 file) git reflog it is advance version of git log Restore after hard reset it even stores history for certain time after git reset --hard you can git reset 74e3b2b but creating mew branch is preferred by git branch branch_name 74e3b2b Restore after deleting entire branch look for \u0026lt;SHA\u0026gt; from git reflog then git branch branch_name 36a46a1 Moving commit to another branch if you want to move cirtain commits from current branch to new branch git branch new_branch_name git reset HEAD~1 --hard if moving commit to already present branch git checkout branch_name git cherry-pick 36a46a1 git checkout previous_branch_name git reset --hard HEAD~1 Interactive rebase is very advance, dangerous and powerful tool read comments during the process Change commit history for example if you want to change commit history upto 3 commits before current HEAD git rebase -i HEAD~3 you can change/reword commit messages, delete/drop commits, squash multiple commits together ","keywords":["Development/Git"],"articleBody":"Undo Mistakes 😱 git restore filename will discard uncommited change for this file cannot be undone afterward git restore -p filename p stands for patches will ask for each change in this file to be restore or not git restore . undo all changes since last commit git commit –ammend -m “Commit Message” change commit message of last commit do not change already pushed commit git revert it reverts specified single commit can be seen through git log, eg. 74e3b2b it makes new commit by exactly doing opposite changes, so it is very safe git reset –hard 74e3b2b it resets HEAD to certain commit in history while deleting all the commits after it if commits just local then they are gone forever git reset –mixed 74e3b2b same as previous one but it will store all the changes from the removed commits as uncommited changes git restore –source 74e3b2b filename will restore this file to certain commit (just 1 file) git reflog it is advance version of git log Restore after hard reset it even stores history for certain time after git reset --hard you can git reset 74e3b2b but creating mew branch is preferred by git branch branch_name 74e3b2b Restore after deleting entire branch look for from git reflog then git branch branch_name 36a46a1 Moving commit to another branch if you want to move cirtain commits from current branch to new branch git branch new_branch_name git reset HEAD~1 --hard if moving commit to already present branch git checkout branch_name git cherry-pick 36a46a1 git checkout previous_branch_name git reset --hard HEAD~1 Interactive rebase is very advance, dangerous and powerful tool read comments during the process Change commit history for example if you want to change commit history upto 3 commits before current HEAD git rebase -i HEAD~3 you can change/reword commit messages, delete/drop commits, squash multiple commits together ","wordCount":"309","inLanguage":"en","datePublished":"2021-03-24T23:12:00Z","dateModified":"2021-03-24T23:12:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/"},"publisher":{"@type":"Organization","name":"Rishav's Digital Garden","logo":{"@type":"ImageObject","url":"https://blog.rishavs.in/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.rishavs.in/ accesskey=h title="Rishav's Digital Garden (Alt + H)">Rishav's Digital Garden</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.rishavs.in/archives title=Archive><span>Archive</span></a></li><li><a href=https://blog.rishavs.in/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://blog.rishavs.in/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Git Undo Mistakes</h1><div class=post-meta><span title='2021-03-24 23:12:00 +0000 UTC'>March 24, 2021</span>&nbsp;·&nbsp;2 min</div></header><div class=post-content><h1 id=undo-mistakes->Undo Mistakes 😱<a hidden class=anchor aria-hidden=true href=#undo-mistakes->#</a></h1><h2 id=git-restore-filename>git restore filename<a hidden class=anchor aria-hidden=true href=#git-restore-filename>#</a></h2><ul><li>will discard uncommited change for this file</li><li>cannot be undone afterward</li></ul><h3 id=git-restore--p-filename>git restore -p filename<a hidden class=anchor aria-hidden=true href=#git-restore--p-filename>#</a></h3><ul><li>p stands for patches</li><li>will ask for each change in this file to be restore or not</li></ul><h3 id=git-restore->git restore .<a hidden class=anchor aria-hidden=true href=#git-restore->#</a></h3><ul><li>undo all changes since last commit</li></ul><h2 id=git-commit-ammend--m-commit-message>git commit &ndash;ammend -m &ldquo;Commit Message&rdquo;<a hidden class=anchor aria-hidden=true href=#git-commit-ammend--m-commit-message>#</a></h2><ul><li>change commit message of last commit</li><li>do not change already pushed commit</li></ul><h2 id=git-revert-sha>git revert &lt;SHA><a hidden class=anchor aria-hidden=true href=#git-revert-sha>#</a></h2><ul><li>it reverts specified single commit</li><li>&lt;SHA> can be seen through <code>git log</code>, eg. 74e3b2b</li><li>it makes new commit by exactly doing opposite changes, so it is very safe</li></ul><h2 id=git-reset-hard-74e3b2b>git reset &ndash;hard 74e3b2b<a hidden class=anchor aria-hidden=true href=#git-reset-hard-74e3b2b>#</a></h2><ul><li>it resets HEAD to certain commit in history while deleting all the commits after it</li><li>if commits just local then they are gone forever</li></ul><h3 id=git-reset-mixed-74e3b2b>git reset &ndash;mixed 74e3b2b<a hidden class=anchor aria-hidden=true href=#git-reset-mixed-74e3b2b>#</a></h3><ul><li>same as previous one but it will store all the changes from the removed commits as uncommited changes</li></ul><h2 id=git-restore-source-74e3b2b-filename>git restore &ndash;source 74e3b2b filename<a hidden class=anchor aria-hidden=true href=#git-restore-source-74e3b2b-filename>#</a></h2><ul><li>will restore this file to certain commit (just 1 file)</li></ul><h2 id=git-reflog>git reflog<a hidden class=anchor aria-hidden=true href=#git-reflog>#</a></h2><ul><li>it is advance version of <code>git log</code></li></ul><h3 id=restore-after-hard-reset>Restore after hard reset<a hidden class=anchor aria-hidden=true href=#restore-after-hard-reset>#</a></h3><ul><li>it even stores history for certain time after <code>git reset --hard</code></li><li>you can <code>git reset 74e3b2b</code> but creating mew branch is preferred by <code>git branch branch_name 74e3b2b</code></li></ul><h3 id=restore-after-deleting-entire-branch>Restore after deleting entire branch<a hidden class=anchor aria-hidden=true href=#restore-after-deleting-entire-branch>#</a></h3><ul><li>look for &lt;SHA> from <code>git reflog</code></li><li>then <code>git branch branch_name 36a46a1</code></li></ul><h2 id=moving-commit-to-another-branch>Moving commit to another branch<a hidden class=anchor aria-hidden=true href=#moving-commit-to-another-branch>#</a></h2><ul><li>if you want to <em>move</em> cirtain commits from current branch to new branch<pre tabindex=0><code>git branch new_branch_name
+git reset HEAD~1 --hard
+</code></pre></li><li>if moving commit to already present branch<pre tabindex=0><code>git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+</code></pre></li></ul><h2 id=interactive-rebase>Interactive rebase<a hidden class=anchor aria-hidden=true href=#interactive-rebase>#</a></h2><ul><li>is very advance, <em>dangerous</em> and powerful tool</li><li>read comments during the process</li></ul><h3 id=change-commit-history>Change commit history<a hidden class=anchor aria-hidden=true href=#change-commit-history>#</a></h3><ul><li>for example if you want to change commit history upto 3 commits before current HEAD</li><li><code>git rebase -i HEAD~3</code></li><li>you can change/<em>reword</em> commit messages, delete/<em>drop</em> commits, <em>squash</em> multiple commits together</li></ul></div><footer class=post-footer><ul class=post-tags><li><a href=https://blog.rishavs.in/tags/development/git/>Development/Git</a></li></ul><nav class=paginav><a class=prev href=https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/><span class=title>« Prev</span><br><span>Packages I use in any Linux based OS</span>
+</a><a class=next href=https://blog.rishavs.in/posts/3-resource/linux/arch-installation-guide/><span class=title>Next »</span><br><span>Arch installation Guide</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://blog.rishavs.in/>Rishav's Digital Garden</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

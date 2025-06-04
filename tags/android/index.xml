@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Android on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/android/</link><description>Recent content in Android on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Tue, 23 Nov 2021 22:54:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/android/index.xml" rel="self" type="application/rss+xml"/><item><title>degoogle rom</title><link>https://blog.rishavs.in/posts/3-resource/android/degoogle-rom/</link><pubDate>Tue, 23 Nov 2021 22:54:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/android/degoogle-rom/</guid><description>&lt;h2 id="e-os">/e/ OS&lt;/h2>
+&lt;p>settings put global captive_portal_http_url &lt;a href="http://204.ecloud.global">http://204.ecloud.global&lt;/a>
+settings put global captive_portal_https_url &lt;a href="https://e.foundation/net_204/">https://e.foundation/net_204/&lt;/a>&lt;/p>
+&lt;h2 id="change-ntp">change ntp&lt;/h2>
+&lt;p>settings put global ntp_server pool.ntp.org&lt;/p>
+&lt;h2 id="deblot-pre-installed-apps">DeBlot pre-installed apps&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>Use this command to list all the apps installed&lt;/p>
+&lt;pre tabindex="0">&lt;code>adb shell pm list packages
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>To search any particular keyword use &lt;code>grep&lt;/code> command
+&lt;pre tabindex="0">&lt;code>adb shell pm list packages | grep &amp;#39;keyword&amp;#39;
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>Package names will be somewhat like this, eg. for &lt;code>Google Assistant&lt;/code> its &lt;code>com.android.hotwordenrollment.okgoogle&lt;/code>, for &lt;code>Google Auto&lt;/code> its &lt;code>com.google.android.projection.gearhead&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>
+&lt;p>Copy the name of the package you want to uninstall and use the following command&lt;/p></description></item></channel></rss>

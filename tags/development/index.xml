@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Development on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/development/</link><description>Recent content in Development on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Mon, 03 Feb 2025 16:37:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/development/index.xml" rel="self" type="application/rss+xml"/><item><title>GitFlow</title><link>https://blog.rishavs.in/posts/3-resource/development/git-flow/</link><pubDate>Mon, 03 Feb 2025 16:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-flow/</guid><description>&lt;p>!assets/Pasted image 20250203182747.png&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;ul>
+&lt;li>GirFlow Explained: &lt;a href="https://youtu.be/Aa8RpP0sf-Y">https://youtu.be/Aa8RpP0sf-Y&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>SHA-256 (Secure Hash Algorithm 256-bit)</title><link>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</link><pubDate>Wed, 29 Jan 2025 14:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</guid><description>&lt;p>SHA-256 is a cryptographic hash function that produces a fixed-size 256-bit (32-byte) hash. It is &lt;strong>deterministic&lt;/strong>, &lt;strong>collision-resistant&lt;/strong>, and designed for security-critical applications.&lt;/p>
+&lt;p>!assets/hashing-algorithm-sha256.png&lt;/p>
+&lt;h3 id="how-sha-256-works">How SHA-256 Works&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Preprocessing&lt;/strong>:
+&lt;ul>
+&lt;li>Pad the input to a multiple of 512 bits.&lt;/li>
+&lt;li>Append a &lt;code>1&lt;/code>, then add &lt;code>k&lt;/code> zeros, and finally append the original message length (64 bits).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Initialize Hash Values&lt;/strong>:
+&lt;ul>
+&lt;li>Use constants derived from the fractional parts of square roots of the first 8 primes (eight 32-bit words).&lt;/li>
+&lt;li>Example: &lt;code>h0 = 0x6a09e667, h1 = 0xbb67ae85, ...&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Process Blocks&lt;/strong>:
+&lt;ul>
+&lt;li>Split the padded message into 512-bit blocks.&lt;/li>
+&lt;li>For each block:
+&lt;ul>
+&lt;li>Expand the block into 64 words using a message schedule.&lt;/li>
+&lt;li>Perform 64 rounds of compression using bitwise operations (e.g., XOR, AND, modular addition).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Compression Function&lt;/strong>
+A compression function is applied to each block, creating a new hash value. This function involves mixing the bits of the current hash value and the message block.&lt;/li>
+&lt;li>&lt;strong>Iteration&lt;/strong>
+Repeat the compression function for each block, using the output of each iteration as input for the next.&lt;/li>
+&lt;li>&lt;strong>Final Hash&lt;/strong>:
+&lt;ul>
+&lt;li>Combine the intermediate hash values to produce the final 256-bit digest.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h3 id="example-sha-256-for-string-hello">Example: SHA-256 for String &amp;ldquo;Hello&amp;rdquo;&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Input&lt;/strong>: &amp;ldquo;Hello&amp;rdquo; → ASCII &lt;code>48656C6C6F&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Padding&lt;/strong>:
+&lt;ul>
+&lt;li>Length = 40 bits (5 bytes).&lt;/li>
+&lt;li>Pad with &lt;code>1&lt;/code>, 407 zeros, and &lt;code>0000000000000028&lt;/code> (hex for 40 bits).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Hash Computation&lt;/strong>:
+&lt;ul>
+&lt;li>After processing, the final hash is:
+&lt;code>185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;h4 id="sha-256">SHA-256&lt;/h4>
+&lt;ul>
+&lt;li>&lt;strong>Cryptographic security&lt;/strong> in:
+&lt;ul>
+&lt;li>Digital signatures (SSL/TLS certificates).&lt;/li>
+&lt;li>Password storage (hashed+salted).&lt;/li>
+&lt;li>Blockchain (Bitcoin transactions).&lt;/li>
+&lt;li>File integrity verification (e.g., software downloads).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Guarantees&lt;/strong>: Pre-image resistance, collision resistance.&lt;/li>
+&lt;/ul></description></item><item><title>C,C++ Code Style Guide</title><link>https://blog.rishavs.in/posts/3-resource/development/cc-code-style-guide/</link><pubDate>Thu, 28 Nov 2024 11:28:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/cc-code-style-guide/</guid><description>&lt;p>This guide provides step-by-step instructions for setting up consistent formatting, rules checking, and documentation for C/C++ code using &lt;strong>clang-format&lt;/strong>, &lt;strong>clang-tidy&lt;/strong>, and &lt;strong>Doxygen&lt;/strong> in &lt;strong>VS Code&lt;/strong>. Follow this guide to ensure uniformity across the team.&lt;/p>
+&lt;hr>
+&lt;h2 id="1-prerequisites">1. Prerequisites&lt;/h2>
+&lt;p>Before starting, ensure you have the following tools installed:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>VS Code&lt;/strong> (latest version)&lt;/li>
+&lt;li>Extensions for VS Code:
+&lt;ul>
+&lt;li>&lt;a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C/C++ (Microsoft)&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://marketplace.visualstudio.com/items?itemName=cschlosser.doxdocgen">Doxygen Documentation Generator&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Command-line tools:
+&lt;ul>
+&lt;li>&lt;code>clang-format&lt;/code>&lt;/li>
+&lt;li>&lt;code>clang-tidy&lt;/code>&lt;/li>
+&lt;li>&lt;code>doxygen&lt;/code>&lt;/li>
+&lt;li>Python (for pre-commit hooks)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="2-auto-formatting-using-clang-format">2. Auto-Formatting Using &lt;code>clang-format&lt;/code>&lt;/h2>
+&lt;p>&lt;a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format&lt;/a> is used for consistent code formatting.&lt;/p></description></item><item><title>Git Undo Mistakes</title><link>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</link><pubDate>Wed, 24 Mar 2021 23:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</guid><description>&lt;h1 id="undo-mistakes-">Undo Mistakes 😱&lt;/h1>
+&lt;h2 id="git-restore-filename">git restore filename&lt;/h2>
+&lt;ul>
+&lt;li>will discard uncommited change for this file&lt;/li>
+&lt;li>cannot be undone afterward&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-restore--p-filename">git restore -p filename&lt;/h3>
+&lt;ul>
+&lt;li>p stands for patches&lt;/li>
+&lt;li>will ask for each change in this file to be restore or not&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-restore-">git restore .&lt;/h3>
+&lt;ul>
+&lt;li>undo all changes since last commit&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-commit-ammend--m-commit-message">git commit &amp;ndash;ammend -m &amp;ldquo;Commit Message&amp;rdquo;&lt;/h2>
+&lt;ul>
+&lt;li>change commit message of last commit&lt;/li>
+&lt;li>do not change already pushed commit&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-revert-sha">git revert &amp;lt;SHA&amp;gt;&lt;/h2>
+&lt;ul>
+&lt;li>it reverts specified single commit&lt;/li>
+&lt;li>&amp;lt;SHA&amp;gt; can be seen through &lt;code>git log&lt;/code>, eg. 74e3b2b&lt;/li>
+&lt;li>it makes new commit by exactly doing opposite changes, so it is very safe&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-reset-hard-74e3b2b">git reset &amp;ndash;hard 74e3b2b&lt;/h2>
+&lt;ul>
+&lt;li>it resets HEAD to certain commit in history while deleting all the commits after it&lt;/li>
+&lt;li>if commits just local then they are gone forever&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-reset-mixed-74e3b2b">git reset &amp;ndash;mixed 74e3b2b&lt;/h3>
+&lt;ul>
+&lt;li>same as previous one but it will store all the changes from the removed commits as uncommited changes&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-restore-source-74e3b2b-filename">git restore &amp;ndash;source 74e3b2b filename&lt;/h2>
+&lt;ul>
+&lt;li>will restore this file to certain commit (just 1 file)&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-reflog">git reflog&lt;/h2>
+&lt;ul>
+&lt;li>it is advance version of &lt;code>git log&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="restore-after-hard-reset">Restore after hard reset&lt;/h3>
+&lt;ul>
+&lt;li>it even stores history for certain time after &lt;code>git reset --hard&lt;/code>&lt;/li>
+&lt;li>you can &lt;code>git reset 74e3b2b&lt;/code> but creating mew branch is preferred by &lt;code>git branch branch_name 74e3b2b&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="restore-after-deleting-entire-branch">Restore after deleting entire branch&lt;/h3>
+&lt;ul>
+&lt;li>look for &amp;lt;SHA&amp;gt; from &lt;code>git reflog&lt;/code>&lt;/li>
+&lt;li>then &lt;code>git branch branch_name 36a46a1&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="moving-commit-to-another-branch">Moving commit to another branch&lt;/h2>
+&lt;ul>
+&lt;li>if you want to &lt;em>move&lt;/em> cirtain commits from current branch to new branch
+&lt;pre tabindex="0">&lt;code>git branch new_branch_name
+git reset HEAD~1 --hard
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>if moving commit to already present branch
+&lt;pre tabindex="0">&lt;code>git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ul>
+&lt;h2 id="interactive-rebase">Interactive rebase&lt;/h2>
+&lt;ul>
+&lt;li>is very advance, &lt;em>dangerous&lt;/em> and powerful tool&lt;/li>
+&lt;li>read comments during the process&lt;/li>
+&lt;/ul>
+&lt;h3 id="change-commit-history">Change commit history&lt;/h3>
+&lt;ul>
+&lt;li>for example if you want to change commit history upto 3 commits before current HEAD&lt;/li>
+&lt;li>&lt;code>git rebase -i HEAD~3&lt;/code>&lt;/li>
+&lt;li>you can change/&lt;em>reword&lt;/em> commit messages, delete/&lt;em>drop&lt;/em> commits, &lt;em>squash&lt;/em> multiple commits together&lt;/li>
+&lt;/ul></description></item></channel></rss>

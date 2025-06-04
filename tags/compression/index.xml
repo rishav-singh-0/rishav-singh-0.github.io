@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Compression on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/compression/</link><description>Recent content in Compression on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Wed, 07 Aug 2024 09:37:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/compression/index.xml" rel="self" type="application/rss+xml"/><item><title>Format Comparison</title><link>https://blog.rishavs.in/posts/3-resource/linux/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Format&lt;/th>
+&lt;th>Compression Ratio&lt;/th>
+&lt;th>Speed (Compression/&lt;!-- raw HTML omitted -->Decompression)&lt;/th>
+&lt;th>Encryption&lt;/th>
+&lt;th>Speciality/Uniqueness&lt;/th>
+&lt;th>Open Source/ License&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>gz (&lt;code>.gz&lt;/code>)&lt;/td>
+&lt;td>Moderate&lt;/td>
+&lt;td>Fast / Fast&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Widely supported and fast for most general uses.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>bzip2 (&lt;code>.bz2&lt;/code>)&lt;/td>
+&lt;td>Better than gzip&lt;/td>
+&lt;td>Slow / Moderate&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Higher compression ratio and robust error detection.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->BSD&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>xz (&lt;code>.xz&lt;/code>)&lt;/td>
+&lt;td>Best&lt;/td>
+&lt;td>Very slow / Fast&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Highest compression ratio; slow compression speed.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>zip (&lt;code>.zip&lt;/code>)&lt;/td>
+&lt;td>Moderate&lt;/td>
+&lt;td>Fast / Fast&lt;/td>
+&lt;td>Built-in encryption&lt;/td>
+&lt;td>Commonly used with built-in encryption and wide software support.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->Various (Info-ZIP)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>tar (&lt;code>.tar&lt;/code>)&lt;/td>
+&lt;td>Depends on method&lt;/td>
+&lt;td>Fast (archive only) / Fast (archive only)&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Primarily used for archiving; compression depends on additional tools.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7z (&lt;code>.7z&lt;/code>)&lt;/td>
+&lt;td>Excellent&lt;/td>
+&lt;td>Moderate / Slow at high settings&lt;/td>
+&lt;td>AES-256 encryption&lt;/td>
+&lt;td>Excellent compression with advanced encryption options.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->LGPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>rar (&lt;code>.rar&lt;/code>)&lt;/td>
+&lt;td>Good&lt;/td>
+&lt;td>Moderate / Moderate&lt;/td>
+&lt;td>AES-256 encryption&lt;/td>
+&lt;td>Includes error recovery and strong encryption; proprietary format.&lt;/td>
+&lt;td>No&lt;!-- raw HTML omitted -->Proprietary&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>lzma (&lt;code>.lzma&lt;/code>)&lt;/td>
+&lt;td>Very high&lt;/td>
+&lt;td>Very slow / Moderate&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>High compression ratio with reliable decompression; requires separate decompressor.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="key-points">Key Points&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>gz (.gz)&lt;/code>: Well-rounded for speed and compatibility, commonly used for general purposes.&lt;/li>
+&lt;li>&lt;code>bzip2 (.bz2)&lt;/code>: Provides a higher compression ratio compared to gzip, though slower.&lt;/li>
+&lt;li>&lt;code>xz (.xz)&lt;/code>: Offers the best compression ratio but at the cost of slower compression speed.&lt;/li>
+&lt;li>&lt;code>zip (.zip)&lt;/code>: Convenient with built-in encryption and broad compatibility.&lt;/li>
+&lt;li>&lt;code>tar (.tar)&lt;/code>: Primarily an archiving format; often used in combination with other compression methods.&lt;/li>
+&lt;li>&lt;code>7z (.7z)&lt;/code>: Excellent compression and strong encryption; requires specific software for full support.&lt;/li>
+&lt;li>&lt;code>rar (.rar)&lt;/code>: Known for robust recovery features and encryption, but is proprietary.&lt;/li>
+&lt;li>&lt;code>lzma (.lzma)&lt;/code>: Delivers a high compression ratio and reliable decompression, though it’s slow.&lt;/li>
+&lt;/ul></description></item></channel></rss>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Development/Git on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/development/git/</link><description>Recent content in Development/Git on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Mon, 03 Feb 2025 16:37:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/development/git/index.xml" rel="self" type="application/rss+xml"/><item><title>GitFlow</title><link>https://blog.rishavs.in/posts/3-resource/development/git-flow/</link><pubDate>Mon, 03 Feb 2025 16:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-flow/</guid><description>&lt;p>!assets/Pasted image 20250203182747.png&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;ul>
+&lt;li>GirFlow Explained: &lt;a href="https://youtu.be/Aa8RpP0sf-Y">https://youtu.be/Aa8RpP0sf-Y&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Git Undo Mistakes</title><link>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</link><pubDate>Wed, 24 Mar 2021 23:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</guid><description>&lt;h1 id="undo-mistakes-">Undo Mistakes 😱&lt;/h1>
+&lt;h2 id="git-restore-filename">git restore filename&lt;/h2>
+&lt;ul>
+&lt;li>will discard uncommited change for this file&lt;/li>
+&lt;li>cannot be undone afterward&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-restore--p-filename">git restore -p filename&lt;/h3>
+&lt;ul>
+&lt;li>p stands for patches&lt;/li>
+&lt;li>will ask for each change in this file to be restore or not&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-restore-">git restore .&lt;/h3>
+&lt;ul>
+&lt;li>undo all changes since last commit&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-commit-ammend--m-commit-message">git commit &amp;ndash;ammend -m &amp;ldquo;Commit Message&amp;rdquo;&lt;/h2>
+&lt;ul>
+&lt;li>change commit message of last commit&lt;/li>
+&lt;li>do not change already pushed commit&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-revert-sha">git revert &amp;lt;SHA&amp;gt;&lt;/h2>
+&lt;ul>
+&lt;li>it reverts specified single commit&lt;/li>
+&lt;li>&amp;lt;SHA&amp;gt; can be seen through &lt;code>git log&lt;/code>, eg. 74e3b2b&lt;/li>
+&lt;li>it makes new commit by exactly doing opposite changes, so it is very safe&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-reset-hard-74e3b2b">git reset &amp;ndash;hard 74e3b2b&lt;/h2>
+&lt;ul>
+&lt;li>it resets HEAD to certain commit in history while deleting all the commits after it&lt;/li>
+&lt;li>if commits just local then they are gone forever&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-reset-mixed-74e3b2b">git reset &amp;ndash;mixed 74e3b2b&lt;/h3>
+&lt;ul>
+&lt;li>same as previous one but it will store all the changes from the removed commits as uncommited changes&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-restore-source-74e3b2b-filename">git restore &amp;ndash;source 74e3b2b filename&lt;/h2>
+&lt;ul>
+&lt;li>will restore this file to certain commit (just 1 file)&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-reflog">git reflog&lt;/h2>
+&lt;ul>
+&lt;li>it is advance version of &lt;code>git log&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="restore-after-hard-reset">Restore after hard reset&lt;/h3>
+&lt;ul>
+&lt;li>it even stores history for certain time after &lt;code>git reset --hard&lt;/code>&lt;/li>
+&lt;li>you can &lt;code>git reset 74e3b2b&lt;/code> but creating mew branch is preferred by &lt;code>git branch branch_name 74e3b2b&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="restore-after-deleting-entire-branch">Restore after deleting entire branch&lt;/h3>
+&lt;ul>
+&lt;li>look for &amp;lt;SHA&amp;gt; from &lt;code>git reflog&lt;/code>&lt;/li>
+&lt;li>then &lt;code>git branch branch_name 36a46a1&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="moving-commit-to-another-branch">Moving commit to another branch&lt;/h2>
+&lt;ul>
+&lt;li>if you want to &lt;em>move&lt;/em> cirtain commits from current branch to new branch
+&lt;pre tabindex="0">&lt;code>git branch new_branch_name
+git reset HEAD~1 --hard
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>if moving commit to already present branch
+&lt;pre tabindex="0">&lt;code>git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ul>
+&lt;h2 id="interactive-rebase">Interactive rebase&lt;/h2>
+&lt;ul>
+&lt;li>is very advance, &lt;em>dangerous&lt;/em> and powerful tool&lt;/li>
+&lt;li>read comments during the process&lt;/li>
+&lt;/ul>
+&lt;h3 id="change-commit-history">Change commit history&lt;/h3>
+&lt;ul>
+&lt;li>for example if you want to change commit history upto 3 commits before current HEAD&lt;/li>
+&lt;li>&lt;code>git rebase -i HEAD~3&lt;/code>&lt;/li>
+&lt;li>you can change/&lt;em>reword&lt;/em> commit messages, delete/&lt;em>drop&lt;/em> commits, &lt;em>squash&lt;/em> multiple commits together&lt;/li>
+&lt;/ul></description></item></channel></rss>

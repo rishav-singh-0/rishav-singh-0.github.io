@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux/Arch on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/linux/arch/</link><description>Recent content in Linux/Arch on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Mon, 12 Apr 2021 23:03:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/linux/arch/index.xml" rel="self" type="application/rss+xml"/><item><title>Packages I use in any Linux based OS</title><link>https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/</link><pubDate>Mon, 12 Apr 2021 23:03:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/</guid><description>&lt;h1 id="packages-on-arch">Packages on Arch&lt;/h1>
+&lt;h2 id="pacstrap">pacstrap&lt;/h2>
+&lt;ul>
+&lt;li>base&lt;/li>
+&lt;li>linux-lts&lt;/li>
+&lt;li>linux-lts-headers&lt;/li>
+&lt;li>base-devel&lt;/li>
+&lt;li>btrfs&lt;/li>
+&lt;li>btrfs-progs&lt;/li>
+&lt;li>vim&lt;/li>
+&lt;li>networkmanager&lt;/li>
+&lt;li>grub&lt;/li>
+&lt;li>efibootmgr&lt;/li>
+&lt;li>intel-ucode&lt;/li>
+&lt;/ul>
+&lt;h2 id="utils">Utils&lt;/h2>
+&lt;ul>
+&lt;li>mtpfs : Reading and Writing from any MTP device&lt;/li>
+&lt;li>ntfs-3g : NTFS filesystem driver and utilities&lt;/li>
+&lt;li>gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player)&lt;/li>
+&lt;li>gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)&lt;/li>
+&lt;li>nfs-utils : Support programs for Network File Systems&lt;/li>
+&lt;li>tlp : Linux Advanced Power Management&lt;/li>
+&lt;li>powertop : A tool to diagnose issues with power consumption and power management&lt;/li>
+&lt;li>python-pip : The PyPA recommended tool for installing Python packages&lt;/li>
+&lt;li>jre8-openjdk : OpenJDK Java 8 full runtime environment&lt;/li>
+&lt;li>jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment&lt;/li>
+&lt;li>wget : Network utility to retrieve files from the Web&lt;/li>
+&lt;li>gnome-keyring : Stores passwords and encryption keys&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code># Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+# Power Management
+pacman -S tlp powertop
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+&lt;/code>&lt;/pre>&lt;h2 id="xorg">xorg&lt;/h2>
+&lt;ul>
+&lt;li>libx11 : X11 client-side library&lt;/li>
+&lt;li>xorg-xinit : X.Org initialisation program&lt;/li>
+&lt;li>libxinerama : X11 Xinerama extension library&lt;/li>
+&lt;li>libxft : FreeType-based font drawing library for X&lt;/li>
+&lt;li>xorg-server : Xorg X server&lt;/li>
+&lt;li>xorg-xrandr : Primitive command line interface to RandR extension&lt;/li>
+&lt;li>xorg-xrdb : X server resource database utility&lt;/li>
+&lt;li>xorg-xinput : Small commandline tool to configure devices&lt;/li>
+&lt;li>xorg-xbacklight : RandR-based backlight control application&lt;/li>
+&lt;li>xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers&lt;/li>
+&lt;li>xclip : Command line interface to the X11 clipboard&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-1">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+pacman -S xf86-video-intel
+yay -S libxft-bgra-git
+&lt;/code>&lt;/pre>&lt;h3 id="gentoo">Gentoo&lt;/h3>
+&lt;pre tabindex="0">&lt;code>emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+&lt;/code>&lt;/pre>&lt;h2 id="basic">Basic&lt;/h2>
+&lt;ul>
+&lt;li>picom : X compositor that may fix tearing issues&lt;/li>
+&lt;li>unclutter : A small program for hiding the mouse cursor&lt;/li>
+&lt;li>os-prober : Utility to detect other OSes on a set of drives&lt;/li>
+&lt;li>man-db : A utility for reading man pages&lt;/li>
+&lt;li>bash-completion : Programmable completion for the bash shell&lt;/li>
+&lt;li>zsh-completions : Additional completion definitions for Zsh&lt;/li>
+&lt;li>zip,unzip,tar,bzip2,atool,unrar : Compression utils&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-2">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code>pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+&lt;/code>&lt;/pre>&lt;h2 id="fonts">Fonts&lt;/h2>
+&lt;ul>
+&lt;li>noto-fonts : Google Noto TTF fonts&lt;/li>
+&lt;li>noto-fonts-cjk : Google Noto CJK fonts&lt;/li>
+&lt;li>ttf-joypixels : Emoji as a Service (formerly EmojiOne)&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-3">Arch&lt;/h3>
+&lt;p>&lt;code>pacman -S noto-fonts ttf-joypixels&lt;/code>&lt;/p></description></item></channel></rss>

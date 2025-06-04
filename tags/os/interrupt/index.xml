@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>OS/Interrupt on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/os/interrupt/</link><description>Recent content in OS/Interrupt on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Sun, 04 May 2025 22:55:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/os/interrupt/index.xml" rel="self" type="application/rss+xml"/><item><title>CPU Execution States on ARM</title><link>https://blog.rishavs.in/posts/0-inbox/cpu-execution-states-on-arm/</link><pubDate>Sun, 04 May 2025 22:55:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/cpu-execution-states-on-arm/</guid><description>&lt;h2 id="1-overview">1. Overview&lt;/h2>
+&lt;h3 id="process-context">Process Context&lt;/h3>
+&lt;ul>
+&lt;li>The kernel executes code &lt;strong>on behalf of a user-space process&lt;/strong> (e.g., handling a system call like &lt;code>read()&lt;/code> or &lt;code>write()&lt;/code>).&lt;/li>
+&lt;li>&lt;strong>Key Properties&lt;/strong>:
+&lt;ul>
+&lt;li>Associated with a &lt;code>struct task_struct&lt;/code> (process descriptor).&lt;/li>
+&lt;li>Can &lt;strong>sleep&lt;/strong> (use blocking functions like &lt;code>mutex_lock()&lt;/code>).&lt;/li>
+&lt;li>Can access user-space memory (via &lt;code>copy_from_user()&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="interrupt-context">Interrupt Context&lt;/h3>
+&lt;ul>
+&lt;li>&amp;ldquo;Atomic context&amp;rdquo; or &amp;ldquo;Interrupt context&amp;rdquo;, The kernel executes code &lt;strong>to handle a hardware interrupt or softirq&lt;/strong> (e.g., a network packet arriving)&lt;/li>
+&lt;li>&lt;strong>Key Properties&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>No associated process&lt;/strong> (&lt;code>current&lt;/code> macro points to an idle task).&lt;/li>
+&lt;li>&lt;strong>Cannot sleep&lt;/strong> (blocking functions like &lt;code>kmalloc(GFP_KERNEL)&lt;/code> are forbidden).&lt;/li>
+&lt;li>Runs with &lt;strong>interrupts disabled&lt;/strong> (on the current CPU).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-cpu-execution-states-in-arm">2. CPU Execution States in ARM&lt;/h2>
+&lt;p>ARM architectures (e.g., ARMv8-A) define &lt;strong>exception levels (ELs)&lt;/strong> that correspond to CPU execution states:&lt;/p></description></item><item><title>System Call (Software Interrupt)</title><link>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</link><pubDate>Sun, 04 May 2025 14:24:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</guid><description>&lt;h2 id="1-system-call-basics">1. System Call Basics&lt;/h2>
+&lt;p>System calls (syscalls) are the interface for user-space programs to request services from the kernel. Examples include:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>File I/O&lt;/strong>: &lt;code>read()&lt;/code>, &lt;code>write()&lt;/code>, &lt;code>open()&lt;/code>, &lt;code>close()&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Device Control&lt;/strong>: &lt;code>ioctl()&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Signal Handling&lt;/strong>: &lt;code>kill()&lt;/code>, &lt;code>signal()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-system-call-table-and-registration">2. System Call Table and Registration&lt;/h2>
+&lt;h3 id="syscall-table">Syscall Table:&lt;/h3>
+&lt;ul>
+&lt;li>A table (&lt;code>sys_call_table&lt;/code>) maps syscall numbers to handler functions.&lt;/li>
+&lt;li>&lt;strong>Architecture-Specific&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>x86&lt;/strong>: Defined in &lt;code>arch/x86/entry/syscalls/syscall_64.tbl&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>ARM&lt;/strong>: Defined in &lt;code>arch/arm/tools/syscall.tbl&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Registration&lt;/strong>:
+&lt;ul>
+&lt;li>Syscalls are registered at compile time using macros like &lt;code>SYSCALL_DEFINE&lt;/code> (e.g., &lt;code>SYSCALL_DEFINE3(write, ...)&lt;/code> for &lt;code>write()&lt;/code>).&lt;/li>
+&lt;li>For custom syscalls (rare and discouraged), you would:
+&lt;ol>
+&lt;li>Add an entry to the syscall table.&lt;/li>
+&lt;li>Define the handler using &lt;code>SYSCALL_DEFINE&lt;/code>.&lt;/li>
+&lt;li>Recompile the kernel (or use modules for dynamic insertion).&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="3-flow-of-system-calls">3. Flow of System Calls&lt;/h2>
+&lt;h3 id="1-user-space-invocation">1. User-Space Invocation&lt;/h3>
+&lt;ul>
+&lt;li>The libc wrapper (e.g., &lt;code>read()&lt;/code>, &lt;code>ioctl()&lt;/code>) triggers a &lt;strong>software interrupt&lt;/strong> (&lt;code>int 0x80&lt;/code> on x86) or uses the &lt;code>syscall&lt;/code> instruction (modern x86/ARM).&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// User-space code
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>fd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">open&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/dev/mydevice&amp;#34;&lt;/span>, O_RDWR); &lt;span style="color:#75715e">// Syscall 1: open()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">read&lt;/span>(fd, buf, &lt;span style="color:#ae81ff">100&lt;/span>); &lt;span style="color:#75715e">// Syscall 2: read()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, MY_CMD, arg); &lt;span style="color:#75715e">// Syscall 3: ioctl()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">close&lt;/span>(fd); &lt;span style="color:#75715e">// Syscall 4: close()
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-transition-to-kernel-mode">2. Transition to Kernel Mode&lt;/h3>
+&lt;ul>
+&lt;li>Switches to kernel mode (ring 0 on x86, EL1 on ARM).&lt;/li>
+&lt;li>Saves user-space registers (e.g., RIP, RSP, EFLAGS).&lt;/li>
+&lt;li>Jumps to the kernel&amp;rsquo;s syscall entry point (e.g., &lt;code>entry_SYSCALL_64&lt;/code> on x86)&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-syscall-dispatching">3. Syscall Dispatching&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Syscall Number&lt;/strong>:
+&lt;ul>
+&lt;li>The syscall number is stored in a register (e.g., &lt;code>RAX&lt;/code> on x86, &lt;code>R7&lt;/code> on ARM).&lt;/li>
+&lt;li>Example: &lt;code>__NR_read&lt;/code> (syscall number for &lt;code>read()&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Syscall Table&lt;/strong>:
+&lt;ul>
+&lt;li>The kernel uses &lt;code>sys_call_table&lt;/code> (array of function pointers) to find the handler.&lt;/li>
+&lt;li>Example: &lt;code>sys_call_table[__NR_read]&lt;/code> points to &lt;code>sys_read()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-handler-execution-in-process-context">4. Handler Execution in Process Context&lt;/h3>
+&lt;h4 id="generic-steps-for-all-syscalls">Generic Steps for All Syscalls:&lt;/h4>
+&lt;ol>
+&lt;li>Argument Validation:
+&lt;ul>
+&lt;li>Check pointers (e.g., &lt;code>buf&lt;/code> in &lt;code>read()&lt;/code>) using &lt;code>access_ok()&lt;/code>&lt;/li>
+&lt;li>Copy arguments from user space with &lt;code>copy_from_user()&lt;/code> or &lt;code>get_user()&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Kernel Function Execution:
+&lt;ul>
+&lt;li>Perform the requested operation (e.g., read from a file, send an &lt;code>ioctl&lt;/code> command)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="file-operations-readwrite">File Operations (&lt;code>read&lt;/code>/&lt;code>write&lt;/code>):&lt;/h4>
+&lt;ul>
+&lt;li>File Descriptor Resolution:
+&lt;ul>
+&lt;li>Convert &lt;code>fd&lt;/code> to a &lt;code>struct file&lt;/code> using &lt;code>fdget()&lt;/code>.&lt;/li>
+&lt;li>Check file permissions (&lt;code>FMODE_READ&lt;/code>/&lt;code>FMODE_WRITE&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Driver Interaction:
+&lt;ul>
+&lt;li>Call the &lt;code>read&lt;/code>/&lt;code>write&lt;/code> method from the file’s &lt;code>file_operations&lt;/code> struct.&lt;/li>
+&lt;li>Example: For &lt;code>/dev/mydevice&lt;/code>, this invokes the driver’s &lt;code>.read&lt;/code> function.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="io-control-ioctl">I/O Control (&lt;code>ioctl&lt;/code>):&lt;/h4>
+&lt;ul>
+&lt;li>The &lt;code>ioctl&lt;/code> syscall (&lt;code>sys_ioctl()&lt;/code>) calls the driver&amp;rsquo;s &lt;code>.unlocked_ioctl&lt;/code> method.
+!../3-Resource/Platform/IOCTL in Kernel Device Drivers#3. Integrate into file_operations&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-return-to-user-space">5. Return to User Space:&lt;/h3>
+&lt;ul>
+&lt;li>Result is stored in &lt;code>eax&lt;/code>/&lt;code>r0&lt;/code>, and the kernel restores user registers&lt;/li>
+&lt;li>Execute &lt;code>iret&lt;/code> (x86) or exception return (ARM) to resume user-mode execution.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="4-device-file-operations">4. Device File Operations&lt;/h2>
+&lt;p>Character devices (e.g., &lt;code>/dev/char_dev&lt;/code>) expose operations via &lt;code>file_operations&lt;/code>:&lt;/p></description></item><item><title>Interrupt Handling Flow</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/</link><pubDate>Sun, 04 May 2025 14:11:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/</guid><description>&lt;h3 id="1-interrupt-generation">1. Interrupt Generation&lt;/h3>
+&lt;ul>
+&lt;li>A hardware device (e.g., NIC, keyboard) raises an interrupt via the Programmable Interrupt Controller (PIC/APIC).&lt;/li>
+&lt;li>The PIC converts the IRQ line into a vector number and signals the CPU via the INTR/NMI pin.&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-cpu-state-save--context-switch">2. CPU State Save &amp;amp; Context Switch&lt;/h3>
+&lt;ul>
+&lt;li>The CPU finishes the current instruction, saves the process context (registers, PC, flags) to the stack, and disables local interrupts&lt;/li>
+&lt;li>Switches to the &lt;strong>interrupt context&lt;/strong> (no associated process, interrupts disabled).&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-idt-lookup">3. IDT Lookup&lt;/h3>
+&lt;ul>
+&lt;li>The CPU uses the Interrupt Descriptor Table (IDT) to find the handler address for the interrupt vector.&lt;/li>
+&lt;li>On ARM, the vector table (similar to x86 IDT) is preconfigured with handlers like &lt;code>handle_level_irq&lt;/code> or &lt;code>handle_edge_irq&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-top-half-execution">4. Top Half Execution&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Immediate Actions&lt;/strong>:&lt;/li>
+&lt;li>Acknowledge the interrupt at the hardware level (&lt;code>irq_data.chip-&amp;gt;irq_ack()&lt;/code>)&lt;/li>
+&lt;li>Read device status registers to confirm the interrupt source&lt;/li>
+&lt;li>&lt;strong>Minimal Processing&lt;/strong>:&lt;/li>
+&lt;li>Copy critical data (e.g., network packets) to kernel buffers.&lt;/li>
+&lt;li>Schedule deferred processing via bottom halves (tasklets, softirqs)&lt;/li>
+&lt;li>&lt;strong>APIs&lt;/strong>: &lt;code>request_irq()&lt;/code>, &lt;code>free_irq()&lt;/code> for driver-level registration.&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-bottom-half-execution">5. Bottom Half Execution&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deferred Work&lt;/strong>:
+&lt;ul>
+&lt;li>Process data in safe contexts (e.g., &lt;code>tasklet_schedule()&lt;/code> or workqueues).&lt;/li>
+&lt;li>Runs with interrupts enabled (softirq context) or in process context (workqueues).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Mechanisms&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>SoftIRQs&lt;/strong>: Statically allocated, high-priority (e.g., network RX)&lt;/li>
+&lt;li>&lt;strong>Tasklets&lt;/strong>: Dynamically allocated, atomic (e.g., USB transfers).&lt;/li>
+&lt;li>&lt;strong>Workqueues&lt;/strong>: Sleepable, process context (e.g., filesystem I/O) .&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="6-interrupt-completion">6. Interrupt Completion&lt;/h3>
+&lt;ul>
+&lt;li>Send End-of-Interrupt (EOI) to the PIC (e.g., &lt;code>irq_data.chip-&amp;gt;irq_eoi()&lt;/code>)&lt;/li>
+&lt;li>The result is stored in &lt;code>eax&lt;/code>/&lt;code>r0&lt;/code>, and the kernel uses &lt;code>iret&lt;/code> (x86) or exception return (ARM) to resume user execution.&lt;/li>
+&lt;/ul>
+&lt;h3 id="7-examples">7. Examples&lt;/h3>
+&lt;h4 id="network-driver-hardware-interrupt">Network Driver (Hardware Interrupt)&lt;/h4>
+&lt;ul>
+&lt;li>Top Half:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">irqreturn_t&lt;/span> &lt;span style="color:#a6e22e">nic_isr&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> irq, &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#f92672">*&lt;/span>dev_id) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read packet from hardware buffer
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">tasklet_schedule&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>nic_tasklet); &lt;span style="color:#75715e">// Schedule bottom half
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> IRQ_HANDLED;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Bottom Half:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">nic_tasklet_fn&lt;/span>(&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> data) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Process packets, update kernel networking stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Interrupt Questions</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt-questions/</link><pubDate>Sun, 04 May 2025 13:49:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt-questions/</guid><description>&lt;h3 id="q1-what-happens-if-another-interrupt-occurs-while-a-top-half-isr-is-executing">Q1: What happens if another interrupt occurs while a top half (ISR) is executing?&lt;/h3>
+&lt;p>&lt;strong>Answer&lt;/strong>:&lt;/p>
+&lt;ul>
+&lt;li>By default, &lt;strong>interrupts are disabled&lt;/strong> during the top half execution. When the CPU enters the ISR (via the IDT), it automatically clears the &lt;strong>Interrupt Flag (IF)&lt;/strong> on x86 (using &lt;code>cli&lt;/code>), preventing further interrupts until the ISR finishes.&lt;/li>
+&lt;li>&lt;strong>Exception&lt;/strong>: Some architectures or configurations (e.g., &lt;strong>nested interrupts&lt;/strong>) allow interrupts to preempt an ISR. For example:
+&lt;ul>
+&lt;li>&lt;strong>IRQF_DISABLED&lt;/strong> (now deprecated): Previously controlled whether interrupts were disabled during the ISR. Modern kernels typically disable interrupts for all IRQ handlers by default.&lt;/li>
+&lt;li>&lt;strong>Threaded interrupts&lt;/strong> (using &lt;code>IRQF_ONESHOT&lt;/code> or &lt;code>IRQF_THREAD&lt;/code>): The &amp;ldquo;top half&amp;rdquo; runs in a kernel thread with interrupts enabled.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Key Takeaway&lt;/strong>:&lt;/p></description></item><item><title>Interrupt</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt/</link><pubDate>Sat, 03 May 2025 12:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>An &lt;em>interrupt&lt;/em> is a signal that breaks the normal execution flow to handle an event. When an interrupt occurs, the CPU &lt;strong>pauses&lt;/strong> its current task, jumps to an interrupt service routine (ISR), and after the ISR completes it &lt;strong>resumes&lt;/strong> the original task. In other words, interrupts let hardware or software requests &amp;ldquo;call&amp;rdquo; the CPU’s attention immediately, then let the program continue &amp;ldquo;as if nothing happened&amp;rdquo; after handling it.&lt;/p>
+&lt;h2 id="why-are-interrupts-needed">Why are interrupts needed?&lt;/h2>
+&lt;ul>
+&lt;li>Avoid Polling: More efficient than continuously checking device status (polling), reducing CPU overhead and increasing system throughput&lt;/li>
+&lt;li>Real-Time Responsiveness: Essential for systems requiring quick reactions to events
+&lt;ul>
+&lt;li>Automotive airbag systems detecting collisions&lt;/li>
+&lt;li>Network Interface Cards (NICs) processing incoming packets&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="interrupt-types">Interrupt Types&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>Hardware Interrupts&lt;/strong>: Triggered by devices (e.g., keyboard, NIC). Managed by the &lt;strong>Programmable Interrupt Controller (PIC)&lt;/strong> or &lt;strong>APIC&lt;/strong>.&lt;/li>
+&lt;li>&lt;strong>Software Interrupts&lt;/strong>: Generated by software (e.g., &lt;code>int 0x80&lt;/code> for syscalls).&lt;/li>
+&lt;li>&lt;strong>Exceptions&lt;/strong>: CPU-generated (e.g., divide-by-zero, page faults).&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-the-kernel-registers-interrupts">How the Kernel Registers Interrupts&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a href="https://blog.rishavs.in/posts/0-inbox/interrupt-descriptor-table-idt/">Interrupt Descriptor Table (IDT)&lt;/a> Initialization:
+&lt;ul>
+&lt;li>At boot, the kernel populates the IDT with default handlers (e.g., for exceptions).&lt;/li>
+&lt;li>Hardware interrupts are mapped to a generic entry (e.g., common_interrupt on x86).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Device Drivers&lt;/strong>:
+&lt;ul>
+&lt;li>Drivers request a specific IRQ (Interrupt Request Line) using &lt;code>request_irq()&lt;/code>.&lt;/li>
+&lt;li>Example:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">request_irq&lt;/span>(&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> irq, &lt;span style="color:#66d9ef">irq_handler_t&lt;/span> handler, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> flags,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>name, &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#f92672">*&lt;/span>dev);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>irq&lt;/code>: The interrupt number (e.g., &lt;code>IRQ 1&lt;/code> for keyboard).&lt;/li>
+&lt;li>&lt;code>handler&lt;/code>: The ISR function.&lt;/li>
+&lt;li>&lt;code>flags&lt;/code>: Options like &lt;code>IRQF_SHARED&lt;/code> for shared interrupts.&lt;/li>
+&lt;li>&lt;code>dev&lt;/code>: A cookie passed to the ISR (used for shared IRQs).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="what-happens-when-an-interrupt-is-occurred">What happens when an interrupt is occurred?&lt;/h2>
+&lt;p>See &lt;a href="https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/">Interrupt Handling Flow&lt;/a>&lt;/p></description></item></channel></rss>

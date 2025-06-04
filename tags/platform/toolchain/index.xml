@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Toolchain on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/platform/toolchain/</link><description>Recent content in Platform/Toolchain on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Fri, 04 Apr 2025 12:00:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/platform/toolchain/index.xml" rel="self" type="application/rss+xml"/><item><title>External Toolchain in Buildroot</title><link>https://blog.rishavs.in/posts/3-resource/platform/external-toolchain-in-buildroot/</link><pubDate>Fri, 04 Apr 2025 12:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/external-toolchain-in-buildroot/</guid><description>&lt;h2 id="using-external-toolchain">Using External Toolchain&lt;/h2>
+&lt;h3 id="option-1-give-tarball-url">Option 1: Give tarball URL&lt;/h3>
+&lt;p>Specify URL for the tarball in &lt;code>BR_TOOLCHAIN_EXTERNAL_URL&lt;/code>&lt;/p>
+&lt;p>Example:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR_TOOLCHAIN_EXTERNAL_URL=http://192.168.101.52:8082/artifactory/toolchain.tar.xz
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>In this case you will have to deselect &lt;code>BR2_PRIMARY_SITE_ONLY&lt;/code> option&lt;/p>&lt;/blockquote>
+&lt;h3 id="option-2-give-tarball-relative-dl-path">Option 2: Give tarball relative dl path&lt;/h3>
+&lt;p>If &lt;code>BR2_PRIMARY_SITE_ONLY&lt;/code> option is selected then you have to keep the toolchain inside &lt;code>dl/toolchain-external-custom/&lt;/code> directory and pass the name of tarball to &lt;code>BR_TOOLCHAIN_EXTERNAL_URL&lt;/code>&lt;/p>
+&lt;p>Example:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR2_PRIMARY_SITE=&amp;#34;http://192.168.101.52:8082/artifactory/dl&amp;#34;
+BR2_PRIMARY_SITE_ONLY=y
+BR_TOOLCHAIN_EXTERNAL_URL=nvrx-rk3588-toolcahin.tar.xz
+&lt;/code>&lt;/pre>&lt;p>This will extract the toolchain to buildroot&amp;rsquo;s build directory &lt;code>output/host/opt/ext-toolchain&lt;/code>&lt;/p></description></item></channel></rss>

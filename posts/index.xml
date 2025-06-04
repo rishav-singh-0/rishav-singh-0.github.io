@@ -1,0 +1,1840 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on Rishav's Digital Garden</title><link>https://blog.rishavs.in/posts/</link><description>Recent content in Posts on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Sun, 04 May 2025 22:55:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>CPU Execution States on ARM</title><link>https://blog.rishavs.in/posts/0-inbox/cpu-execution-states-on-arm/</link><pubDate>Sun, 04 May 2025 22:55:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/cpu-execution-states-on-arm/</guid><description>&lt;h2 id="1-overview">1. Overview&lt;/h2>
+&lt;h3 id="process-context">Process Context&lt;/h3>
+&lt;ul>
+&lt;li>The kernel executes code &lt;strong>on behalf of a user-space process&lt;/strong> (e.g., handling a system call like &lt;code>read()&lt;/code> or &lt;code>write()&lt;/code>).&lt;/li>
+&lt;li>&lt;strong>Key Properties&lt;/strong>:
+&lt;ul>
+&lt;li>Associated with a &lt;code>struct task_struct&lt;/code> (process descriptor).&lt;/li>
+&lt;li>Can &lt;strong>sleep&lt;/strong> (use blocking functions like &lt;code>mutex_lock()&lt;/code>).&lt;/li>
+&lt;li>Can access user-space memory (via &lt;code>copy_from_user()&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="interrupt-context">Interrupt Context&lt;/h3>
+&lt;ul>
+&lt;li>&amp;ldquo;Atomic context&amp;rdquo; or &amp;ldquo;Interrupt context&amp;rdquo;, The kernel executes code &lt;strong>to handle a hardware interrupt or softirq&lt;/strong> (e.g., a network packet arriving)&lt;/li>
+&lt;li>&lt;strong>Key Properties&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>No associated process&lt;/strong> (&lt;code>current&lt;/code> macro points to an idle task).&lt;/li>
+&lt;li>&lt;strong>Cannot sleep&lt;/strong> (blocking functions like &lt;code>kmalloc(GFP_KERNEL)&lt;/code> are forbidden).&lt;/li>
+&lt;li>Runs with &lt;strong>interrupts disabled&lt;/strong> (on the current CPU).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-cpu-execution-states-in-arm">2. CPU Execution States in ARM&lt;/h2>
+&lt;p>ARM architectures (e.g., ARMv8-A) define &lt;strong>exception levels (ELs)&lt;/strong> that correspond to CPU execution states:&lt;/p></description></item><item><title>System Call (Software Interrupt)</title><link>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</link><pubDate>Sun, 04 May 2025 14:24:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</guid><description>&lt;h2 id="1-system-call-basics">1. System Call Basics&lt;/h2>
+&lt;p>System calls (syscalls) are the interface for user-space programs to request services from the kernel. Examples include:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>File I/O&lt;/strong>: &lt;code>read()&lt;/code>, &lt;code>write()&lt;/code>, &lt;code>open()&lt;/code>, &lt;code>close()&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Device Control&lt;/strong>: &lt;code>ioctl()&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Signal Handling&lt;/strong>: &lt;code>kill()&lt;/code>, &lt;code>signal()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-system-call-table-and-registration">2. System Call Table and Registration&lt;/h2>
+&lt;h3 id="syscall-table">Syscall Table:&lt;/h3>
+&lt;ul>
+&lt;li>A table (&lt;code>sys_call_table&lt;/code>) maps syscall numbers to handler functions.&lt;/li>
+&lt;li>&lt;strong>Architecture-Specific&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>x86&lt;/strong>: Defined in &lt;code>arch/x86/entry/syscalls/syscall_64.tbl&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>ARM&lt;/strong>: Defined in &lt;code>arch/arm/tools/syscall.tbl&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Registration&lt;/strong>:
+&lt;ul>
+&lt;li>Syscalls are registered at compile time using macros like &lt;code>SYSCALL_DEFINE&lt;/code> (e.g., &lt;code>SYSCALL_DEFINE3(write, ...)&lt;/code> for &lt;code>write()&lt;/code>).&lt;/li>
+&lt;li>For custom syscalls (rare and discouraged), you would:
+&lt;ol>
+&lt;li>Add an entry to the syscall table.&lt;/li>
+&lt;li>Define the handler using &lt;code>SYSCALL_DEFINE&lt;/code>.&lt;/li>
+&lt;li>Recompile the kernel (or use modules for dynamic insertion).&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="3-flow-of-system-calls">3. Flow of System Calls&lt;/h2>
+&lt;h3 id="1-user-space-invocation">1. User-Space Invocation&lt;/h3>
+&lt;ul>
+&lt;li>The libc wrapper (e.g., &lt;code>read()&lt;/code>, &lt;code>ioctl()&lt;/code>) triggers a &lt;strong>software interrupt&lt;/strong> (&lt;code>int 0x80&lt;/code> on x86) or uses the &lt;code>syscall&lt;/code> instruction (modern x86/ARM).&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// User-space code
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>fd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">open&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/dev/mydevice&amp;#34;&lt;/span>, O_RDWR); &lt;span style="color:#75715e">// Syscall 1: open()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">read&lt;/span>(fd, buf, &lt;span style="color:#ae81ff">100&lt;/span>); &lt;span style="color:#75715e">// Syscall 2: read()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, MY_CMD, arg); &lt;span style="color:#75715e">// Syscall 3: ioctl()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">close&lt;/span>(fd); &lt;span style="color:#75715e">// Syscall 4: close()
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-transition-to-kernel-mode">2. Transition to Kernel Mode&lt;/h3>
+&lt;ul>
+&lt;li>Switches to kernel mode (ring 0 on x86, EL1 on ARM).&lt;/li>
+&lt;li>Saves user-space registers (e.g., RIP, RSP, EFLAGS).&lt;/li>
+&lt;li>Jumps to the kernel&amp;rsquo;s syscall entry point (e.g., &lt;code>entry_SYSCALL_64&lt;/code> on x86)&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-syscall-dispatching">3. Syscall Dispatching&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Syscall Number&lt;/strong>:
+&lt;ul>
+&lt;li>The syscall number is stored in a register (e.g., &lt;code>RAX&lt;/code> on x86, &lt;code>R7&lt;/code> on ARM).&lt;/li>
+&lt;li>Example: &lt;code>__NR_read&lt;/code> (syscall number for &lt;code>read()&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Syscall Table&lt;/strong>:
+&lt;ul>
+&lt;li>The kernel uses &lt;code>sys_call_table&lt;/code> (array of function pointers) to find the handler.&lt;/li>
+&lt;li>Example: &lt;code>sys_call_table[__NR_read]&lt;/code> points to &lt;code>sys_read()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-handler-execution-in-process-context">4. Handler Execution in Process Context&lt;/h3>
+&lt;h4 id="generic-steps-for-all-syscalls">Generic Steps for All Syscalls:&lt;/h4>
+&lt;ol>
+&lt;li>Argument Validation:
+&lt;ul>
+&lt;li>Check pointers (e.g., &lt;code>buf&lt;/code> in &lt;code>read()&lt;/code>) using &lt;code>access_ok()&lt;/code>&lt;/li>
+&lt;li>Copy arguments from user space with &lt;code>copy_from_user()&lt;/code> or &lt;code>get_user()&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Kernel Function Execution:
+&lt;ul>
+&lt;li>Perform the requested operation (e.g., read from a file, send an &lt;code>ioctl&lt;/code> command)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="file-operations-readwrite">File Operations (&lt;code>read&lt;/code>/&lt;code>write&lt;/code>):&lt;/h4>
+&lt;ul>
+&lt;li>File Descriptor Resolution:
+&lt;ul>
+&lt;li>Convert &lt;code>fd&lt;/code> to a &lt;code>struct file&lt;/code> using &lt;code>fdget()&lt;/code>.&lt;/li>
+&lt;li>Check file permissions (&lt;code>FMODE_READ&lt;/code>/&lt;code>FMODE_WRITE&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Driver Interaction:
+&lt;ul>
+&lt;li>Call the &lt;code>read&lt;/code>/&lt;code>write&lt;/code> method from the file’s &lt;code>file_operations&lt;/code> struct.&lt;/li>
+&lt;li>Example: For &lt;code>/dev/mydevice&lt;/code>, this invokes the driver’s &lt;code>.read&lt;/code> function.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="io-control-ioctl">I/O Control (&lt;code>ioctl&lt;/code>):&lt;/h4>
+&lt;ul>
+&lt;li>The &lt;code>ioctl&lt;/code> syscall (&lt;code>sys_ioctl()&lt;/code>) calls the driver&amp;rsquo;s &lt;code>.unlocked_ioctl&lt;/code> method.
+!../3-Resource/Platform/IOCTL in Kernel Device Drivers#3. Integrate into file_operations&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-return-to-user-space">5. Return to User Space:&lt;/h3>
+&lt;ul>
+&lt;li>Result is stored in &lt;code>eax&lt;/code>/&lt;code>r0&lt;/code>, and the kernel restores user registers&lt;/li>
+&lt;li>Execute &lt;code>iret&lt;/code> (x86) or exception return (ARM) to resume user-mode execution.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="4-device-file-operations">4. Device File Operations&lt;/h2>
+&lt;p>Character devices (e.g., &lt;code>/dev/char_dev&lt;/code>) expose operations via &lt;code>file_operations&lt;/code>:&lt;/p></description></item><item><title>Interrupt Handling Flow</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/</link><pubDate>Sun, 04 May 2025 14:11:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/</guid><description>&lt;h3 id="1-interrupt-generation">1. Interrupt Generation&lt;/h3>
+&lt;ul>
+&lt;li>A hardware device (e.g., NIC, keyboard) raises an interrupt via the Programmable Interrupt Controller (PIC/APIC).&lt;/li>
+&lt;li>The PIC converts the IRQ line into a vector number and signals the CPU via the INTR/NMI pin.&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-cpu-state-save--context-switch">2. CPU State Save &amp;amp; Context Switch&lt;/h3>
+&lt;ul>
+&lt;li>The CPU finishes the current instruction, saves the process context (registers, PC, flags) to the stack, and disables local interrupts&lt;/li>
+&lt;li>Switches to the &lt;strong>interrupt context&lt;/strong> (no associated process, interrupts disabled).&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-idt-lookup">3. IDT Lookup&lt;/h3>
+&lt;ul>
+&lt;li>The CPU uses the Interrupt Descriptor Table (IDT) to find the handler address for the interrupt vector.&lt;/li>
+&lt;li>On ARM, the vector table (similar to x86 IDT) is preconfigured with handlers like &lt;code>handle_level_irq&lt;/code> or &lt;code>handle_edge_irq&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-top-half-execution">4. Top Half Execution&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Immediate Actions&lt;/strong>:&lt;/li>
+&lt;li>Acknowledge the interrupt at the hardware level (&lt;code>irq_data.chip-&amp;gt;irq_ack()&lt;/code>)&lt;/li>
+&lt;li>Read device status registers to confirm the interrupt source&lt;/li>
+&lt;li>&lt;strong>Minimal Processing&lt;/strong>:&lt;/li>
+&lt;li>Copy critical data (e.g., network packets) to kernel buffers.&lt;/li>
+&lt;li>Schedule deferred processing via bottom halves (tasklets, softirqs)&lt;/li>
+&lt;li>&lt;strong>APIs&lt;/strong>: &lt;code>request_irq()&lt;/code>, &lt;code>free_irq()&lt;/code> for driver-level registration.&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-bottom-half-execution">5. Bottom Half Execution&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Deferred Work&lt;/strong>:
+&lt;ul>
+&lt;li>Process data in safe contexts (e.g., &lt;code>tasklet_schedule()&lt;/code> or workqueues).&lt;/li>
+&lt;li>Runs with interrupts enabled (softirq context) or in process context (workqueues).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Mechanisms&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>SoftIRQs&lt;/strong>: Statically allocated, high-priority (e.g., network RX)&lt;/li>
+&lt;li>&lt;strong>Tasklets&lt;/strong>: Dynamically allocated, atomic (e.g., USB transfers).&lt;/li>
+&lt;li>&lt;strong>Workqueues&lt;/strong>: Sleepable, process context (e.g., filesystem I/O) .&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="6-interrupt-completion">6. Interrupt Completion&lt;/h3>
+&lt;ul>
+&lt;li>Send End-of-Interrupt (EOI) to the PIC (e.g., &lt;code>irq_data.chip-&amp;gt;irq_eoi()&lt;/code>)&lt;/li>
+&lt;li>The result is stored in &lt;code>eax&lt;/code>/&lt;code>r0&lt;/code>, and the kernel uses &lt;code>iret&lt;/code> (x86) or exception return (ARM) to resume user execution.&lt;/li>
+&lt;/ul>
+&lt;h3 id="7-examples">7. Examples&lt;/h3>
+&lt;h4 id="network-driver-hardware-interrupt">Network Driver (Hardware Interrupt)&lt;/h4>
+&lt;ul>
+&lt;li>Top Half:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">irqreturn_t&lt;/span> &lt;span style="color:#a6e22e">nic_isr&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> irq, &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#f92672">*&lt;/span>dev_id) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read packet from hardware buffer
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">tasklet_schedule&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>nic_tasklet); &lt;span style="color:#75715e">// Schedule bottom half
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> IRQ_HANDLED;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Bottom Half:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">nic_tasklet_fn&lt;/span>(&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> data) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Process packets, update kernel networking stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Interrupt Questions</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt-questions/</link><pubDate>Sun, 04 May 2025 13:49:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt-questions/</guid><description>&lt;h3 id="q1-what-happens-if-another-interrupt-occurs-while-a-top-half-isr-is-executing">Q1: What happens if another interrupt occurs while a top half (ISR) is executing?&lt;/h3>
+&lt;p>&lt;strong>Answer&lt;/strong>:&lt;/p>
+&lt;ul>
+&lt;li>By default, &lt;strong>interrupts are disabled&lt;/strong> during the top half execution. When the CPU enters the ISR (via the IDT), it automatically clears the &lt;strong>Interrupt Flag (IF)&lt;/strong> on x86 (using &lt;code>cli&lt;/code>), preventing further interrupts until the ISR finishes.&lt;/li>
+&lt;li>&lt;strong>Exception&lt;/strong>: Some architectures or configurations (e.g., &lt;strong>nested interrupts&lt;/strong>) allow interrupts to preempt an ISR. For example:
+&lt;ul>
+&lt;li>&lt;strong>IRQF_DISABLED&lt;/strong> (now deprecated): Previously controlled whether interrupts were disabled during the ISR. Modern kernels typically disable interrupts for all IRQ handlers by default.&lt;/li>
+&lt;li>&lt;strong>Threaded interrupts&lt;/strong> (using &lt;code>IRQF_ONESHOT&lt;/code> or &lt;code>IRQF_THREAD&lt;/code>): The &amp;ldquo;top half&amp;rdquo; runs in a kernel thread with interrupts enabled.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Key Takeaway&lt;/strong>:&lt;/p></description></item><item><title>Interrupt</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt/</link><pubDate>Sat, 03 May 2025 12:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>An &lt;em>interrupt&lt;/em> is a signal that breaks the normal execution flow to handle an event. When an interrupt occurs, the CPU &lt;strong>pauses&lt;/strong> its current task, jumps to an interrupt service routine (ISR), and after the ISR completes it &lt;strong>resumes&lt;/strong> the original task. In other words, interrupts let hardware or software requests &amp;ldquo;call&amp;rdquo; the CPU’s attention immediately, then let the program continue &amp;ldquo;as if nothing happened&amp;rdquo; after handling it.&lt;/p>
+&lt;h2 id="why-are-interrupts-needed">Why are interrupts needed?&lt;/h2>
+&lt;ul>
+&lt;li>Avoid Polling: More efficient than continuously checking device status (polling), reducing CPU overhead and increasing system throughput&lt;/li>
+&lt;li>Real-Time Responsiveness: Essential for systems requiring quick reactions to events
+&lt;ul>
+&lt;li>Automotive airbag systems detecting collisions&lt;/li>
+&lt;li>Network Interface Cards (NICs) processing incoming packets&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="interrupt-types">Interrupt Types&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>Hardware Interrupts&lt;/strong>: Triggered by devices (e.g., keyboard, NIC). Managed by the &lt;strong>Programmable Interrupt Controller (PIC)&lt;/strong> or &lt;strong>APIC&lt;/strong>.&lt;/li>
+&lt;li>&lt;strong>Software Interrupts&lt;/strong>: Generated by software (e.g., &lt;code>int 0x80&lt;/code> for syscalls).&lt;/li>
+&lt;li>&lt;strong>Exceptions&lt;/strong>: CPU-generated (e.g., divide-by-zero, page faults).&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-the-kernel-registers-interrupts">How the Kernel Registers Interrupts&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a href="https://blog.rishavs.in/posts/0-inbox/interrupt-descriptor-table-idt/">Interrupt Descriptor Table (IDT)&lt;/a> Initialization:
+&lt;ul>
+&lt;li>At boot, the kernel populates the IDT with default handlers (e.g., for exceptions).&lt;/li>
+&lt;li>Hardware interrupts are mapped to a generic entry (e.g., common_interrupt on x86).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Device Drivers&lt;/strong>:
+&lt;ul>
+&lt;li>Drivers request a specific IRQ (Interrupt Request Line) using &lt;code>request_irq()&lt;/code>.&lt;/li>
+&lt;li>Example:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">request_irq&lt;/span>(&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> irq, &lt;span style="color:#66d9ef">irq_handler_t&lt;/span> handler, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> flags,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>name, &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#f92672">*&lt;/span>dev);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>irq&lt;/code>: The interrupt number (e.g., &lt;code>IRQ 1&lt;/code> for keyboard).&lt;/li>
+&lt;li>&lt;code>handler&lt;/code>: The ISR function.&lt;/li>
+&lt;li>&lt;code>flags&lt;/code>: Options like &lt;code>IRQF_SHARED&lt;/code> for shared interrupts.&lt;/li>
+&lt;li>&lt;code>dev&lt;/code>: A cookie passed to the ISR (used for shared IRQs).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="what-happens-when-an-interrupt-is-occurred">What happens when an interrupt is occurred?&lt;/h2>
+&lt;p>See &lt;a href="https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/">Interrupt Handling Flow&lt;/a>&lt;/p></description></item><item><title>External Toolchain in Buildroot</title><link>https://blog.rishavs.in/posts/3-resource/platform/external-toolchain-in-buildroot/</link><pubDate>Fri, 04 Apr 2025 12:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/external-toolchain-in-buildroot/</guid><description>&lt;h2 id="using-external-toolchain">Using External Toolchain&lt;/h2>
+&lt;h3 id="option-1-give-tarball-url">Option 1: Give tarball URL&lt;/h3>
+&lt;p>Specify URL for the tarball in &lt;code>BR_TOOLCHAIN_EXTERNAL_URL&lt;/code>&lt;/p>
+&lt;p>Example:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR_TOOLCHAIN_EXTERNAL_URL=http://192.168.101.52:8082/artifactory/toolchain.tar.xz
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>In this case you will have to deselect &lt;code>BR2_PRIMARY_SITE_ONLY&lt;/code> option&lt;/p>&lt;/blockquote>
+&lt;h3 id="option-2-give-tarball-relative-dl-path">Option 2: Give tarball relative dl path&lt;/h3>
+&lt;p>If &lt;code>BR2_PRIMARY_SITE_ONLY&lt;/code> option is selected then you have to keep the toolchain inside &lt;code>dl/toolchain-external-custom/&lt;/code> directory and pass the name of tarball to &lt;code>BR_TOOLCHAIN_EXTERNAL_URL&lt;/code>&lt;/p>
+&lt;p>Example:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR2_PRIMARY_SITE=&amp;#34;http://192.168.101.52:8082/artifactory/dl&amp;#34;
+BR2_PRIMARY_SITE_ONLY=y
+BR_TOOLCHAIN_EXTERNAL_URL=nvrx-rk3588-toolcahin.tar.xz
+&lt;/code>&lt;/pre>&lt;p>This will extract the toolchain to buildroot&amp;rsquo;s build directory &lt;code>output/host/opt/ext-toolchain&lt;/code>&lt;/p></description></item><item><title>Buildroot Relocatable SDK</title><link>https://blog.rishavs.in/posts/0-inbox/buildroot-relocatable-sdk/</link><pubDate>Mon, 10 Mar 2025 12:17:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/buildroot-relocatable-sdk/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>A relocatable toolchain/SDK is a self-contained set of cross-compilation tools that can be moved to different locations without breaking dependencies. Buildroot provides an option to generate such a toolchain, allowing developers to use it for cross-compiling applications without depending on a fixed absolute path.&lt;/p>
+&lt;h2 id="prepare-relocatable-sdk">Prepare Relocatable SDK&lt;/h2>
+&lt;h3 id="configure-buildroot-for-sdk-generation">Configure Buildroot for SDK Generation&lt;/h3>
+&lt;p>Disable &lt;code>BusyBox&lt;/code> and set &lt;code>/bin/sh&lt;/code> to &lt;code>None&lt;/code> under &lt;code>System configuration&lt;/code>. This prevents unnecessary shell dependencies within the SDK, ensuring better relocatability.&lt;/p></description></item><item><title>Bitwise Operators</title><link>https://blog.rishavs.in/posts/src/c-prac/notes/bitwise-operators/</link><pubDate>Wed, 19 Feb 2025 12:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/src/c-prac/notes/bitwise-operators/</guid><description>&lt;h2 id="truth-table">Truth Table&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>X&lt;/th>
+&lt;th>Y&lt;/th>
+&lt;th>X &amp;amp; Y&lt;/th>
+&lt;th>X | Y&lt;/th>
+&lt;th>X ^ Y&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="points-to-remember">Points to Remember&lt;/h2>
+&lt;ul>
+&lt;li>The left-shift and right-shift operators should not be used for negative numbers&lt;/li>
+&lt;li>Left Shift(&lt;code>&amp;lt;&amp;lt;&lt;/code>) just means multiply by &lt;code>2&lt;/code>. Similarly &lt;code>&amp;gt;&amp;gt;&lt;/code> results division by &lt;code>2&lt;/code>.&lt;/li>
+&lt;li>&lt;code>XOR&lt;/code> results 0 if both bits are same. So &lt;code>a^1=~a&lt;/code> , &lt;code>a^0=a&lt;/code> and &lt;code>a^a=0&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="questions">Questions&lt;/h2>
+&lt;ol>
+&lt;li>How to toggle or flip a particular bit in a number?
+To toggle any bit in a variable, Use (^) exclusive OR operator.&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define togglebit(data, bit) (data* = data ^ (1&amp;lt;&amp;lt;bit))
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Write MACRO to Swap the bytes in 16bit Integer Variable.&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define ByteSwap16(Value) ((Value &amp;amp; 0x00FF) &amp;lt;&amp;lt; 8) | ((Value &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define ByteSwap32(Value) ((Value &amp;amp; 0x000000FF) &amp;lt;&amp;lt; 24) |
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> ((Value &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0x0000FF00U&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">8&lt;/span>) &lt;span style="color:#f92672">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ((Value &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0x00FF0000U&lt;/span>) &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">8&lt;/span>) &lt;span style="color:#f92672">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ((Value &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0xFF000000U&lt;/span>) &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">24&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>Count the number of set bits in a number&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">countSetBits&lt;/span>( &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> number )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span>( number &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> count&lt;span style="color:#f92672">++&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> number &lt;span style="color:#f92672">&amp;amp;=&lt;/span> (number&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> count;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>Swap 2 bits of given integer&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">swapBits&lt;/span>(&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> n, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> p1, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> p2)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> bit1 &lt;span style="color:#f92672">=&lt;/span> (n &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> p1) &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; &lt;span style="color:#75715e">/* Move p1&amp;#39;th to rightmost side */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> bit2 &lt;span style="color:#f92672">=&lt;/span> (n &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> p2) &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; &lt;span style="color:#75715e">/* Move p2&amp;#39;th to rightmost side */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> x &lt;span style="color:#f92672">=&lt;/span> (bit1 &lt;span style="color:#f92672">^&lt;/span> bit2); &lt;span style="color:#75715e">/* XOR the two bits */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* Put the xor bit back to their original positions */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#f92672">=&lt;/span> (x &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> p1) &lt;span style="color:#f92672">|&lt;/span> (x &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> p2);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* XOR &amp;#39;x&amp;#39; with the original number so that the two sets are swapped */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> n &lt;span style="color:#f92672">^&lt;/span> x;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Generic GPIO Management in Linux</title><link>https://blog.rishavs.in/posts/3-resource/platform/generic-gpio-management-in-linux/</link><pubDate>Wed, 19 Feb 2025 11:29:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/generic-gpio-management-in-linux/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>GPIO (General Purpose Input/Output) is a fundamental interface in embedded systems and Linux-based platforms. Linux provides multiple methods to control GPIOs, including the deprecated &lt;code>/sys/class/gpio/&lt;/code> interface and the modern &lt;code>libgpiod&lt;/code> (GPIO character device) API. This document provides a comprehensive guide to managing GPIOs in Linux.&lt;/p>
+&lt;h2 id="gpio-interfaces-in-linux">GPIO Interfaces in Linux&lt;/h2>
+&lt;p>Linux provides three primary ways to manage GPIOs:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Legacy Sysfs Interface (&lt;code>/sys/class/gpio/&lt;/code>)&lt;/strong> - Deprecated but still present on some systems.&lt;/li>
+&lt;li>&lt;strong>GPIO Character Device (&lt;code>/dev/gpiochipX&lt;/code>)&lt;/strong> - The recommended approach using &lt;code>libgpiod&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Direct Kernel Access&lt;/strong> - Through kernel drivers or device tree configurations.&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="1-sysfs-gpio-interface-deprecated">1. Sysfs GPIO Interface (Deprecated)&lt;/h2>
+&lt;p>The sysfs-based interface was historically used to control GPIOs but has been marked as deprecated in favor of &lt;code>gpiod&lt;/code>. If still available, it can be accessed via &lt;code>/sys/class/gpio/&lt;/code>.&lt;/p></description></item><item><title>Bayer Filter</title><link>https://blog.rishavs.in/posts/1-project/ip-camera/bayer-filter/</link><pubDate>Mon, 17 Feb 2025 14:25:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/1-project/ip-camera/bayer-filter/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>A Bayer filter is a color filter array (CFA) that arranges RGB color filters on a square grid of photosensors.&lt;/p>
+&lt;p>&lt;img src="https://blog.rishavs.in/posts/1-project/ip-camera//posts/0-inbox/assets/pasted-image-20250217142016.png" alt="Pasted image 20250217142016.png"/>&lt;/p>
+&lt;p>&lt;strong>Color Sensitivity&lt;/strong> Digital image sensors can only detect brightness, not color. To produce color sensors, a color filter is applied to each pixel. Generally the sensor is divided into 50% green, 25% red, and 25% blue photosites.&lt;/p>
+&lt;pre tabindex="0">&lt;code>G R G R
+B G B G
+G R G R
+B G B G
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>&lt;a href="https://blog.rishavs.in/posts/1-project/ip-camera/demosaicing/">Demosaicing&lt;/a>&lt;/strong> Each pixel is filtered to record only one of three colors, so the data from each pixel cannot fully specify each of the red, green, and blue values on its own. To obtain a full-color image, demosaicing algorithms are used to interpolate a set of complete red, green, and blue values for each pixel. The color of each pixel is interpolated by those around it.&lt;/p></description></item><item><title>SPI</title><link>https://blog.rishavs.in/posts/3-resource/platform/spi/</link><pubDate>Wed, 05 Feb 2025 23:06:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/spi/</guid><description>&lt;h2 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)&lt;/h2>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>full-duplex&lt;/strong> serial bus.&lt;/li>
+&lt;li>&lt;strong>Master-slave&lt;/strong> architecture (1 master, multiple slaves).&lt;/li>
+&lt;li>Uses &lt;strong>4 wires&lt;/strong>:
+&lt;ul>
+&lt;li>&lt;strong>SCLK&lt;/strong> (clock), &lt;strong>MOSI&lt;/strong> (Master Out Slave In), &lt;strong>MISO&lt;/strong> (Master In Slave Out), &lt;strong>SS/CS&lt;/strong> (Slave Select).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-layer">Physical Layer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Push-pull outputs&lt;/strong> (faster than open-drain).&lt;/li>
+&lt;li>Each slave requires a dedicated &lt;strong>SS line&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>No start/stop bits&lt;/strong> – continuous stream synchronized to SCLK.&lt;/li>
+&lt;li>Data sampled on clock edges defined by &lt;strong>CPOL&lt;/strong> (clock polarity) and &lt;strong>CPHA&lt;/strong> (clock phase):
+&lt;ul>
+&lt;li>&lt;strong>Mode 0&lt;/strong>: CPOL=0 (idle low), CPHA=0 (sample on rising edge).&lt;/li>
+&lt;li>&lt;strong>Mode 3&lt;/strong>: CPOL=1 (idle high), CPHA=1 (sample on falling edge).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>SCLK | MOSI (Data from Master) | MISO (Data from Slave) | CS (Active Low)
+&lt;/code>&lt;/pre>&lt;h3 id="key-features">Key Features&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Full-duplex&lt;/strong> communication (simultaneous MOSI/MISO).&lt;/li>
+&lt;li>&lt;strong>No addressing&lt;/strong> – slaves selected via SS lines.&lt;/li>
+&lt;li>Speeds: Up to 100+ Mbps (depends on hardware).&lt;/li>
+&lt;/ul>
+&lt;h3 id="pros--cons">Pros &amp;amp; Cons&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;strong>Pros&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>Cons&lt;/strong>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>High-speed communication&lt;/td>
+&lt;td>High pin count (n+3 for n slaves)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Simple protocol, flexible modes&lt;/td>
+&lt;td>No built-in error detection&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Full-duplex support&lt;/td>
+&lt;td>No multi-master support&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>High-speed sensors (e.g., IMUs).&lt;/li>
+&lt;li>Display controllers (OLED, TFT).&lt;/li>
+&lt;li>SD cards, NOR flash memory.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="comparison-table">Comparison Table&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;strong>Feature&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>UART&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>I2C&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>SPI&lt;/strong>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>Clock&lt;/strong>&lt;/td>
+&lt;td>None (async)&lt;/td>
+&lt;td>Shared (SCL)&lt;/td>
+&lt;td>Shared (SCLK)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Duplex&lt;/strong>&lt;/td>
+&lt;td>Full-duplex&lt;/td>
+&lt;td>Half-duplex&lt;/td>
+&lt;td>Full-duplex&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Topology&lt;/strong>&lt;/td>
+&lt;td>Point-to-point&lt;/td>
+&lt;td>Multi-device&lt;/td>
+&lt;td>Master-slave&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Speed&lt;/strong>&lt;/td>
+&lt;td>Low (≤115kbps)&lt;/td>
+&lt;td>Moderate (≤3.4Mbps)&lt;/td>
+&lt;td>High (≥10Mbps)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Addressing&lt;/strong>&lt;/td>
+&lt;td>None&lt;/td>
+&lt;td>7/10-bit&lt;/td>
+&lt;td>Hardware (SS lines)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Pins&lt;/strong>&lt;/td>
+&lt;td>2 (TX/RX)&lt;/td>
+&lt;td>2 (SCL/SDA)&lt;/td>
+&lt;td>4 + n (SS per slave)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Error Handling&lt;/strong>&lt;/td>
+&lt;td>Parity bit&lt;/td>
+&lt;td>ACK/NACK&lt;/td>
+&lt;td>None&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>UART</title><link>https://blog.rishavs.in/posts/3-resource/platform/uart/</link><pubDate>Wed, 05 Feb 2025 22:14:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/uart/</guid><description>&lt;h2 id="uart-universal-asynchronous-receiver-transmitter">UART (Universal Asynchronous Receiver-Transmitter)&lt;/h2>
+&lt;p>UART is a simple, asynchronous serial communication protocol used for full-duplex communication between two devices.&lt;/p>
+&lt;h3 id="key-features">Key Features:&lt;/h3>
+&lt;ul>
+&lt;li>Asynchronous: &lt;strong>No clock signal&lt;/strong> – relies on pre-agreed &lt;strong>baud rate&lt;/strong> (e.g., 9600, 115200 bps).&lt;/li>
+&lt;li>Uses two main lines: &lt;strong>TX (Transmit)&lt;/strong> and &lt;strong>RX (Receive)&lt;/strong>.&lt;/li>
+&lt;li>Configurable baud rate (e.g., 9600, 115200 bps).&lt;/li>
+&lt;li>&lt;strong>Error detection&lt;/strong>: Parity bit (optional).&lt;/li>
+&lt;li>&lt;strong>Flow control&lt;/strong>: Hardware (RTS/CTS) or software (XON/XOFF).&lt;/li>
+&lt;li>&lt;strong>No addressing&lt;/strong> – only two devices per bus.&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Start bit&lt;/strong> (1 bit, logic low).&lt;/li>
+&lt;li>&lt;strong>Data bits&lt;/strong> (5–9 bits, LSB-first).&lt;/li>
+&lt;li>&lt;strong>Parity bit&lt;/strong> (optional, even/odd/none).&lt;/li>
+&lt;li>&lt;strong>Stop bit(s)&lt;/strong> (1 or 2 bits, logic high).&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>Start Bit | Data Bits (5-9) | Parity Bit (Optional) | Stop Bit (1-2)
+&lt;/code>&lt;/pre>&lt;h3 id="points-to-remember">Points to Remember&lt;/h3>
+&lt;ul>
+&lt;li>If the baud rate is set as 115200, then the recever will expect stop bit that is high state for 1 baud period(generally).&lt;/li>
+&lt;/ul>
+&lt;h3 id="usage-in-linux-kernel">Usage in Linux Kernel:&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;linux/serial_core.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">struct&lt;/span> uart_port &lt;span style="color:#f92672">*&lt;/span>port;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">uart_write&lt;/span>(port, &lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>, &lt;span style="color:#ae81ff">5&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>Debugging consoles (e.g., Linux kernel &lt;code>printk&lt;/code> via UART).&lt;/li>
+&lt;li>GPS modules, Bluetooth/Wi-Fi modules.&lt;/li>
+&lt;/ul></description></item><item><title>Kernel Synchronization in Linux</title><link>https://blog.rishavs.in/posts/3-resource/platform/kernel-synchronization-in-linux/</link><pubDate>Tue, 04 Feb 2025 18:49:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/kernel-synchronization-in-linux/</guid><description>&lt;h2 id="1-introduction">1. Introduction&lt;/h2>
+&lt;p>In a multitasking environment, multiple processes and threads may need to access shared resources concurrently. Without proper synchronization, race conditions, deadlocks, and data corruption can occur. The Linux kernel provides various synchronization primitives to ensure safe concurrent access while maintaining performance.&lt;/p>
+&lt;hr>
+&lt;h2 id="2-spinlocks">2. Spinlocks&lt;/h2>
+&lt;p>Spinlocks are busy-waiting locks used in scenarios where critical sections are short and must be protected from concurrent access.&lt;/p>
+&lt;h3 id="key-features">Key Features:&lt;/h3>
+&lt;ul>
+&lt;li>Suitable for short, critical sections.&lt;/li>
+&lt;li>Does &lt;strong>not&lt;/strong> sleep, making it ideal for use in interrupt handlers.&lt;/li>
+&lt;li>If contention occurs, the CPU &lt;strong>spins in a loop&lt;/strong> until the lock is available.
+&lt;strong>Usage:&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">spinlock_t&lt;/span> my_lock;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">spin_lock_init&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_lock);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">spin_lock&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_lock);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/* Critical section */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">spin_unlock&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_lock);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Types of Spinlocks:&lt;/strong>&lt;/p></description></item><item><title>Monolithic vs Microkernel</title><link>https://blog.rishavs.in/posts/3-resource/platform/monolithic-vs-microkernel/</link><pubDate>Tue, 04 Feb 2025 17:28:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/monolithic-vs-microkernel/</guid><description>&lt;h3 id="monolithic-kernel">Monolithic Kernel&lt;/h3>
+&lt;ul>
+&lt;li>All core OS services (memory management, process scheduling, file systems, drivers) reside in kernel space.&lt;/li>
+&lt;li>Example: Linux Kernel.&lt;/li>
+&lt;li>Pros: Fast performance, directaccess to hardware.&lt;/li>
+&lt;li>Cons: Large codebase, difficult debugging, crashes can affect the whole system.&lt;/li>
+&lt;/ul>
+&lt;h3 id="microkernel">Microkernel&lt;/h3>
+&lt;ul>
+&lt;li>Minimal core kernel, with most services running in user space.&lt;/li>
+&lt;li>Example: QNX, Minix.&lt;/li>
+&lt;li>Pros: Stability, modularity, better security.&lt;/li>
+&lt;li>Cons: Performance overhead due to inter-process communication (IPC).&lt;/li>
+&lt;/ul></description></item><item><title>Kernel Space vs User Space</title><link>https://blog.rishavs.in/posts/3-resource/platform/kernel-space-vs-user-space/</link><pubDate>Tue, 04 Feb 2025 17:23:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/kernel-space-vs-user-space/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>Kernel Space&lt;/strong>: This is where the Linux kernel executes and provides low-level access to hardware, system memory management, process scheduling, and device drivers. Kernel space has privileged access to system resources and is protected from direct user interference. For example, when a user requests data from a hardware sensor, the kernel driver handles communication with the hardware, processes the request, and returns the data to user space through system calls.&lt;/li>
+&lt;li>&lt;strong>User Space&lt;/strong>: This is where applications and system utilities run. User-space processes operate with restricted privileges and interact with the kernel via system calls, libraries, and IPC mechanisms. For example, a user-space daemon may monitor the watchdog status by writing to &lt;code>/dev/watchdog&lt;/code>, or a mobile app may read light intensity from &lt;code>/sys/bus/i2c/devices/1-0039/lux&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="communication-methods-between-kernel-and-user-space">Communication Methods between Kernel and User Space&lt;/h2>
+&lt;p>There are several ways to facilitate communication between user space and kernel space in an embedded Linux environment:&lt;/p></description></item><item><title>RTOS (FreeRTOS) vs Linux Kernel</title><link>https://blog.rishavs.in/posts/0-inbox/rtos-free-rtos-vs-linux-kernel/</link><pubDate>Tue, 04 Feb 2025 13:59:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/rtos-free-rtos-vs-linux-kernel/</guid><description>&lt;h2 id="1-overview">1. Overview&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>RTOS (Real-Time Operating System)&lt;/strong>: Designed for deterministic, time-critical applications with low-latency response.&lt;/li>
+&lt;li>&lt;strong>Why RTOS over Linux?&lt;/strong>
+&lt;ul>
+&lt;li>&lt;strong>Deterministic Execution&lt;/strong>: RTOS ensures tasks meet strict timing deadlines, unlike Linux, which has non-deterministic scheduling.&lt;/li>
+&lt;li>&lt;strong>Low Overhead&lt;/strong>: RTOS has minimal context switching overhead and no user/kernel space separation.&lt;/li>
+&lt;li>&lt;strong>Resource-Constrained Devices&lt;/strong>: Ideal for microcontrollers (MCUs) with limited memory and processing power.&lt;/li>
+&lt;li>&lt;strong>Fast Boot Times&lt;/strong>: RTOS boots in milliseconds, while Linux requires a much longer initialization process.&lt;/li>
+&lt;li>&lt;strong>Interrupt Handling&lt;/strong>: More responsive to real-time interrupts, whereas Linux introduces latency due to its complex scheduler.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>FreeRTOS&lt;/strong>: A lightweight, open-source RTOS widely used in embedded systems.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel&lt;/strong>: A general-purpose OS with multi-user capabilities, used in complex embedded and desktop/server systems.&lt;/li>
+&lt;/ul>
+&lt;h2 id="2-freertos-vs-linux-kernel-key-differences">2. FreeRTOS vs. Linux Kernel (Key Differences)&lt;/h2>
+&lt;h3 id="kernel-vs-user-space">Kernel vs. User Space&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> It doesn&amp;rsquo;t have the concept of a user space and kernel space like Linux. The whole system is essentially one space, and tasks directly interact with the kernel (RTOS). You can think of FreeRTOS as a single program running with different tasks that can interact with each other or with hardware directly.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> Linux operates with a strict separation between user space and kernel space. User applications cannot directly interact with hardware; they must go through system calls, which are handled by the kernel.&lt;/li>
+&lt;/ul>
+&lt;h3 id="scheduler">Scheduler&lt;/h3>
+&lt;h5 id="freertos">FreeRTOS:&lt;/h5>
+&lt;ul>
+&lt;li>Preemptive, cooperative, or tickless scheduling.&lt;/li>
+&lt;li>Supports priority-based scheduling (fixed priority, round-robin, etc.).&lt;/li>
+&lt;li>Simple task model, each task runs in its own stack but shares memory.&lt;/li>
+&lt;/ul>
+&lt;h5 id="linux-kernel">Linux Kernel&lt;/h5>
+&lt;ul>
+&lt;li>Also has a preemptive scheduler, but it is much more complex, as it must handle multiple users, system calls, different types of scheduling (e.g., real-time, normal tasks), and various priorities.&lt;/li>
+&lt;li>Linux is optimized for fairness &lt;strong>CFS (Completely Fair Scheduler)&lt;/strong> and general-purpose multitasking. The FreeRTOS scheduler, by contrast, is simpler and more deterministic.&lt;/li>
+&lt;/ul>
+&lt;h3 id="processes">Processes&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> Does not have a &amp;ldquo;process&amp;rdquo; model like Linux. Instead, it has tasks. Tasks in FreeRTOS can be thought of as lightweight threads. FreeRTOS doesn’t manage the memory space for each task in the same way Linux does for processes. All tasks share the same address space and run in the same context.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> Linux uses processes, each of which has its own memory space. Processes in Linux can be multi-threaded, and each thread can have different scheduling characteristics. Linux processes are isolated from each other, so one process crashing doesn&amp;rsquo;t affect others.&lt;/li>
+&lt;/ul>
+&lt;h3 id="memory-management">Memory Management&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> Memory management is more manual. FreeRTOS does not have sophisticated memory management like Linux. It provides basic functions for allocating fixed-size blocks or dynamic memory pools (&lt;code>pvPortMalloc&lt;/code>, &lt;code>vPortFree&lt;/code>). It doesn&amp;rsquo;t have virtual memory, so all tasks have access to the same memory space, making it much simpler but also more prone to memory corruption if not managed properly.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> Linux includes virtual memory, meaning each process has its own virtual address space. It supports advanced features like paging and memory protection. The Linux kernel has a memory management unit (MMU) and sophisticated memory allocators for heap, stack, and memory mapping.&lt;/li>
+&lt;/ul>
+&lt;h3 id="drivers">Drivers&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> Drivers in FreeRTOS are usually written to interface directly with the hardware. Embedded developers write hardware-specific drivers for devices such as GPIO, UART, SPI, I2C, etc. The drivers are tightly coupled with the hardware and typically run in the same task context as the rest of the application. Interfacing with hardware is done via direct memory-mapped registers and interrupt service routines (ISRs).&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> The Linux kernel has a comprehensive set of device drivers for a wide variety of hardware. Drivers in Linux are implemented as kernel modules, which can be dynamically loaded and unloaded. These drivers abstract hardware interactions and often provide a system call interface for user-space applications to interact with hardware.&lt;/li>
+&lt;/ul>
+&lt;h3 id="gpio-management">GPIO Management&lt;/h3>
+&lt;h5 id="freertos-1">FreeRTOS:&lt;/h5>
+&lt;ul>
+&lt;li>Direct register manipulation or vendor-specific HAL libraries.&lt;/li>
+&lt;li>No standard GPIO subsystem like Linux.&lt;/li>
+&lt;li>GPIO interrupts are handled using &lt;strong>ISR (Interrupt Service Routines)&lt;/strong> with FreeRTOS primitives like queues for event notification.&lt;/li>
+&lt;/ul>
+&lt;h5 id="linux-kernel-1">Linux Kernel:&lt;/h5>
+&lt;ul>
+&lt;li>&lt;strong>GPIO Subsystem&lt;/strong>: Provides an abstraction layer using sysfs, character devices, or device tree bindings.&lt;/li>
+&lt;li>Uses kernel interrupt handling with debounce and polling mechanisms.&lt;/li>
+&lt;/ul>
+&lt;h3 id="interrupt-handling">Interrupt Handling&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> Interrupt handling is done through &lt;strong>Interrupt Service Routines (ISRs)&lt;/strong>, which are small, time-critical functions that handle hardware interrupts. FreeRTOS provides mechanisms to synchronize tasks with ISRs via &lt;strong>semaphores&lt;/strong> or &lt;strong>queues&lt;/strong>.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> Linux also uses ISRs, but in addition to regular interrupts, it has a more complex mechanism for handling asynchronous events, such as software interrupts, tasklets, work queues, etc. The kernel abstracts much of the interrupt management for portability.&lt;/li>
+&lt;/ul>
+&lt;h3 id="synchronization-mechanisms">Synchronization Mechanisms&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> Offers simple synchronization primitives like &lt;strong>semaphores&lt;/strong>, &lt;strong>mutexes&lt;/strong>, &lt;strong>queues&lt;/strong>, and &lt;strong>event groups&lt;/strong>. These are lightweight and highly optimized for small systems with limited resources.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> Linux also provides synchronization mechanisms like &lt;strong>semaphores&lt;/strong>, &lt;strong>mutexes&lt;/strong>, and &lt;strong>spinlocks&lt;/strong>. However, these mechanisms are more complex and support features like priority inversion prevention, as well as various types of locking for different kernel contexts.&lt;/li>
+&lt;/ul>
+&lt;h3 id="filesystem-and-io">Filesystem and I/O&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>FreeRTOS:&lt;/strong> By default, FreeRTOS does not provide any filesystem management or complex I/O subsystem. I/O is typically done through simple APIs provided by the BSP or device driver code.&lt;/li>
+&lt;li>&lt;strong>Linux Kernel:&lt;/strong> Linux supports a full-fledged filesystem with many types (e.g., ext4, NTFS) and includes complex device I/O management, including file descriptors, blocking/non-blocking I/O, and extensive support for network file systems (NFS, CIFS).&lt;/li>
+&lt;/ul>
+&lt;h2 id="conclusion">Conclusion:&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>FreeRTOS&lt;/th>
+&lt;th>Linux Kernel&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Kernel/User Space&lt;/td>
+&lt;td>Single space&lt;/td>
+&lt;td>Separated&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Scheduler&lt;/td>
+&lt;td>Priority-based, Preemptive&lt;/td>
+&lt;td>CFS, RT scheduling&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Driver Model&lt;/td>
+&lt;td>Direct access, HAL-based&lt;/td>
+&lt;td>Kernel module-based&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GPIO Management&lt;/td>
+&lt;td>Direct register access&lt;/td>
+&lt;td>Standard GPIO subsystem&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Process Model&lt;/td>
+&lt;td>Tasks only&lt;/td>
+&lt;td>Processes &amp;amp; Threads&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Memory Management&lt;/td>
+&lt;td>Heap-based, no MMU&lt;/td>
+&lt;td>Virtual memory, MMU support&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Use Cases&lt;/td>
+&lt;td>Real-time, MCUs&lt;/td>
+&lt;td>High-performance, SBCs, SoCs&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>FreeRTOS and Linux serve different purposes in embedded systems:&lt;/p></description></item><item><title>BSP Topics</title><link>https://blog.rishavs.in/posts/3-resource/platform/bsp-topics/</link><pubDate>Tue, 04 Feb 2025 10:39:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/bsp-topics/</guid><description>&lt;h2 id="1-linux-kernel-internals">1. Linux Kernel Internals&lt;/h2>
+&lt;h3 id="importance">Importance:&lt;/h3>
+&lt;p>Understanding kernel internals is crucial for BSP and driver development as it helps in debugging, optimizing performance, and modifying the kernel to meet hardware-specific requirements.&lt;/p>
+&lt;h3 id="topics">Topics:&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Kernel Architecture:&lt;/strong> &lt;a href="https://blog.rishavs.in/posts/3-resource/platform/monolithic-vs-microkernel/">Monolithic vs Microkernel&lt;/a>, &lt;a href="https://blog.rishavs.in/posts/3-resource/platform/kernel-space-vs-user-space/">Kernel and User Space interactions&lt;/a>.&lt;/li>
+&lt;li>&lt;strong>Process Management:&lt;/strong> Understanding &lt;code>task_struct&lt;/code>, process states, scheduling algorithms.&lt;/li>
+&lt;li>&lt;strong>Interrupt Handling:&lt;/strong> SoftIRQs, tasklets, bottom halves, handling IRQs efficiently.&lt;/li>
+&lt;li>&lt;strong>Memory Management:&lt;/strong> Paging, kmalloc/vmalloc, slab allocator, ARM MMU and memory regions.&lt;/li>
+&lt;li>&lt;strong>Syscalls:&lt;/strong> How system calls work, writing custom syscalls.&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://blog.rishavs.in/posts/3-resource/platform/kernel-synchronization-in-linux/">Kernel Synchronization&lt;/a>:&lt;/strong> Spinlocks, mutexes, semaphores, barriers, RCU.&lt;/li>
+&lt;li>&lt;strong>Workqueues and Timers:&lt;/strong> Deferred execution, using timers for scheduling tasks.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="2-linux-device-drivers">2. Linux Device Drivers&lt;/h2>
+&lt;h3 id="importance-1">Importance:&lt;/h3>
+&lt;p>Device drivers are the bridge between hardware and the OS. Understanding drivers is crucial for embedded systems and BSP development.&lt;/p></description></item><item><title>GitFlow</title><link>https://blog.rishavs.in/posts/3-resource/development/git-flow/</link><pubDate>Mon, 03 Feb 2025 16:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-flow/</guid><description>&lt;p>!assets/Pasted image 20250203182747.png&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;ul>
+&lt;li>GirFlow Explained: &lt;a href="https://youtu.be/Aa8RpP0sf-Y">https://youtu.be/Aa8RpP0sf-Y&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>SHA-256 (Secure Hash Algorithm 256-bit)</title><link>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</link><pubDate>Wed, 29 Jan 2025 14:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</guid><description>&lt;p>SHA-256 is a cryptographic hash function that produces a fixed-size 256-bit (32-byte) hash. It is &lt;strong>deterministic&lt;/strong>, &lt;strong>collision-resistant&lt;/strong>, and designed for security-critical applications.&lt;/p>
+&lt;p>!assets/hashing-algorithm-sha256.png&lt;/p>
+&lt;h3 id="how-sha-256-works">How SHA-256 Works&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Preprocessing&lt;/strong>:
+&lt;ul>
+&lt;li>Pad the input to a multiple of 512 bits.&lt;/li>
+&lt;li>Append a &lt;code>1&lt;/code>, then add &lt;code>k&lt;/code> zeros, and finally append the original message length (64 bits).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Initialize Hash Values&lt;/strong>:
+&lt;ul>
+&lt;li>Use constants derived from the fractional parts of square roots of the first 8 primes (eight 32-bit words).&lt;/li>
+&lt;li>Example: &lt;code>h0 = 0x6a09e667, h1 = 0xbb67ae85, ...&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Process Blocks&lt;/strong>:
+&lt;ul>
+&lt;li>Split the padded message into 512-bit blocks.&lt;/li>
+&lt;li>For each block:
+&lt;ul>
+&lt;li>Expand the block into 64 words using a message schedule.&lt;/li>
+&lt;li>Perform 64 rounds of compression using bitwise operations (e.g., XOR, AND, modular addition).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Compression Function&lt;/strong>
+A compression function is applied to each block, creating a new hash value. This function involves mixing the bits of the current hash value and the message block.&lt;/li>
+&lt;li>&lt;strong>Iteration&lt;/strong>
+Repeat the compression function for each block, using the output of each iteration as input for the next.&lt;/li>
+&lt;li>&lt;strong>Final Hash&lt;/strong>:
+&lt;ul>
+&lt;li>Combine the intermediate hash values to produce the final 256-bit digest.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h3 id="example-sha-256-for-string-hello">Example: SHA-256 for String &amp;ldquo;Hello&amp;rdquo;&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Input&lt;/strong>: &amp;ldquo;Hello&amp;rdquo; → ASCII &lt;code>48656C6C6F&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Padding&lt;/strong>:
+&lt;ul>
+&lt;li>Length = 40 bits (5 bytes).&lt;/li>
+&lt;li>Pad with &lt;code>1&lt;/code>, 407 zeros, and &lt;code>0000000000000028&lt;/code> (hex for 40 bits).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Hash Computation&lt;/strong>:
+&lt;ul>
+&lt;li>After processing, the final hash is:
+&lt;code>185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;h4 id="sha-256">SHA-256&lt;/h4>
+&lt;ul>
+&lt;li>&lt;strong>Cryptographic security&lt;/strong> in:
+&lt;ul>
+&lt;li>Digital signatures (SSL/TLS certificates).&lt;/li>
+&lt;li>Password storage (hashed+salted).&lt;/li>
+&lt;li>Blockchain (Bitcoin transactions).&lt;/li>
+&lt;li>File integrity verification (e.g., software downloads).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Guarantees&lt;/strong>: Pre-image resistance, collision resistance.&lt;/li>
+&lt;/ul></description></item><item><title>CRC (Cyclic Redundancy Check)</title><link>https://blog.rishavs.in/posts/3-resource/crc-cyclic-redundancy-check/</link><pubDate>Wed, 29 Jan 2025 14:09:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/crc-cyclic-redundancy-check/</guid><description>&lt;p>CRC is an error-detection code used to detect accidental changes to raw data (e.g., during transmission or storage). It works by treating the data as a polynomial and performing polynomial division with a predefined &lt;strong>generator polynomial&lt;/strong>. The remainder of this division becomes the CRC value.&lt;/p>
+&lt;h3 id="how-crc-is-calculated">How CRC is Calculated&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Convert data to binary&lt;/strong>: Treat the data as a sequence of bits.&lt;/li>
+&lt;li>&lt;strong>Append zeros&lt;/strong>: Add &lt;code>n&lt;/code> zeros to the end of the data, where &lt;code>n&lt;/code> is the degree of the generator polynomial (e.g., CRC-32 uses a 33-bit polynomial, so append 32 zeros).&lt;/li>
+&lt;li>&lt;strong>Polynomial division&lt;/strong>: Divide the data + zeros by the generator polynomial using &lt;strong>modulo-2 arithmetic&lt;/strong> (XOR operations).&lt;/li>
+&lt;li>&lt;strong>CRC value&lt;/strong>: The remainder of this division is the CRC checksum.&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h3 id="example-crc-8-for-string-hi">Example: CRC-8 for String &amp;ldquo;Hi&amp;rdquo;&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Data&lt;/strong>: &amp;ldquo;Hi&amp;rdquo; in ASCII is &lt;code>01001000 01101001&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Generator Polynomial&lt;/strong>: CRC-8 (e.g., &lt;code>x⁸ + x² + x + 1&lt;/code>), represented as &lt;code>100000111&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Append 8 zeros&lt;/strong>:&lt;br>
+Data becomes &lt;code>010010000110100100000000&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Perform division&lt;/strong>:
+&lt;ul>
+&lt;li>Divide &lt;code>010010000110100100000000&lt;/code> by &lt;code>100000111&lt;/code> using XOR.&lt;/li>
+&lt;li>&lt;strong>Remainder&lt;/strong>: Let’s assume the remainder is &lt;code>00110110&lt;/code> (hex &lt;code>0x36&lt;/code>).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Final CRC&lt;/strong>: &lt;code>0x36&lt;/code>.&lt;/li>
+&lt;/ol>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Error detection&lt;/strong> in:
+&lt;ul>
+&lt;li>Network protocols (Ethernet, Wi-Fi).&lt;/li>
+&lt;li>Storage systems (hard drives, ZIP files).&lt;/li>
+&lt;li>Quick checksums for small data transfers.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Not secure&lt;/strong> against intentional tampering.&lt;/li>
+&lt;/ul></description></item><item><title>Device Tree (DT) in Linux Kernel</title><link>https://blog.rishavs.in/posts/3-resource/platform/device-tree-dt-in-linux-kernel/</link><pubDate>Mon, 27 Jan 2025 17:41:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/device-tree-dt-in-linux-kernel/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>The Device Tree (DT) is a data structure used to describe the hardware components of a system in a way that is independent of the operating system and software. It is particularly relevant for systems based on the ARM architecture, where the hardware varies significantly across devices.&lt;/p>
+&lt;p>Instead of hardcoding hardware details in the kernel, the device tree provides a flexible way to inform the kernel about the system&amp;rsquo;s hardware layout. This simplifies kernel code and enables easier reuse across multiple hardware platforms.&lt;/p></description></item><item><title>Character Device Management in Kernel Drivers</title><link>https://blog.rishavs.in/posts/3-resource/platform/character-device-management-in-kernel-drivers/</link><pubDate>Fri, 24 Jan 2025 17:54:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/character-device-management-in-kernel-drivers/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>Character devices allow byte-by-byte communication between user-space applications and kernel drivers. They are commonly used for devices like serial ports, sensors, and custom hardware interfaces. The Linux kernel provides mechanisms for registering, managing, and interacting with character devices via a device file in &lt;code>/dev&lt;/code>.&lt;/p>
+&lt;hr>
+&lt;h2 id="registering-a-character-device">Registering a Character Device&lt;/h2>
+&lt;p>To register a character device, the driver needs to:&lt;/p>
+&lt;h4 id="1-allocate-a-major-and-minor-number">1. Allocate a Major and Minor Number:&lt;/h4>
+&lt;ul>
+&lt;li>Each character device is identified by a major number (device type) and a minor number (specific device). The major number indicates the driver associated with the device, while the minor number is used to differentiate between multiple devices handled by the same driver. If major and minor numbers are repeated, it can cause conflicts and lead to incorrect device identification. To avoid this, the kernel provides &lt;code>alloc_chrdev_region&lt;/code>, a function to dynamically allocate major and minor numbers, ensuring uniqueness. These numbers are used in the &lt;code>/dev&lt;/code> directory to associate device files with their corresponding drivers.&lt;/li>
+&lt;li>Use &lt;code>alloc_chrdev_region&lt;/code> to dynamically allocate a major number.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">dev_t&lt;/span> dev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// kernel/fs/char_dev.c
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// int alloc_chrdev_region(dev_t *dev, unsigned baseminor, unsigned count, const char *name)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">alloc_chrdev_region&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>dev, &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;my_char_device&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (result &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_err&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to allocate major number&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">pr_info&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Device registered with major %d, minor %d&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">MAJOR&lt;/span>(dev), &lt;span style="color:#a6e22e">MINOR&lt;/span>(dev));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-initialize-and-register-the-device">2. Initialize and Register the Device:&lt;/h4>
+&lt;ul>
+&lt;li>Define a &lt;code>cdev&lt;/code> structure and initialize it with file operations.&lt;/li>
+&lt;li>Use &lt;code>cdev_add&lt;/code> to register the device with the kernel.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">struct&lt;/span> cdev my_cdev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">cdev_init&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_cdev, &lt;span style="color:#f92672">&amp;amp;&lt;/span>my_fops);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>my_cdev.owner &lt;span style="color:#f92672">=&lt;/span> THIS_MODULE;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">cdev_add&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_cdev, dev, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (result &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_err&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to add cdev&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unregister_chrdev_region&lt;/span>(dev, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-create-a-device-file-optional">3. Create a Device File (Optional):&lt;/h4>
+&lt;ul>
+&lt;li>Creating a device file in &lt;code>/dev&lt;/code> is optional because character devices can be accessed directly using their major and minor numbers through system calls or user-space libraries, bypassing the need for a device file. However, creating a file in &lt;code>/dev&lt;/code> makes interaction more user-friendly by providing a standard interface.&lt;/li>
+&lt;li>To interact with a character device without creating a device file, you can use system calls like &lt;code>mknod&lt;/code> to create a temporary device node or interact with the device directly using its major and minor numbers programmatically.&lt;/li>
+&lt;li>Use &lt;code>class_create&lt;/code> and &lt;code>device_create&lt;/code> to automatically create a device file in &lt;code>/dev&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">struct&lt;/span> class &lt;span style="color:#f92672">*&lt;/span>my_class;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>my_class &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">class_create&lt;/span>(THIS_MODULE, &lt;span style="color:#e6db74">&amp;#34;my_device_class&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">IS_ERR&lt;/span>(my_class)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_err&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to create class&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cdev_del&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>my_cdev);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unregister_chrdev_region&lt;/span>(dev, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">PTR_ERR&lt;/span>(my_class);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">device_create&lt;/span>(my_class, NULL, dev, NULL, &lt;span style="color:#e6db74">&amp;#34;my_char_device&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="file-operations">File Operations&lt;/h2>
+&lt;p>Character devices are controlled through a set of file operations defined in a &lt;code>struct file_operations&lt;/code>. These operations determine how the device responds to system calls like &lt;code>open&lt;/code>, &lt;code>read&lt;/code>, &lt;code>write&lt;/code>, and &lt;code>ioctl&lt;/code>.&lt;/p></description></item><item><title>IOCTL in Kernel Device Drivers</title><link>https://blog.rishavs.in/posts/3-resource/platform/ioctl-in-kernel-device-drivers/</link><pubDate>Fri, 24 Jan 2025 17:24:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/ioctl-in-kernel-device-drivers/</guid><description>&lt;h2 id="ioctl-implementation-in-kernel-device-drivers">ioctl Implementation in Kernel Device Drivers&lt;/h2>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ioctl&lt;/code> (Input/Output Control) is a powerful system call in Linux used to perform device-specific operations that are not covered by standard system calls like &lt;code>read&lt;/code>, &lt;code>write&lt;/code>, or &lt;code>open&lt;/code>. It allows user-space applications to interact with kernel-space drivers for device-specific configurations and data exchanges.&lt;/p>
+&lt;hr>
+&lt;h2 id="how-ioctl-works">How ioctl Works&lt;/h2>
+&lt;h4 id="1-user-space-interaction">1. User-Space Interaction:&lt;/h4>
+&lt;ul>
+&lt;li>A user-space application invokes &lt;code>ioctl&lt;/code> using the following prototype:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">ioctl&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> fd, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> cmd, &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#f92672">*&lt;/span>arg);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>fd&lt;/code>: File descriptor for the device.&lt;/li>
+&lt;li>&lt;code>cmd&lt;/code>: Command defining the operation.&lt;/li>
+&lt;li>&lt;code>arg&lt;/code>: Pointer to the data or argument passed between user-space and kernel-space.&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-driver-side-handling">2. Driver-Side Handling:&lt;/h4>
+&lt;ul>
+&lt;li>The &lt;code>ioctl&lt;/code> system call is routed to the driver by the kernel.&lt;/li>
+&lt;li>The driver implements a specific &lt;code>unlocked_ioctl&lt;/code> or &lt;code>compat_ioctl&lt;/code> callback in the &lt;code>file_operations&lt;/code> structure.&lt;/li>
+&lt;/ul>
+&lt;h4 id="3-data-flow">3. Data Flow:&lt;/h4>
+&lt;ul>
+&lt;li>Arguments passed via &lt;code>arg&lt;/code> can be pointers to user-space data, requiring the driver to use helper functions like &lt;code>copy_from_user&lt;/code> and &lt;code>copy_to_user&lt;/code> for secure data transfer.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="steps-to-implement-ioctl-in-a-kernel-driver">Steps to Implement ioctl in a Kernel Driver&lt;/h2>
+&lt;h4 id="1-define-ioctl-commands">1. Define ioctl Commands:&lt;/h4>
+&lt;ul>
+&lt;li>Use macros to define command numbers, typically with the &lt;code>_IO&lt;/code>, &lt;code>_IOR&lt;/code>, &lt;code>_IOW&lt;/code>, and &lt;code>_IOWR&lt;/code> macros provided in &lt;code>&amp;lt;linux/ioctl.h&amp;gt;&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define MY_IOCTL_BASE &amp;#39;M&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_GET _IOR(MY_IOCTL_BASE, 1, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_SET _IOW(MY_IOCTL_BASE, 2, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>_IOR&lt;/code>: Read data from the kernel.&lt;/li>
+&lt;li>&lt;code>_IOW&lt;/code>: Write data to the kernel.&lt;/li>
+&lt;li>&lt;code>_IOWR&lt;/code>: Read and write data.&lt;/li>
+&lt;li>&lt;code>_IO&lt;/code>: Command without data.&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-implement-ioctl-callback">2. Implement ioctl Callback:&lt;/h4>
+&lt;ul>
+&lt;li>Define the &lt;code>unlocked_ioctl&lt;/code> function in the driver.&lt;/li>
+&lt;li>Handle commands appropriately based on &lt;code>cmd&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> &lt;span style="color:#a6e22e">my_ioctl&lt;/span>(&lt;span style="color:#66d9ef">struct&lt;/span> file &lt;span style="color:#f92672">*&lt;/span>file, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> cmd, &lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> arg) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> value;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">switch&lt;/span> (cmd) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">case&lt;/span> IOCTL_CMD_GET:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1234&lt;/span>; &lt;span style="color:#75715e">// Example value
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">copy_to_user&lt;/span>((&lt;span style="color:#66d9ef">int&lt;/span> __user &lt;span style="color:#f92672">*&lt;/span>)arg, &lt;span style="color:#f92672">&amp;amp;&lt;/span>value, &lt;span style="color:#66d9ef">sizeof&lt;/span>(value)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>EFAULT;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">case&lt;/span> IOCTL_CMD_SET:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">copy_from_user&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>value, (&lt;span style="color:#66d9ef">int&lt;/span> __user &lt;span style="color:#f92672">*&lt;/span>)arg, &lt;span style="color:#66d9ef">sizeof&lt;/span>(value)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>EFAULT;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pr_info&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Value set by user: %d&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, value);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">default&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>ENOTTY; &lt;span style="color:#75715e">// Command not supported
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-integrate-into-file_operations">3. Integrate into file_operations:&lt;/h4>
+&lt;ul>
+&lt;li>Register the ioctl handler in the &lt;code>file_operations&lt;/code> structure.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> file_operations my_fops &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .owner &lt;span style="color:#f92672">=&lt;/span> THIS_MODULE,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .open &lt;span style="color:#f92672">=&lt;/span> my_open,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .release &lt;span style="color:#f92672">=&lt;/span> my_release,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .unlocked_ioctl &lt;span style="color:#f92672">=&lt;/span> my_ioctl,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="4-test-the-ioctl-implementation">4. Test the ioctl Implementation:&lt;/h4>
+&lt;ul>
+&lt;li>Write a user-space application to interact with the driver.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;sys/ioctl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define MY_IOCTL_BASE &amp;#39;M&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_GET _IOR(MY_IOCTL_BASE, 1, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IOCTL_CMD_SET _IOW(MY_IOCTL_BASE, 2, int)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> fd, value &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">42&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">open&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/dev/my_device&amp;#34;&lt;/span>, O_RDWR);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (fd &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">perror&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Failed to open device&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, IOCTL_CMD_SET, &lt;span style="color:#f92672">&amp;amp;&lt;/span>value) &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">perror&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ioctl SET failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">ioctl&lt;/span>(fd, IOCTL_CMD_GET, &lt;span style="color:#f92672">&amp;amp;&lt;/span>value) &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">perror&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ioctl GET failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Value from device: %d&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, value);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">close&lt;/span>(fd);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="best-practices-for-ioctl">Best Practices for ioctl&lt;/h2>
+&lt;ol>
+&lt;li>&lt;strong>Use Explicit Command Definitions&lt;/strong>:
+&lt;ul>
+&lt;li>Follow a consistent naming convention for command macros.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Secure User-Kernel Data Transfer&lt;/strong>:
+&lt;ul>
+&lt;li>Always validate pointers and sizes.&lt;/li>
+&lt;li>Use &lt;code>copy_from_user&lt;/code> and &lt;code>copy_to_user&lt;/code> for safe data exchange.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Error Handling&lt;/strong>:
+&lt;ul>
+&lt;li>Return appropriate error codes for unsupported commands or invalid inputs.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Limit ioctl Usage&lt;/strong>:
+&lt;ul>
+&lt;li>Avoid using &lt;code>ioctl&lt;/code> for operations that can be implemented using &lt;code>read&lt;/code> or &lt;code>write&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Magic Number&lt;/strong>: Ensure it’s unique (check &lt;code>Documentation/ioctl/ioctl-number.txt&lt;/code> in kernel sources).&lt;/li>
+&lt;li>&lt;strong>Atomicity&lt;/strong>: Use locks if hardware operations are not atomic.&lt;/li>
+&lt;li>&lt;strong>Cross-Platform&lt;/strong>: Handle 32/64-bit compatibility with &lt;code>compat_ioctl&lt;/code> if needed.&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="real-world-example-custom-arm-board">Real-World Example: Custom ARM Board&lt;/h2>
+&lt;p>For a custom ARM board, you might need an &lt;code>ioctl&lt;/code> to configure hardware parameters like GPIO modes or clock frequencies.&lt;/p></description></item><item><title>SSL Certificate</title><link>https://blog.rishavs.in/posts/0-inbox/ssl-certificate/</link><pubDate>Tue, 10 Dec 2024 18:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/ssl-certificate/</guid><description>&lt;p>An &lt;strong>SSL certificate&lt;/strong> is a digital certificate issued by a trusted third-party authority known as a &lt;strong>Certificate Authority (CA)&lt;/strong>. It verifies the identity of a website or server and enables secure, encrypted communication.&lt;/p>
+&lt;h3 id="components-of-an-ssl-certificate">Components of an SSL Certificate&lt;/h3>
+&lt;ul>
+&lt;li>Public Key:
+&lt;ul>
+&lt;li>Used for encryption and verifying the certificate&amp;rsquo;s authenticity.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Certificate Holder Information:
+&lt;ul>
+&lt;li>Details like the domain name, organization, and location.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Issuer Information:
+&lt;ul>
+&lt;li>The CA that issued the certificate.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Validity Period:
+&lt;ul>
+&lt;li>Specifies the time frame during which the certificate is valid.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Digital Signature:
+&lt;ul>
+&lt;li>Ensures the certificate was issued by a trusted CA and has not been tampered with.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="self-signed-certificates">Self-Signed Certificates&lt;/h2>
+&lt;hr>
+&lt;h3 id="examples-and-differences">Examples and Differences&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>Usage&lt;/th>
+&lt;th>Example&lt;/th>
+&lt;th>Difference&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>Self-Signed&lt;/strong>&lt;/td>
+&lt;td>Internal servers, testing&lt;/td>
+&lt;td>Generated via OpenSSL&lt;/td>
+&lt;td>Not trusted by default in browsers or OS.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>CA-Signed&lt;/strong>&lt;/td>
+&lt;td>Public-facing servers&lt;/td>
+&lt;td>Issued by DigiCert, Let&amp;rsquo;s Encrypt&lt;/td>
+&lt;td>Trusted by browsers and OS.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Wildcard Certificate&lt;/strong>&lt;/td>
+&lt;td>Secures a domain and its subdomains&lt;/td>
+&lt;td>&lt;code>*.example.com&lt;/code>&lt;/td>
+&lt;td>Can’t be self-signed, requires a CA.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Multi-Domain Certificate&lt;/strong>&lt;/td>
+&lt;td>Covers multiple domains&lt;/td>
+&lt;td>&lt;code>example.com&lt;/code>, &lt;code>test.com&lt;/code>&lt;/td>
+&lt;td>Self-signed possible but not widely used.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;h3 id="self-signed-certificates-1">Self-Signed Certificates&lt;/h3>
+&lt;p>A &lt;strong>self-signed certificate&lt;/strong> is a digital certificate that is not issued by a trusted Certificate Authority (CA) but is signed by the entity it is certifying (e.g., your own server). These certificates are primarily used for internal testing, development environments, or scenarios where external trust is not required.&lt;/p></description></item><item><title>Short Term Trading - After result</title><link>https://blog.rishavs.in/posts/2-area/finance/short-term-trading---after-result/</link><pubDate>Sun, 08 Dec 2024 22:07:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/finance/short-term-trading---after-result/</guid><description>&lt;h2 id="overall-idea">Overall Idea&lt;/h2>
+&lt;ul>
+&lt;li>Avoid immediate trading post-result; monitor price behaviour instead.&lt;/li>
+&lt;li>Monitor for retracement and consistent trends&lt;/li>
+&lt;li>See quarterly result and shortlist &lt;strong>high growth&lt;/strong> stocks&lt;/li>
+&lt;li>Fundamental Analysis is must because if the analysis is even wrong but fundamentals are strong then the loss will be minimal. So, less chance of being wrong.&lt;/li>
+&lt;/ul>
+&lt;h2 id="filter-by-fundamentals">Filter by Fundamentals&lt;/h2>
+&lt;h4 id="high-growth-criteria">High Growth Criteria:&lt;/h4>
+&lt;ul>
+&lt;li>Quarterly &lt;strong>sales growth YoY&lt;/strong> &amp;gt; 10%.&lt;/li>
+&lt;li>Quarterly &lt;strong>profit growth YoY&lt;/strong> &amp;gt; 10%.&lt;/li>
+&lt;li>Sales and profit in the latest quarter should be the &lt;strong>highest compared to previous quarters&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>See percent change in growth of past 3 years&lt;/p></description></item><item><title>TradingView Shortcuts</title><link>https://blog.rishavs.in/posts/2-area/finance/trading-view-shortcuts/</link><pubDate>Sun, 08 Dec 2024 18:13:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/finance/trading-view-shortcuts/</guid><description>&lt;p>Alt + H = Horizontal line
+Alt + V = Vertical line
+Alt + T = Trendline
+Alt + F = Fibonacci
+Alt + C = Crossline
+Alt + I = Invert chart
+Alt + S = Link to your chart&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.tradingview.com/charting-library-docs/latest/getting_started/Shortcuts/">https://www.tradingview.com/charting-library-docs/latest/getting_started/Shortcuts/&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>C,C++ Code Style Guide</title><link>https://blog.rishavs.in/posts/3-resource/development/cc-code-style-guide/</link><pubDate>Thu, 28 Nov 2024 11:28:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/cc-code-style-guide/</guid><description>&lt;p>This guide provides step-by-step instructions for setting up consistent formatting, rules checking, and documentation for C/C++ code using &lt;strong>clang-format&lt;/strong>, &lt;strong>clang-tidy&lt;/strong>, and &lt;strong>Doxygen&lt;/strong> in &lt;strong>VS Code&lt;/strong>. Follow this guide to ensure uniformity across the team.&lt;/p>
+&lt;hr>
+&lt;h2 id="1-prerequisites">1. Prerequisites&lt;/h2>
+&lt;p>Before starting, ensure you have the following tools installed:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>VS Code&lt;/strong> (latest version)&lt;/li>
+&lt;li>Extensions for VS Code:
+&lt;ul>
+&lt;li>&lt;a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C/C++ (Microsoft)&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://marketplace.visualstudio.com/items?itemName=cschlosser.doxdocgen">Doxygen Documentation Generator&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Command-line tools:
+&lt;ul>
+&lt;li>&lt;code>clang-format&lt;/code>&lt;/li>
+&lt;li>&lt;code>clang-tidy&lt;/code>&lt;/li>
+&lt;li>&lt;code>doxygen&lt;/code>&lt;/li>
+&lt;li>Python (for pre-commit hooks)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="2-auto-formatting-using-clang-format">2. Auto-Formatting Using &lt;code>clang-format&lt;/code>&lt;/h2>
+&lt;p>&lt;a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format&lt;/a> is used for consistent code formatting.&lt;/p></description></item><item><title>Kernel Log Level</title><link>https://blog.rishavs.in/posts/3-resource/platform/kernel-log-level/</link><pubDate>Wed, 20 Nov 2024 16:23:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/kernel-log-level/</guid><description>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Number&lt;/th>
+&lt;th>Macro&lt;/th>
+&lt;th>Log Level&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;th>Equivalent&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>&lt;code>pr_emerg&lt;/code>&lt;/td>
+&lt;td>Emergency&lt;/td>
+&lt;td>System is unusable.&lt;/td>
+&lt;td>&lt;code>KERN_EMERG&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>&lt;code>pr_alert&lt;/code>&lt;/td>
+&lt;td>Alert&lt;/td>
+&lt;td>Action must be taken immediately.&lt;/td>
+&lt;td>&lt;code>KERN_ALERT&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2&lt;/td>
+&lt;td>&lt;code>pr_crit&lt;/code>&lt;/td>
+&lt;td>Critical&lt;/td>
+&lt;td>Critical conditions.&lt;/td>
+&lt;td>&lt;code>KERN_CRIT&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>3&lt;/td>
+&lt;td>&lt;code>pr_err&lt;/code>&lt;/td>
+&lt;td>Error&lt;/td>
+&lt;td>Error conditions.&lt;/td>
+&lt;td>&lt;code>KERN_ERR&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4&lt;/td>
+&lt;td>&lt;code>pr_warn&lt;/code>&lt;/td>
+&lt;td>Warning&lt;/td>
+&lt;td>Warning conditions.&lt;/td>
+&lt;td>&lt;code>KERN_WARNING&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>5&lt;/td>
+&lt;td>&lt;code>pr_notice&lt;/code>&lt;/td>
+&lt;td>Notice&lt;/td>
+&lt;td>Normal but significant condition.&lt;/td>
+&lt;td>&lt;code>KERN_NOTICE&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6&lt;/td>
+&lt;td>&lt;code>pr_info&lt;/code>&lt;/td>
+&lt;td>Informational&lt;/td>
+&lt;td>Informational messages.&lt;/td>
+&lt;td>&lt;code>KERN_INFO&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7&lt;/td>
+&lt;td>&lt;code>pr_debug&lt;/code>&lt;/td>
+&lt;td>Debug&lt;/td>
+&lt;td>Debugging messages.&lt;/td>
+&lt;td>&lt;code>KERN_DEBUG&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>The &lt;strong>number&lt;/strong> corresponds to the log level used by the Linux kernel, with lower numbers indicating higher severity.&lt;/li>
+&lt;li>For example, if the log level is set to &lt;code>4&lt;/code> (Warning), only messages from &lt;code>pr_emerg&lt;/code> to &lt;code>pr_warn&lt;/code> will appear in the system logs. Default log level is generally set to 6.&lt;/li>
+&lt;li>&lt;/li>
+&lt;/ul></description></item><item><title>I2C</title><link>https://blog.rishavs.in/posts/3-resource/platform/i-2-c/</link><pubDate>Fri, 08 Nov 2024 21:40:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/i-2-c/</guid><description>&lt;h2 id="basics-of-i2c">Basics of I2C&lt;/h2>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>multi-master&lt;/strong>, &lt;strong>multi-slave&lt;/strong> serial bus.&lt;/li>
+&lt;li>&lt;strong>Half-duplex&lt;/strong> communication (bidirectional SDA line).&lt;/li>
+&lt;li>Uses &lt;strong>2 wires&lt;/strong>: SCL (clock), SDA (data).&lt;/li>
+&lt;li>Speeds: Standard (100 kHz), Fast (400 kHz), High-Speed (3.4 MHz).&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-layer">Physical Layer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Open-drain&lt;/strong> outputs – requires pull-up resistors.&lt;/li>
+&lt;li>&lt;strong>7-bit or 10-bit addressing&lt;/strong> (supports up to 128/1024 devices).&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-frame-structure">Data Frame Structure&lt;/h3>
+&lt;ol>
+&lt;li>&lt;strong>Start condition&lt;/strong>: SDA ↓ while SCL is high.&lt;/li>
+&lt;li>&lt;strong>Address frame&lt;/strong>: 7/10-bit address + R/W bit.&lt;/li>
+&lt;li>&lt;strong>ACK/NACK&lt;/strong>: Slave pulls SDA low to acknowledge.&lt;/li>
+&lt;li>&lt;strong>Data frames&lt;/strong> (8-bit chunks, MSB-first).&lt;/li>
+&lt;li>&lt;strong>Stop condition&lt;/strong>: SDA ↑ while SCL is high.&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>Start | Address | Read/Write | ACK/NACK | Data | Stop
+&lt;/code>&lt;/pre>&lt;h3 id="key-features">Key Features&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Clock stretching&lt;/strong>: Slaves can hold SCL low to pause communication.&lt;/li>
+&lt;li>&lt;strong>Multi-master arbitration&lt;/strong>: Masters detect collisions via SDA monitoring.&lt;/li>
+&lt;li>Speeds: Standard (100 kbps), Fast (400 kbps), High-Speed (3.4 Mbps).&lt;/li>
+&lt;/ul>
+&lt;h3 id="use-cases">Use Cases&lt;/h3>
+&lt;ul>
+&lt;li>Sensors (temperature, accelerometers).&lt;/li>
+&lt;li>EEPROMs, RTC (Real-Time Clock) modules.&lt;/li>
+&lt;/ul>
+&lt;h2 id="device-tree">Device Tree&lt;/h2>
+&lt;ul>
+&lt;li>TODO&lt;/li>
+&lt;/ul>
+&lt;h2 id="writing-client-device-drivers">Writing client device drivers&lt;/h2>
+&lt;ul>
+&lt;li>TODO&lt;/li>
+&lt;/ul>
+&lt;h2 id="i2c-tools-package-in-userspace">I2C-Tools Package in Userspace&lt;/h2>
+&lt;ul>
+&lt;li>Useful for debugging, testing, some simple prototyping&lt;/li>
+&lt;li>Accesses the I²C bus via &lt;code>/dev/i2c-0&lt;/code>, &lt;code>/dev/i2c-1&lt;/code>…&lt;/li>
+&lt;li>Assume devices have registers, SMBus-like&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2cdetect">i2cdetect&lt;/h3>
+&lt;ul>
+&lt;li>scan an I2C bus for devices&lt;/li>
+&lt;li>No guarantee it works (I²C is not discoverable by the spec)&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>[rishav] ➜ ~ i2cdetect -l
+i2c-0 i2c i915 gmbus dpc I2C adapter
+i2c-1 i2c i915 gmbus dpb I2C adapter
+i2c-2 i2c i915 gmbus dpd I2C adapter
+i2c-3 i2c AUX A/DDI A/PHY A I2C adapter
+i2c-4 unknown Synopsys DesignWare I2C adapter N/A
+i2c-5 unknown Synopsys DesignWare I2C adapter N/A
+i2c-6 unknown SMBus I801 adapter at f040 N/A
+[rishav] ➜ ~ i2cdetect -y 2
+0 1 2 3 4 5 6 7 8 9 a b c d e f
+00: -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- 28 -- -- -- -- -- -- --
+30: -- -- -- UU -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;code>--&lt;/code> No response&lt;/li>
+&lt;li>&lt;code>28&lt;/code> Response from address 28&lt;/li>
+&lt;li>&lt;code>UU&lt;/code> Address in use (by driver)&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2cget-i2cset">i2cget, i2cset&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>i2cget&lt;/code>: read a register value&lt;/li>
+&lt;li>&lt;code>i2cset&lt;/code>: set a register value&lt;/li>
+&lt;li>Can use various types of SMBus and I2C transactions&lt;/li>
+&lt;li>Limited to 8-bit register address&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># i2cget -y 2 0x28 0x1b
+0x21
+# i2cset -y 2 0x28 0x55
+#
+&lt;/code>&lt;/pre>&lt;h3 id="i2cdump">i2cdump&lt;/h3>
+&lt;ul>
+&lt;li>dump value of all registers&lt;/li>
+&lt;/ul>
+&lt;h3 id="i2ctransfer">i2ctransfer&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>i2ctransfer&lt;/code>: the &amp;ldquo;swiss army knife of Linux I2C&amp;rdquo;, in userspace&lt;/li>
+&lt;li>Example: reimplement the i2cget -y 2 0x28 0x1b command:&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># i2ctransfer -y 2 w1@0x28 0x1b r1@0x28
+0x21
+#
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;code>w1@0x28&lt;/code> Write transaction, 1 byte, client address 0x28&lt;/li>
+&lt;li>&lt;code>0x1b&lt;/code> Data to send in the write transaction&lt;/li>
+&lt;li>&lt;code>r1@0x28&lt;/code> Read transaction, 1 byte, client address 0x28&lt;/li>
+&lt;/ul>
+&lt;h2 id="troubleshooting">Troubleshooting&lt;/h2>
+&lt;ol start="6">
+&lt;li>Return code from &lt;code>i2c_*()&lt;/code> functions — Never ignore errors!&lt;/li>
+&lt;li>Kernel logs&lt;/li>
+&lt;li>i2c-tools&lt;/li>
+&lt;li>Oscilloscope or logic analyzer&lt;/li>
+&lt;/ol>
+&lt;h3 id="no-ack-from-client---systematic">No ACK from client - systematic&lt;/h3>
+&lt;p>&lt;strong>Problem&lt;/strong>: a client &lt;strong>never&lt;/strong> responds to transactions&lt;/p></description></item><item><title>Flattened Devicetree (DTB) Format</title><link>https://blog.rishavs.in/posts/3-resource/flattened-devicetree-dtb-format/</link><pubDate>Fri, 08 Nov 2024 11:31:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/flattened-devicetree-dtb-format/</guid><description>&lt;h2 id="device-tree">Device Tree&lt;/h2>
+&lt;p>!assets/Pasted image 20241108115912.png&lt;/p>
+&lt;h3 id="standard-properties">Standard Properties&lt;/h3>
+&lt;h4 id="compatible">compatible&lt;/h4>
+&lt;p>The &lt;em>compatible&lt;/em> property value consists of one or more strings that define the specific programming model for the device. This list of strings should be used by a client program for device driver selection. The property value consists of a concatenated list of null terminated strings, from most specific to most general. They allow a device to express its compatibility with a family of similar devices, potentially allowing a single device driver to match against several devices.&lt;/p></description></item><item><title>Format Comparison</title><link>https://blog.rishavs.in/posts/3-resource/linux/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Format&lt;/th>
+&lt;th>Compression Ratio&lt;/th>
+&lt;th>Speed (Compression/&lt;!-- raw HTML omitted -->Decompression)&lt;/th>
+&lt;th>Encryption&lt;/th>
+&lt;th>Speciality/Uniqueness&lt;/th>
+&lt;th>Open Source/ License&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>gz (&lt;code>.gz&lt;/code>)&lt;/td>
+&lt;td>Moderate&lt;/td>
+&lt;td>Fast / Fast&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Widely supported and fast for most general uses.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>bzip2 (&lt;code>.bz2&lt;/code>)&lt;/td>
+&lt;td>Better than gzip&lt;/td>
+&lt;td>Slow / Moderate&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Higher compression ratio and robust error detection.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->BSD&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>xz (&lt;code>.xz&lt;/code>)&lt;/td>
+&lt;td>Best&lt;/td>
+&lt;td>Very slow / Fast&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Highest compression ratio; slow compression speed.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>zip (&lt;code>.zip&lt;/code>)&lt;/td>
+&lt;td>Moderate&lt;/td>
+&lt;td>Fast / Fast&lt;/td>
+&lt;td>Built-in encryption&lt;/td>
+&lt;td>Commonly used with built-in encryption and wide software support.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->Various (Info-ZIP)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>tar (&lt;code>.tar&lt;/code>)&lt;/td>
+&lt;td>Depends on method&lt;/td>
+&lt;td>Fast (archive only) / Fast (archive only)&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>Primarily used for archiving; compression depends on additional tools.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7z (&lt;code>.7z&lt;/code>)&lt;/td>
+&lt;td>Excellent&lt;/td>
+&lt;td>Moderate / Slow at high settings&lt;/td>
+&lt;td>AES-256 encryption&lt;/td>
+&lt;td>Excellent compression with advanced encryption options.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->LGPL&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>rar (&lt;code>.rar&lt;/code>)&lt;/td>
+&lt;td>Good&lt;/td>
+&lt;td>Moderate / Moderate&lt;/td>
+&lt;td>AES-256 encryption&lt;/td>
+&lt;td>Includes error recovery and strong encryption; proprietary format.&lt;/td>
+&lt;td>No&lt;!-- raw HTML omitted -->Proprietary&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>lzma (&lt;code>.lzma&lt;/code>)&lt;/td>
+&lt;td>Very high&lt;/td>
+&lt;td>Very slow / Moderate&lt;/td>
+&lt;td>No native (use &lt;code>gpg&lt;/code>)&lt;/td>
+&lt;td>High compression ratio with reliable decompression; requires separate decompressor.&lt;/td>
+&lt;td>Yes&lt;!-- raw HTML omitted -->GNU GPL&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="key-points">Key Points&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>gz (.gz)&lt;/code>: Well-rounded for speed and compatibility, commonly used for general purposes.&lt;/li>
+&lt;li>&lt;code>bzip2 (.bz2)&lt;/code>: Provides a higher compression ratio compared to gzip, though slower.&lt;/li>
+&lt;li>&lt;code>xz (.xz)&lt;/code>: Offers the best compression ratio but at the cost of slower compression speed.&lt;/li>
+&lt;li>&lt;code>zip (.zip)&lt;/code>: Convenient with built-in encryption and broad compatibility.&lt;/li>
+&lt;li>&lt;code>tar (.tar)&lt;/code>: Primarily an archiving format; often used in combination with other compression methods.&lt;/li>
+&lt;li>&lt;code>7z (.7z)&lt;/code>: Excellent compression and strong encryption; requires specific software for full support.&lt;/li>
+&lt;li>&lt;code>rar (.rar)&lt;/code>: Known for robust recovery features and encryption, but is proprietary.&lt;/li>
+&lt;li>&lt;code>lzma (.lzma)&lt;/code>: Delivers a high compression ratio and reliable decompression, though it’s slow.&lt;/li>
+&lt;/ul></description></item><item><title>CU (call up another system)</title><link>https://blog.rishavs.in/posts/3-resource/linux/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
+&lt;p>The  cu  command is used to call up another system and act as a dial-in terminal (mostly on a serial line ie. serial monitor). It can also do simple file transfers with no error checking.&lt;/p>
+&lt;blockquote>
+&lt;p>cu is part of the UUCP(Unix to Unix Copy Program) source but has been split into its own package because it can be useful even if you do not do uucp.&lt;/p>&lt;/blockquote>
+&lt;h2 id="usage">Usage&lt;/h2>
+&lt;p>Start&lt;/p></description></item><item><title>Hola Bot</title><link>https://blog.rishavs.in/posts/2-area/resume/hola-bot/</link><pubDate>Thu, 30 Mar 2023 10:16:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/resume/hola-bot/</guid><description>&lt;h2 id="holonomic-drive-robot-a-versatile-path-planning-machine">Holonomic Drive Robot: A Versatile Path-Planning Machine&lt;/h2>
+&lt;p>!assets/Pasted image 20241201191055.png&lt;/p>
+&lt;h3 id="overview">Overview&lt;/h3>
+&lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is an innovative, three-wheeled robot designed for precision path planning and image-based drawing. It combines advanced robotics algorithms, custom hardware, and creative problem-solving to deliver exceptional performance in a variety of tasks, from geometric pattern generation to drawing intricate images like logos.&lt;/p>
+&lt;h3 id="key-highlights">Key Highlights&lt;/h3>
+&lt;h4 id="1-motion-planning-and-control">1. Motion Planning and Control&lt;/h4>
+&lt;ul>
+&lt;li>Implemented a novel path-planning approach to optimize motor velocity and trajectory precision.&lt;/li>
+&lt;li>Designed custom algorithms to address trajectory distortion caused by motor speed limitations.&lt;/li>
+&lt;/ul>
+&lt;h4 id="2-hardware-and-software-integration">2. Hardware and Software Integration&lt;/h4>
+&lt;ul>
+&lt;li>Successfully integrated &lt;strong>ESP32&lt;/strong>, &lt;strong>eYFI Mega&lt;/strong>, stepper motors, and LiPo batteries into a cohesive system.&lt;/li>
+&lt;li>Overcame challenges such as faulty motor drivers and optimized power delivery for reliability.&lt;/li>
+&lt;/ul>
+&lt;h4 id="3-image-processing-and-simulation">3. Image Processing and Simulation&lt;/h4>
+&lt;ul>
+&lt;li>Extracted contours from images and translated them into robot motion commands.&lt;/li>
+&lt;li>Utilized &lt;strong>ROS&lt;/strong> and &lt;strong>Gazebo&lt;/strong> for testing and refining the system in a simulated environment.&lt;/li>
+&lt;/ul>
+&lt;h4 id="4-real-time-problem-solving">4. Real-Time Problem Solving&lt;/h4>
+&lt;ul>
+&lt;li>Debugged critical hardware issues, such as malfunctioning motor drivers and damaged LiPo cells.&lt;/li>
+&lt;li>Enhanced communication latency between the laptop and ESP32 from 1 second to 200ms by identifying and resolving protocol bottlenecks.&lt;/li>
+&lt;/ul>
+&lt;h4 id="5-creative-outputs">5. Creative Outputs&lt;/h4>
+&lt;ul>
+&lt;li>Enabled the robot to draw patterns such as Lissajous figures (infinity loops) and complex logos.&lt;/li>
+&lt;li>Developed a custom ink mixture to ensure visibility and erasability for pattern drawing.&lt;/li>
+&lt;/ul>
+&lt;h3 id="technologies-used">Technologies Used&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Hardware&lt;/strong>: ESP32, eYFI Mega, LiPo batteries, and stepper motors.&lt;/li>
+&lt;li>&lt;strong>Software&lt;/strong>: ROS for robot control, Gazebo for simulation, and Python, C for software logic.&lt;/li>
+&lt;li>&lt;strong>Tools &amp;amp; Libraries&lt;/strong>: OpenCV for image processing, AccelStepper for motor control, and custom ROS packages for integration.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="development-timeline">Development Timeline&lt;/h3>
+&lt;h4 id="january---february-2023-prototyping-and-hardware-development">January - February 2023: Prototyping and Hardware Development&lt;/h4>
+&lt;ul>
+&lt;li>Designed and built the physical robot body, integrating motor drivers, sensors, and controllers.&lt;/li>
+&lt;li>Calibrated the camera with over 100 samples for precise localization.&lt;/li>
+&lt;li>Debugged and optimized motor driver configurations, achieving simultaneous operation of all wheels.&lt;/li>
+&lt;li>Developed non-blocking motor control using the AccelStepper library.&lt;/li>
+&lt;/ul>
+&lt;h4 id="march-2023-software-refinement-and-final-tests">March 2023: Software Refinement and Final Tests&lt;/h4>
+&lt;ul>
+&lt;li>Created a contour extraction function for converting images into path points for drawing.&lt;/li>
+&lt;li>Integrated a servo-based pen mechanism for on/off control during drawing operations.&lt;/li>
+&lt;li>Conducted intensive testing, fixing indexing bugs, and optimizing scripts for various patterns, including the Snapchat logo and infinity shapes.&lt;/li>
+&lt;li>Demonstrated successful path-following in a simulation environment using Gazebo.
+!assets/hola-collage 1.jpg&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="challenges-overcome">Challenges Overcome&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Latency in Data Transmission&lt;/strong>: Resolved slow communication by identifying a missing newline character in transmitted data, reducing latency from 1 second to 200ms.&lt;/li>
+&lt;li>&lt;strong>Battery and Power Issues&lt;/strong>: Diagnosed and replaced faulty LiPo battery cells, ensuring uninterrupted operation.&lt;/li>
+&lt;li>&lt;strong>Hardware Failures&lt;/strong>: Addressed motor driver failures and loose connections with creative soldering solutions and robust wiring techniques.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="achievements">Achievements&lt;/h3>
+&lt;ul>
+&lt;li>Successfully implemented conditional path-following to optimize motor velocity during complex path execution.&lt;/li>
+&lt;li>Demonstrated precise image drawing with minimal distortion using camera-calibrated localization.&lt;/li>
+&lt;li>Created a detailed documentation repository and shared project outcomes through YouTube videos, showcasing the robot’s capabilities.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="media">Media&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Video Demonstrations&lt;/strong>: &lt;a href="https://youtu.be/6YWC5tnd194">Watch Demo Video&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="conclusion">Conclusion&lt;/h3>
+&lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is a testament to innovative thinking, technical expertise, and perseverance. It serves as a versatile platform for robotics experimentation, offering potential applications in art, industrial automation, and beyond.&lt;/p></description></item><item><title>Man Pages</title><link>https://blog.rishavs.in/posts/3-resource/linux/man-pages/</link><pubDate>Tue, 18 Oct 2022 11:31:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/man-pages/</guid><description>&lt;h2 id="sections">Sections&lt;/h2>
+&lt;ol>
+&lt;li>Executable programs or shell commands&lt;/li>
+&lt;li>System calls (functions provided by the kernel)&lt;/li>
+&lt;li>Library calls (functions within program libraries)&lt;/li>
+&lt;li>Special files (usually found in &lt;code>/dev&lt;/code>)&lt;/li>
+&lt;li>File formats and conventions, e.g. &lt;code>/etc/passwd&lt;/code>&lt;/li>
+&lt;li>Games&lt;/li>
+&lt;li>Miscellaneous (including macro packages and conventions), e.g. &lt;code>man(7)&lt;/code>, &lt;code>groff(7)&lt;/code>, &lt;code>man-pages(7)&lt;/code>&lt;/li>
+&lt;li>System administration commands (usually only for root)&lt;/li>
+&lt;li>Kernel routines (Non standard)&lt;/li>
+&lt;/ol>
+&lt;p>To see if any &lt;code>COMMAND&lt;/code> has available sections use &lt;code>whatis&lt;/code> of &lt;code>man -f&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>man -f COMMAND
+&lt;/code>&lt;/pre></description></item><item><title>Introduction to Linux</title><link>https://blog.rishavs.in/posts/3-resource/linux/introduction-to-linux/</link><pubDate>Tue, 12 Jul 2022 23:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/introduction-to-linux/</guid><description>&lt;h2 id="what-is-operating-system-">What is Operating System ?&lt;/h2>
+&lt;p>An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs.&lt;/p>
+&lt;h2 id="what-is-kernel">What is Kernel?&lt;/h2>
+&lt;p>The kernel is a part of operating system which has complete control over everything in the system. It is the portion of the operating system code that is always resident in memory,[2] and facilitates interactions between hardware and software components.&lt;/p>
+&lt;h2 id="what-is-linux">What is &lt;a href="https://www.kernel.org/linux.html">Linux&lt;/a>?&lt;/h2>
+&lt;p>Linux is a clone of the operating system Unix, written from scratch by Linus Torvalds with assistance from a loosely-knit team of hackers across the Net. It aims towards &lt;a href="http://get.posixcertified.ieee.org/">POSIX&lt;/a> and Single UNIX Specification compliance.&lt;/p></description></item><item><title>degoogle rom</title><link>https://blog.rishavs.in/posts/3-resource/android/degoogle-rom/</link><pubDate>Tue, 23 Nov 2021 22:54:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/android/degoogle-rom/</guid><description>&lt;h2 id="e-os">/e/ OS&lt;/h2>
+&lt;p>settings put global captive_portal_http_url &lt;a href="http://204.ecloud.global">http://204.ecloud.global&lt;/a>
+settings put global captive_portal_https_url &lt;a href="https://e.foundation/net_204/">https://e.foundation/net_204/&lt;/a>&lt;/p>
+&lt;h2 id="change-ntp">change ntp&lt;/h2>
+&lt;p>settings put global ntp_server pool.ntp.org&lt;/p>
+&lt;h2 id="deblot-pre-installed-apps">DeBlot pre-installed apps&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>Use this command to list all the apps installed&lt;/p>
+&lt;pre tabindex="0">&lt;code>adb shell pm list packages
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>To search any particular keyword use &lt;code>grep&lt;/code> command
+&lt;pre tabindex="0">&lt;code>adb shell pm list packages | grep &amp;#39;keyword&amp;#39;
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>Package names will be somewhat like this, eg. for &lt;code>Google Assistant&lt;/code> its &lt;code>com.android.hotwordenrollment.okgoogle&lt;/code>, for &lt;code>Google Auto&lt;/code> its &lt;code>com.google.android.projection.gearhead&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>
+&lt;p>Copy the name of the package you want to uninstall and use the following command&lt;/p></description></item><item><title>Understanding Farmers</title><link>https://blog.rishavs.in/posts/3-resource/agriculture/understanding-farmers/</link><pubDate>Sat, 20 Nov 2021 23:06:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/agriculture/understanding-farmers/</guid><description>&lt;h3 id="job-profile-of-a-farmer">Job profile of a farmer&lt;/h3>
+&lt;p>A Farmer is the CEO, COO, CFO, Sales manager, Investment manager of a propritary fariming firm.
+It will directly effect his income if he is not good in even one of the fields&lt;/p>
+&lt;hr>
+&lt;h3 id="before-the-cropping-season">Before the cropping season:&lt;/h3>
+&lt;p>What to sow, when to sow, credit availability, plan for inputs, land preparation, soil nutrient status&lt;/p>
+&lt;ul>
+&lt;li>Farmers has to have the access to the data that howmuch has it rained, moisture level in soil.&lt;/li>
+&lt;li>When to sow based on forcasting&lt;/li>
+&lt;li>Svaings, loans &amp;ndash;&amp;gt; moneylenders&lt;/li>
+&lt;li>Seed varity and quality, selection from number of options, authenticity of seeds&lt;/li>
+&lt;li>Land preparation, machinery and labours, funds for that&lt;/li>
+&lt;li>Gap filling for requirements of soil for a crop, suppliments, fertilizers, NPK (should be made easy to understand)&lt;/li>
+&lt;/ul>
+&lt;h3 id="during-the-cropping-season">During the cropping season:&lt;/h3>
+&lt;ul>
+&lt;li>choose appropriate agriculture technology&lt;/li>
+&lt;li>monitor the progress of crop&lt;/li>
+&lt;li>observe anomalies and take action, monitor weather&lt;/li>
+&lt;li>labour/machinery management for sowing and intercultural operations&lt;/li>
+&lt;li>water management&lt;/li>
+&lt;li>weed/pests/ wild animals management&lt;/li>
+&lt;li>respond to climate contingencies&lt;/li>
+&lt;li>in case of damege file claim for insurance&lt;/li>
+&lt;/ul>
+&lt;h3 id="after-the-cropping-season">After the cropping season:&lt;/h3>
+&lt;ul>
+&lt;li>Harvesting based on weather conditions, checking if crop is actually ready&lt;/li>
+&lt;li>labour management&lt;/li>
+&lt;li>primary processing, storage&lt;/li>
+&lt;li>market assessment, where and when to sell&lt;/li>
+&lt;li>grading/sorting/packing/transportation&lt;/li>
+&lt;li>value addition, negotiation for better prices&lt;/li>
+&lt;li>realization of prices&lt;/li>
+&lt;li>repayments(loans, etc.)&lt;/li>
+&lt;li>surplus investment planning(future planning)&lt;/li>
+&lt;/ul>
+&lt;h3 id="during-the-lean-season">During the lean season:&lt;/h3>
+&lt;p>Remaining 6 to 7 months:
+Migration, ancillary works, MGNAREGA
+Repeats it season after season and year after year&lt;/p></description></item><item><title>Technical Analysis</title><link>https://blog.rishavs.in/posts/2-area/finance/technical-analysis/</link><pubDate>Sun, 10 Oct 2021 22:45:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/finance/technical-analysis/</guid><description>&lt;h2 id="analyzing-the-past">Analyzing the past&lt;/h2>
+&lt;ul>
+&lt;li>It is a well established fact that stock prices show cyclical movements, similar to a business.&lt;/li>
+&lt;li>It is a process of identifying trends &amp;amp; trend reversals at an earlier stage to formulate buy-sell strategy.&lt;/li>
+&lt;li>A good technical Analyst always considers facts. He stays away from emotions like greed &amp;amp; panic while taking his decision&lt;/li>
+&lt;/ul>
+&lt;h2 id="know-yourself">Know Yourself&lt;/h2>
+&lt;ul>
+&lt;li>Intraday Trader - Closes the trade within a day.&lt;/li>
+&lt;li>Short Term Investor - Closes a trade in 2 days to 3 months.&lt;/li>
+&lt;li>Medium Term Investor - Closes a trade in 3 months to 1 year.&lt;/li>
+&lt;li>Long Term Investor - Closes a trade after 1 year.&lt;/li>
+&lt;/ul>
+&lt;h2 id="trends">Trends&lt;/h2>
+&lt;ul>
+&lt;li>The meaning of trend in finance isn&amp;rsquo;t all that different from the general definition of the term - a trend is really nothing more than the general direction.&lt;/li>
+&lt;li>We do see trends even while watching IPL matches!&lt;/li>
+&lt;/ul>
+&lt;h3 id="uptrends">Uptrends&lt;/h3>
+&lt;p>&lt;img src="https://blog.rishavs.in/posts/2-area/finance/assets/uptrend.jpg" alt="uptrend"/>&lt;/p></description></item><item><title>Rich Dad Poor Dad Summary</title><link>https://blog.rishavs.in/posts/2-area/finance/rich-dad-poor-dad-summary/</link><pubDate>Sat, 02 Oct 2021 23:18:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/finance/rich-dad-poor-dad-summary/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>For example, one dad would say, &amp;ldquo;The love of money is the root of all evil.&amp;rdquo;
+The other, “The lack of money is the root of all evil.”&lt;/p>
+&lt;p>Money is not taught in schools. Schools focus on scholastic and professional
+skills, but not on financial skills. This explains how smart bankers, doctors
+and accountants who earned excellent grades in school may still struggle
+financially all of their lives. Our staggering national debt is due in large
+part to highly educated politicians and government officials making financial
+decisions with little or no training on the subject of money.&lt;/p></description></item><item><title>Compile your Custom Linux Kernel</title><link>https://blog.rishavs.in/posts/3-resource/linux/compile-your-custom-linux-kernel/</link><pubDate>Fri, 17 Sep 2021 23:52:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/compile-your-custom-linux-kernel/</guid><description>&lt;h2 id="preparation">Preparation&lt;/h2>
+&lt;h3 id="install-dependencies">Install Dependencies&lt;/h3>
+&lt;pre tabindex="0">&lt;code>sudo pacman -S base-devel xmlto kmod inetutils bc libelf git --needed
+&lt;/code>&lt;/pre>&lt;h3 id="downloading-source-and-local-setup">Downloading source and local setup&lt;/h3>
+&lt;p>It is recommended to create a separate build directory for your kernel(s). In this example, the directory kernelbuild will be created in the home directory:&lt;/p>
+&lt;pre tabindex="0">&lt;code>mkdir ~/kernelbuild
+cd ~/kernelbuild
+&lt;/code>&lt;/pre>&lt;p>Goto &lt;a href="https://www.kernel.org/">kernel.org&lt;/a> and download kernel source&lt;/p>
+&lt;pre tabindex="0">&lt;code>wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.14.5.tar.xz
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>Note: you can verify signature of the downloaded tarball if you want&lt;/p>&lt;/blockquote>
+&lt;p>Extract tarball&lt;/p>
+&lt;pre tabindex="0">&lt;code>tar -xvJf linux-5.14.5.tar.xz
+&lt;/code>&lt;/pre>&lt;p>Check
+&lt;img src="https://blog.rishavs.in/posts/3-resource/linux/asserts/custom_kernel_tar_ls.png" alt="ls command output"/>&lt;/p></description></item><item><title>xfiles</title><link>https://blog.rishavs.in/posts/3-resource/linux/xfiles/</link><pubDate>Tue, 14 Sep 2021 22:56:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/xfiles/</guid><description>&lt;h2 id="xinitrc">.xinitrc&lt;/h2>
+&lt;p>The &lt;code>~/.xinitrc&lt;/code> file is a shell script read by xinit and by its front-end
+startx. It is mainly used to execute desktop environments, window managers and
+other programs when starting the X server (e.g., starting daemons and setting
+environment variables).&lt;/p>
+&lt;h2 id="xprofiles">.xprofiles&lt;/h2>
+&lt;p>An xprofile file, &lt;code>~/.xprofile&lt;/code> and &lt;code>/etc/xprofile&lt;/code>, allows you to execute commands
+at the beginning of the X user session - before the window manager is started.&lt;/p>
+&lt;h2 id="xresources">.Xresources&lt;/h2>
+&lt;p>Xresources is a user-level configuration dotfile, typically located at
+&lt;code>~/.Xresources&lt;/code>. It can be used to set X resources, which are configuration
+parameters for X client applications. (&lt;code>xrdb ~/.Xresources&lt;/code>)&lt;/p></description></item><item><title>Packages I use in any Linux based OS</title><link>https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/</link><pubDate>Mon, 12 Apr 2021 23:03:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/</guid><description>&lt;h1 id="packages-on-arch">Packages on Arch&lt;/h1>
+&lt;h2 id="pacstrap">pacstrap&lt;/h2>
+&lt;ul>
+&lt;li>base&lt;/li>
+&lt;li>linux-lts&lt;/li>
+&lt;li>linux-lts-headers&lt;/li>
+&lt;li>base-devel&lt;/li>
+&lt;li>btrfs&lt;/li>
+&lt;li>btrfs-progs&lt;/li>
+&lt;li>vim&lt;/li>
+&lt;li>networkmanager&lt;/li>
+&lt;li>grub&lt;/li>
+&lt;li>efibootmgr&lt;/li>
+&lt;li>intel-ucode&lt;/li>
+&lt;/ul>
+&lt;h2 id="utils">Utils&lt;/h2>
+&lt;ul>
+&lt;li>mtpfs : Reading and Writing from any MTP device&lt;/li>
+&lt;li>ntfs-3g : NTFS filesystem driver and utilities&lt;/li>
+&lt;li>gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player)&lt;/li>
+&lt;li>gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)&lt;/li>
+&lt;li>nfs-utils : Support programs for Network File Systems&lt;/li>
+&lt;li>tlp : Linux Advanced Power Management&lt;/li>
+&lt;li>powertop : A tool to diagnose issues with power consumption and power management&lt;/li>
+&lt;li>python-pip : The PyPA recommended tool for installing Python packages&lt;/li>
+&lt;li>jre8-openjdk : OpenJDK Java 8 full runtime environment&lt;/li>
+&lt;li>jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment&lt;/li>
+&lt;li>wget : Network utility to retrieve files from the Web&lt;/li>
+&lt;li>gnome-keyring : Stores passwords and encryption keys&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code># Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+# Power Management
+pacman -S tlp powertop
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+&lt;/code>&lt;/pre>&lt;h2 id="xorg">xorg&lt;/h2>
+&lt;ul>
+&lt;li>libx11 : X11 client-side library&lt;/li>
+&lt;li>xorg-xinit : X.Org initialisation program&lt;/li>
+&lt;li>libxinerama : X11 Xinerama extension library&lt;/li>
+&lt;li>libxft : FreeType-based font drawing library for X&lt;/li>
+&lt;li>xorg-server : Xorg X server&lt;/li>
+&lt;li>xorg-xrandr : Primitive command line interface to RandR extension&lt;/li>
+&lt;li>xorg-xrdb : X server resource database utility&lt;/li>
+&lt;li>xorg-xinput : Small commandline tool to configure devices&lt;/li>
+&lt;li>xorg-xbacklight : RandR-based backlight control application&lt;/li>
+&lt;li>xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers&lt;/li>
+&lt;li>xclip : Command line interface to the X11 clipboard&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-1">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+pacman -S xf86-video-intel
+yay -S libxft-bgra-git
+&lt;/code>&lt;/pre>&lt;h3 id="gentoo">Gentoo&lt;/h3>
+&lt;pre tabindex="0">&lt;code>emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+&lt;/code>&lt;/pre>&lt;h2 id="basic">Basic&lt;/h2>
+&lt;ul>
+&lt;li>picom : X compositor that may fix tearing issues&lt;/li>
+&lt;li>unclutter : A small program for hiding the mouse cursor&lt;/li>
+&lt;li>os-prober : Utility to detect other OSes on a set of drives&lt;/li>
+&lt;li>man-db : A utility for reading man pages&lt;/li>
+&lt;li>bash-completion : Programmable completion for the bash shell&lt;/li>
+&lt;li>zsh-completions : Additional completion definitions for Zsh&lt;/li>
+&lt;li>zip,unzip,tar,bzip2,atool,unrar : Compression utils&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-2">Arch&lt;/h3>
+&lt;pre tabindex="0">&lt;code>pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+&lt;/code>&lt;/pre>&lt;h2 id="fonts">Fonts&lt;/h2>
+&lt;ul>
+&lt;li>noto-fonts : Google Noto TTF fonts&lt;/li>
+&lt;li>noto-fonts-cjk : Google Noto CJK fonts&lt;/li>
+&lt;li>ttf-joypixels : Emoji as a Service (formerly EmojiOne)&lt;/li>
+&lt;/ul>
+&lt;h3 id="arch-3">Arch&lt;/h3>
+&lt;p>&lt;code>pacman -S noto-fonts ttf-joypixels&lt;/code>&lt;/p></description></item><item><title>Git Undo Mistakes</title><link>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</link><pubDate>Wed, 24 Mar 2021 23:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</guid><description>&lt;h1 id="undo-mistakes-">Undo Mistakes 😱&lt;/h1>
+&lt;h2 id="git-restore-filename">git restore filename&lt;/h2>
+&lt;ul>
+&lt;li>will discard uncommited change for this file&lt;/li>
+&lt;li>cannot be undone afterward&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-restore--p-filename">git restore -p filename&lt;/h3>
+&lt;ul>
+&lt;li>p stands for patches&lt;/li>
+&lt;li>will ask for each change in this file to be restore or not&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-restore-">git restore .&lt;/h3>
+&lt;ul>
+&lt;li>undo all changes since last commit&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-commit-ammend--m-commit-message">git commit &amp;ndash;ammend -m &amp;ldquo;Commit Message&amp;rdquo;&lt;/h2>
+&lt;ul>
+&lt;li>change commit message of last commit&lt;/li>
+&lt;li>do not change already pushed commit&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-revert-sha">git revert &amp;lt;SHA&amp;gt;&lt;/h2>
+&lt;ul>
+&lt;li>it reverts specified single commit&lt;/li>
+&lt;li>&amp;lt;SHA&amp;gt; can be seen through &lt;code>git log&lt;/code>, eg. 74e3b2b&lt;/li>
+&lt;li>it makes new commit by exactly doing opposite changes, so it is very safe&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-reset-hard-74e3b2b">git reset &amp;ndash;hard 74e3b2b&lt;/h2>
+&lt;ul>
+&lt;li>it resets HEAD to certain commit in history while deleting all the commits after it&lt;/li>
+&lt;li>if commits just local then they are gone forever&lt;/li>
+&lt;/ul>
+&lt;h3 id="git-reset-mixed-74e3b2b">git reset &amp;ndash;mixed 74e3b2b&lt;/h3>
+&lt;ul>
+&lt;li>same as previous one but it will store all the changes from the removed commits as uncommited changes&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-restore-source-74e3b2b-filename">git restore &amp;ndash;source 74e3b2b filename&lt;/h2>
+&lt;ul>
+&lt;li>will restore this file to certain commit (just 1 file)&lt;/li>
+&lt;/ul>
+&lt;h2 id="git-reflog">git reflog&lt;/h2>
+&lt;ul>
+&lt;li>it is advance version of &lt;code>git log&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="restore-after-hard-reset">Restore after hard reset&lt;/h3>
+&lt;ul>
+&lt;li>it even stores history for certain time after &lt;code>git reset --hard&lt;/code>&lt;/li>
+&lt;li>you can &lt;code>git reset 74e3b2b&lt;/code> but creating mew branch is preferred by &lt;code>git branch branch_name 74e3b2b&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="restore-after-deleting-entire-branch">Restore after deleting entire branch&lt;/h3>
+&lt;ul>
+&lt;li>look for &amp;lt;SHA&amp;gt; from &lt;code>git reflog&lt;/code>&lt;/li>
+&lt;li>then &lt;code>git branch branch_name 36a46a1&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="moving-commit-to-another-branch">Moving commit to another branch&lt;/h2>
+&lt;ul>
+&lt;li>if you want to &lt;em>move&lt;/em> cirtain commits from current branch to new branch
+&lt;pre tabindex="0">&lt;code>git branch new_branch_name
+git reset HEAD~1 --hard
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>if moving commit to already present branch
+&lt;pre tabindex="0">&lt;code>git checkout branch_name
+git cherry-pick 36a46a1
+git checkout previous_branch_name
+git reset --hard HEAD~1
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ul>
+&lt;h2 id="interactive-rebase">Interactive rebase&lt;/h2>
+&lt;ul>
+&lt;li>is very advance, &lt;em>dangerous&lt;/em> and powerful tool&lt;/li>
+&lt;li>read comments during the process&lt;/li>
+&lt;/ul>
+&lt;h3 id="change-commit-history">Change commit history&lt;/h3>
+&lt;ul>
+&lt;li>for example if you want to change commit history upto 3 commits before current HEAD&lt;/li>
+&lt;li>&lt;code>git rebase -i HEAD~3&lt;/code>&lt;/li>
+&lt;li>you can change/&lt;em>reword&lt;/em> commit messages, delete/&lt;em>drop&lt;/em> commits, &lt;em>squash&lt;/em> multiple commits together&lt;/li>
+&lt;/ul></description></item><item><title>Arch installation Guide</title><link>https://blog.rishavs.in/posts/3-resource/linux/arch-installation-guide/</link><pubDate>Wed, 24 Mar 2021 22:47:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/linux/arch-installation-guide/</guid><description>&lt;p>Ofcource my notes are are derived from &lt;a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Wiki&lt;/a>. And I highly recommend to read it too. These notes contains all the things which i do at the fime of new Arch Installation, so it is well tested.&lt;/p>
+&lt;h2 id="create-bootable-usb">Create Bootable usb&lt;/h2>
+&lt;pre tabindex="0">&lt;code>sudo dd bs=4 if=/mnt/Tools/linux/distros/archlinux-2021.02.01-x86_64.iso of=/dev/sdb conv=fdatasync status=progress
+&lt;/code>&lt;/pre>&lt;h2 id="verify-the-boot-mode">Verify the boot mode&lt;/h2>
+&lt;p>To verify the boot mode, list the efivars directory:
+&lt;code>ls /sys/firmware/efi/efivars&lt;/code>&lt;/p>
+&lt;p>If the command shows the directory without error, then the system is booted in UEFI mode. If the directory does not exist, the system may be booted in BIOS (or CSM) mode. If the system did not boot in the mode you desired, refer to your motherboard&amp;rsquo;s manual.&lt;/p></description></item><item><title>Vitarana Drone</title><link>https://blog.rishavs.in/posts/2-area/resume/vitarana-drone/</link><pubDate>Thu, 01 Oct 2020 12:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/resume/vitarana-drone/</guid><description>&lt;p>&lt;strong>Duration:&lt;/strong> Oct 2020 – Feb 2021&lt;br>
+&lt;strong>Team Members:&lt;/strong> Rishav Singh, Kashyap Joshi&lt;br>
+&lt;strong>Technology:&lt;/strong> Python, ROS, Drone/Quadcopter, Gazebo, Git, Linux&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>Vitarana Drone was part of the e-Yantra Robotics Competition 2020-21, an international robotics outreach program hosted by IIT Bombay. Competing against 2,603 teams from 572 colleges, we designed an autonomous drone-based delivery system to execute precise object handling and delivery tasks in a simulated environment.&lt;/p>
+&lt;h2 id="project-journey">Project Journey&lt;/h2>
+&lt;h3 id="beginning">Beginning&lt;/h3>
+&lt;ul>
+&lt;li>Entered the competition in our 2nd year of B.Tech.&lt;/li>
+&lt;li>Started with 4 members but 2 left in between, we try to bring em on board but
+it was unavoidable. So work increased on 2 people.&lt;/li>
+&lt;li>But still managed to divide the task in smaller, easily doable parts and divided according to the skills&lt;/li>
+&lt;li>Focused on breaking tasks into manageable parts and acquiring new skills on the go.&lt;/li>
+&lt;/ul>
+&lt;h3 id="key-milestones">Key Milestones&lt;/h3>
+&lt;h4 id="task-1-position-and-altitude-control">Task 1: Position and Altitude Control&lt;/h4>
+&lt;ul>
+&lt;li>Developed and tuned PID controllers for roll, pitch, yaw, and throttle.&lt;/li>
+&lt;li>Achieved precise setpoint control after extensive testing and parameter tuning.&lt;/li>
+&lt;li>Took around 5 days to study and impliment the algorithm but tuning the PID required 10 days straight.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-2-obstacle-avoidance">Task 2: Obstacle Avoidance&lt;/h4>
+&lt;ul>
+&lt;li>Considering we were given 4 sensors on 4 sides with 25 meters range each, we searched and studied about many path planning algorithms.&lt;/li>
+&lt;li>Implemented a 2D custom Bug Algorithm for object avoidance using sensor inputs.&lt;/li>
+&lt;li>Designed ROS actions for barcode scanning and delivery location determination.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-3-advanced-pathfinding">Task 3: Advanced Pathfinding&lt;/h4>
+&lt;ul>
+&lt;li>Enhanced pathfinding for 3D environments to navigate complex obstacles by changing height(throttle).&lt;/li>
+&lt;li>Used image processing for accurate marker detection and landing precision.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-4-delivery-optimization">Task 4: Delivery Optimization&lt;/h4>
+&lt;ul>
+&lt;li>Developed a mechanism for retrieving delivery boxes from a warehouse grid and delivering them to specified locations.&lt;/li>
+&lt;li>Improved marker scanning by adjusting drone altitude to enhance accuracy during detection.&lt;/li>
+&lt;li>Enhanced the obstacle avoidance algorithm for more reliable navigation.&lt;/li>
+&lt;li>Despite being one day late for the deadline, implemented major improvements within a single day, incurring a 25% penalty while ensuring task completion.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-5-time-limited-arena-challenge">Task 5: Time-Limited Arena Challenge&lt;/h4>
+&lt;ul>
+&lt;li>Tasked with delivering and picking up as many boxes as possible within an 8-minute timeframe, with scoring based on delivery distance.&lt;/li>
+&lt;li>Prioritized delivering boxes to distant locations to maximize points, balancing quality and speed (race against time). We had 2 choices either to deliver near boxes first to increase number of boxes or to deliver furthest boxes first to maximize distance points. We selected the later one because our algo was taking more time to detect and
+land on marker.&lt;/li>
+&lt;li>Overcame many difficulties like sometimes the markers were so near to each
+roof that drone scanned wrong marker sometimes. So we had to resolve the
+issue by taking the nearest path to the provided approx location of marker.&lt;/li>
+&lt;li>Introduced a velocity controller to increase drone speed in obstacle-free zones, enhancing overall efficiency.&lt;/li>
+&lt;/ul>
+&lt;h4 id="task-6-final-round-challenge">Task 6: Final Round Challenge&lt;/h4>
+&lt;ul>
+&lt;li>Faced a more complex delivery and pickup task with tighter constraints and only two days for completion.&lt;/li>
+&lt;li>Focused on improving code robustness and refining interconnections between controllers to prevent errors and crashes.&lt;/li>
+&lt;li>Documented the code extensively on the final night of submission, working under high pressure with short power naps to maintain productivity. Me and my
+partner waking up each other after taking 10 min power naps.&lt;/li>
+&lt;li>Main difference between our solution and top 6 solution was that we focused
+more on stability over speed.&lt;/li>
+&lt;li>Although we missed the finals, the task highlighted the importance of stability and meticulous planning in achieving high performance.&lt;/li>
+&lt;/ul>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>Participating in this competition provided invaluable lessons in technical problem-solving, team collaboration, and time management. Despite the challenges of a reduced team and tight deadlines, we demonstrated resilience and adaptability, balancing stability with performance optimization. While we narrowly missed the finals, the experience significantly enhanced our expertise in control systems, path planning, and autonomous systems, preparing us for future complex engineering challenges.&lt;/p></description></item><item><title>Agriculture Ideas</title><link>https://blog.rishavs.in/posts/3-resource/agriculture/agriculture-ideas/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/agriculture/agriculture-ideas/</guid><description>&lt;h2 id="vision">Vision&lt;/h2>
+&lt;ul>
+&lt;li>Ease of use that even i can be farmer&lt;/li>
+&lt;li>High yield&lt;/li>
+&lt;li>Low cost&lt;/li>
+&lt;li>Long term solution for farmers as well as environment&lt;/li>
+&lt;/ul>
+&lt;h2 id="imagination">Imagination&lt;/h2>
+&lt;ul>
+&lt;li>Greenhouse&lt;/li>
+&lt;li>Drone/Balloon used for monitoring disease, weeds, etc. and make a report&lt;/li>
+&lt;li>Based on this report automatically spray in those areas&lt;/li>
+&lt;li>Use biofertilizers&lt;/li>
+&lt;li>Use sensors for reporting what and when nuterients are needed&lt;/li>
+&lt;/ul></description></item></channel></rss>

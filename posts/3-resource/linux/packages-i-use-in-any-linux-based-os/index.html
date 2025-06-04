@@ -1,0 +1,220 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Packages I use in any Linux based OS | Rishav's Digital Garden</title><meta name=keywords content="Linux/Arch"><meta name=description content="Packages on Arch
+pacstrap
+
+base
+linux-lts
+linux-lts-headers
+base-devel
+btrfs
+btrfs-progs
+vim
+networkmanager
+grub
+efibootmgr
+intel-ucode
+
+Utils
+
+mtpfs	        : Reading and Writing from any MTP device
+ntfs-3g       : NTFS filesystem driver and utilities
+gvfs-mtp      : Virtual filesystem implementation for GIO (MTP backend; Android, media player)
+gvfs-gphoto2  : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)
+nfs-utils     : Support programs for Network File Systems
+tlp           : Linux Advanced Power Management
+powertop      : A tool to diagnose issues with power consumption and power management
+python-pip    : The PyPA recommended tool for installing Python packages
+jre8-openjdk          : OpenJDK Java 8 full runtime environment
+jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment
+wget          : Network utility to retrieve files from the Web
+gnome-keyring : Stores passwords and encryption keys
+
+Arch
+# Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+
+# Power Management
+pacman -S tlp powertop
+
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+xorg
+
+libx11        : X11 client-side library
+xorg-xinit    : X.Org initialisation program
+libxinerama   : X11 Xinerama extension library
+libxft        : FreeType-based font drawing library for X
+xorg-server   : Xorg X server
+xorg-xrandr   : Primitive command line interface to RandR extension
+xorg-xrdb     : X server resource database utility
+xorg-xinput   : Small commandline tool to configure devices
+xorg-xbacklight   : RandR-based backlight control application
+xf86-video-intel  : X.org Intel i810/i830/i915/945G/G965+ video drivers
+xclip             : Command line interface to the X11 clipboard
+
+Arch
+pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+
+pacman -S xf86-video-intel
+
+yay -S libxft-bgra-git
+Gentoo
+emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+Basic
+
+picom		: X compositor that may fix tearing issues
+unclutter	: A small program for hiding the mouse cursor
+os-prober	: Utility to detect other OSes on a set of drives
+man-db	: A utility for reading man pages
+bash-completion	: Programmable completion for the bash shell
+zsh-completions	: Additional completion definitions for Zsh
+zip,unzip,tar,bzip2,atool,unrar	: Compression utils
+
+Arch
+pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+Fonts
+
+noto-fonts        : Google Noto TTF fonts
+noto-fonts-cjk    : Google Noto CJK fonts
+ttf-joypixels     : Emoji as a Service (formerly EmojiOne)
+
+Arch
+pacman -S noto-fonts ttf-joypixels"><meta name=author content><link rel=canonical href=https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/><link crossorigin=anonymous href=/assets/css/stylesheet.93f625d739f1d6a5c6f20c146bc6a8d26b233492b34b2220c54b12fd46a04ded.css integrity="sha256-k/Yl1znx1qXG8gwUa8ao0msjNJKzSyIgxUsS/UagTe0=" rel="preload stylesheet" as=style><link rel=icon href=https://blog.rishavs.in/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://blog.rishavs.in/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://blog.rishavs.in/favicon-32x32.png><link rel=apple-touch-icon href=https://blog.rishavs.in/apple-touch-icon.png><link rel=mask-icon href=https://blog.rishavs.in/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/"><meta property="og:site_name" content="Rishav's Digital Garden"><meta property="og:title" content="Packages I use in any Linux based OS"><meta property="og:description" content="Packages on Arch pacstrap base linux-lts linux-lts-headers base-devel btrfs btrfs-progs vim networkmanager grub efibootmgr intel-ucode Utils mtpfs	: Reading and Writing from any MTP device ntfs-3g : NTFS filesystem driver and utilities gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player) gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player) nfs-utils : Support programs for Network File Systems tlp : Linux Advanced Power Management powertop : A tool to diagnose issues with power consumption and power management python-pip : The PyPA recommended tool for installing Python packages jre8-openjdk : OpenJDK Java 8 full runtime environment jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment wget : Network utility to retrieve files from the Web gnome-keyring : Stores passwords and encryption keys Arch # Filesystem Support pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2 # Power Management pacman -S tlp powertop # Development pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring xorg libx11 : X11 client-side library xorg-xinit : X.Org initialisation program libxinerama : X11 Xinerama extension library libxft : FreeType-based font drawing library for X xorg-server : Xorg X server xorg-xrandr : Primitive command line interface to RandR extension xorg-xrdb : X server resource database utility xorg-xinput : Small commandline tool to configure devices xorg-xbacklight : RandR-based backlight control application xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers xclip : Command line interface to the X11 clipboard Arch pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip pacman -S xf86-video-intel yay -S libxft-bgra-git Gentoo emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip Basic picom	: X compositor that may fix tearing issues unclutter	: A small program for hiding the mouse cursor os-prober	: Utility to detect other OSes on a set of drives man-db	: A utility for reading man pages bash-completion	: Programmable completion for the bash shell zsh-completions	: Additional completion definitions for Zsh zip,unzip,tar,bzip2,atool,unrar	: Compression utils Arch pacman -S picom unclutter os-prober man-db bash-completion zsh-completions pacman -S atool zip unzip tar bzip2 gzip lzip unrar Fonts noto-fonts : Google Noto TTF fonts noto-fonts-cjk : Google Noto CJK fonts ttf-joypixels : Emoji as a Service (formerly EmojiOne) Arch pacman -S noto-fonts ttf-joypixels"><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-04-12T23:03:00+00:00"><meta property="article:modified_time" content="2021-04-12T23:03:00+00:00"><meta property="article:tag" content="Linux/Arch"><meta name=twitter:card content="summary"><meta name=twitter:title content="Packages I use in any Linux based OS"><meta name=twitter:description content="Packages on Arch
+pacstrap
+
+base
+linux-lts
+linux-lts-headers
+base-devel
+btrfs
+btrfs-progs
+vim
+networkmanager
+grub
+efibootmgr
+intel-ucode
+
+Utils
+
+mtpfs	        : Reading and Writing from any MTP device
+ntfs-3g       : NTFS filesystem driver and utilities
+gvfs-mtp      : Virtual filesystem implementation for GIO (MTP backend; Android, media player)
+gvfs-gphoto2  : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)
+nfs-utils     : Support programs for Network File Systems
+tlp           : Linux Advanced Power Management
+powertop      : A tool to diagnose issues with power consumption and power management
+python-pip    : The PyPA recommended tool for installing Python packages
+jre8-openjdk          : OpenJDK Java 8 full runtime environment
+jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment
+wget          : Network utility to retrieve files from the Web
+gnome-keyring : Stores passwords and encryption keys
+
+Arch
+# Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+
+# Power Management
+pacman -S tlp powertop
+
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+xorg
+
+libx11        : X11 client-side library
+xorg-xinit    : X.Org initialisation program
+libxinerama   : X11 Xinerama extension library
+libxft        : FreeType-based font drawing library for X
+xorg-server   : Xorg X server
+xorg-xrandr   : Primitive command line interface to RandR extension
+xorg-xrdb     : X server resource database utility
+xorg-xinput   : Small commandline tool to configure devices
+xorg-xbacklight   : RandR-based backlight control application
+xf86-video-intel  : X.org Intel i810/i830/i915/945G/G965+ video drivers
+xclip             : Command line interface to the X11 clipboard
+
+Arch
+pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+
+pacman -S xf86-video-intel
+
+yay -S libxft-bgra-git
+Gentoo
+emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+Basic
+
+picom		: X compositor that may fix tearing issues
+unclutter	: A small program for hiding the mouse cursor
+os-prober	: Utility to detect other OSes on a set of drives
+man-db	: A utility for reading man pages
+bash-completion	: Programmable completion for the bash shell
+zsh-completions	: Additional completion definitions for Zsh
+zip,unzip,tar,bzip2,atool,unrar	: Compression utils
+
+Arch
+pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+Fonts
+
+noto-fonts        : Google Noto TTF fonts
+noto-fonts-cjk    : Google Noto CJK fonts
+ttf-joypixels     : Emoji as a Service (formerly EmojiOne)
+
+Arch
+pacman -S noto-fonts ttf-joypixels"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://blog.rishavs.in/posts/"},{"@type":"ListItem","position":2,"name":"Packages I use in any Linux based OS","item":"https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Packages I use in any Linux based OS","name":"Packages I use in any Linux based OS","description":"Packages on Arch pacstrap base linux-lts linux-lts-headers base-devel btrfs btrfs-progs vim networkmanager grub efibootmgr intel-ucode Utils mtpfs\t: Reading and Writing from any MTP device ntfs-3g : NTFS filesystem driver and utilities gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player) gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player) nfs-utils : Support programs for Network File Systems tlp : Linux Advanced Power Management powertop : A tool to diagnose issues with power consumption and power management python-pip : The PyPA recommended tool for installing Python packages jre8-openjdk : OpenJDK Java 8 full runtime environment jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment wget : Network utility to retrieve files from the Web gnome-keyring : Stores passwords and encryption keys Arch # Filesystem Support pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2 # Power Management pacman -S tlp powertop # Development pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring xorg libx11 : X11 client-side library xorg-xinit : X.Org initialisation program libxinerama : X11 Xinerama extension library libxft : FreeType-based font drawing library for X xorg-server : Xorg X server xorg-xrandr : Primitive command line interface to RandR extension xorg-xrdb : X server resource database utility xorg-xinput : Small commandline tool to configure devices xorg-xbacklight : RandR-based backlight control application xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers xclip : Command line interface to the X11 clipboard Arch pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip pacman -S xf86-video-intel yay -S libxft-bgra-git Gentoo emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip Basic picom\t: X compositor that may fix tearing issues unclutter\t: A small program for hiding the mouse cursor os-prober\t: Utility to detect other OSes on a set of drives man-db\t: A utility for reading man pages bash-completion\t: Programmable completion for the bash shell zsh-completions\t: Additional completion definitions for Zsh zip,unzip,tar,bzip2,atool,unrar\t: Compression utils Arch pacman -S picom unclutter os-prober man-db bash-completion zsh-completions pacman -S atool zip unzip tar bzip2 gzip lzip unrar Fonts noto-fonts : Google Noto TTF fonts noto-fonts-cjk : Google Noto CJK fonts ttf-joypixels : Emoji as a Service (formerly EmojiOne) Arch pacman -S noto-fonts ttf-joypixels\n","keywords":["Linux/Arch"],"articleBody":"Packages on Arch pacstrap base linux-lts linux-lts-headers base-devel btrfs btrfs-progs vim networkmanager grub efibootmgr intel-ucode Utils mtpfs\t: Reading and Writing from any MTP device ntfs-3g : NTFS filesystem driver and utilities gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player) gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player) nfs-utils : Support programs for Network File Systems tlp : Linux Advanced Power Management powertop : A tool to diagnose issues with power consumption and power management python-pip : The PyPA recommended tool for installing Python packages jre8-openjdk : OpenJDK Java 8 full runtime environment jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment wget : Network utility to retrieve files from the Web gnome-keyring : Stores passwords and encryption keys Arch # Filesystem Support pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2 # Power Management pacman -S tlp powertop # Development pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring xorg libx11 : X11 client-side library xorg-xinit : X.Org initialisation program libxinerama : X11 Xinerama extension library libxft : FreeType-based font drawing library for X xorg-server : Xorg X server xorg-xrandr : Primitive command line interface to RandR extension xorg-xrdb : X server resource database utility xorg-xinput : Small commandline tool to configure devices xorg-xbacklight : RandR-based backlight control application xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers xclip : Command line interface to the X11 clipboard Arch pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip pacman -S xf86-video-intel yay -S libxft-bgra-git Gentoo emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip Basic picom\t: X compositor that may fix tearing issues unclutter\t: A small program for hiding the mouse cursor os-prober\t: Utility to detect other OSes on a set of drives man-db\t: A utility for reading man pages bash-completion\t: Programmable completion for the bash shell zsh-completions\t: Additional completion definitions for Zsh zip,unzip,tar,bzip2,atool,unrar\t: Compression utils Arch pacman -S picom unclutter os-prober man-db bash-completion zsh-completions pacman -S atool zip unzip tar bzip2 gzip lzip unrar Fonts noto-fonts : Google Noto TTF fonts noto-fonts-cjk : Google Noto CJK fonts ttf-joypixels : Emoji as a Service (formerly EmojiOne) Arch pacman -S noto-fonts ttf-joypixels\nMusic alsa-utils : Advanced Linux Sound Architecture - Utilities pulseaudio : A featureful, general-purpose sound server pamixer : Pulseaudio command-line mixer like amixer pulsemixer : CLI and curses mixer for pulseaudio mpd : Flexible, powerful, server-side application for playing music mpc : Minimalist command line interface to MPD ncmpcpp : terminal music player mpv : video player Arch pacman -S alsa-utils pulseaudio pamixer pulsemixer pacman -S alsa-utils pipewire pipewire-alsa pipewire-pulse pulsemixer pamixer pacman -S mpd mpc ncmpcpp mpv Shell dash : POSIX compliant shell that aims to be as small as possible dashbinsh : redirects sh to dash (aur package) zsh : advanced and programmable shell General fd : find replacement in rust ripgrep : grep replacement in rust fzf : fuzzy finder htop : system manager nitrogen : wallpaper manager ranger : Vim-like file fanager pcmanfm : File manager neomutt : email client dunst : notification demon libnotify : notification client xarchiver : GTK+ frontend to command line archivers xterm : default terminal for various program evince : document viewer sxiv : image viewer ueberzug : image previewer maim : Utility to take a screenshot using imlib2 neovim : text editor brave-bin : internet browser gparted : A Partition Magic clone, frontend to GNU Parted Arch pacman -S fd ripgrep fzf htop nitrogen ranger pcmanfm dunst libnotify xarchiver xterm evince sxiv ueberzug maim yay -S neovim-nightly-bin brave-bin Nvidia nvidia-lts nvidia-utils nvidia-settings nvidia-prime optimus-manager (yay) Arch # For linux lts kernel pacman -S nvidia-lts nvidia-utils nvidia-settings nvidia-prime # For latest linux kernel pacman -S nvidia nvidia-utils nvidia-settings nvidia-prime Virtual Box virtualbox virtualbox-host-dkms (for lts and other kernels) virtualbox-host-modules-arch (for latest linux kernels) Arch # For linux lts kernel pacman -S virtualbox virtualbox-host-dkms linux-lts-headers # For latest linux kernel pacman -S virtualbox virtualbox-host-modules-arch linux-headers # Add user into `vboxusers` group, here user is `rishav` gpasswd -a rishav vboxusers # load the `vboxdrv` module manually modprobe vboxdrv Note: If you are on linux kernel then make sure you have linux-headers installed. Similarly if you are on linux-lts kernel then linux-ltx-headers should be installed.\nQEMU qemu : A generic and open source machine emulator and virtualizer vert-manager : Desktop user interface for managing virtual machines pacman -S qemu virt-manager dnsmasq ebtables Fun figlet : A program for making large letters out of ordinary text cmatrix : A curses-based scrolling ‘Matrix’-like screen neofetch : A CLI system information tool Arch pacman -S figlet cmatrix neofetch Latex texlive-core : TeX Live core distribution texlive-latexextra : Large collection of add-on packages for LaTeX texlive-science : Typesetting for mathematics, natural and computer sciences texlive-publishers : LaTeX classes and packages for specific publishers texlive-formatsextra : Collection of extra TeX ‘formats’ pandoc : Conversion between markup formats Development redis : An in-memory database that persists on disk pacman -S redis postgresql : Sophisticated object-relational DBMS (link) pacman -S postgresql sudo -iu postgres # login as postgres user initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data # start the service systemctl enable --now postgresql.service Bluetooth bluez - Daemons for the bluetooth protocol stack bluez-utils - Development and debugging utilities blueman PDF xournalpp - Handwriting notetaking software with PDF annotation support Random xdotools tesseract - OCR tesseract-data-eng\nExplore xdg-user-dirs xdg-utils\n","wordCount":"893","inLanguage":"en","datePublished":"2021-04-12T23:03:00Z","dateModified":"2021-04-12T23:03:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.rishavs.in/posts/3-resource/linux/packages-i-use-in-any-linux-based-os/"},"publisher":{"@type":"Organization","name":"Rishav's Digital Garden","logo":{"@type":"ImageObject","url":"https://blog.rishavs.in/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://blog.rishavs.in/ accesskey=h title="Rishav's Digital Garden (Alt + H)">Rishav's Digital Garden</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://blog.rishavs.in/archives title=Archive><span>Archive</span></a></li><li><a href=https://blog.rishavs.in/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://blog.rishavs.in/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Packages I use in any Linux based OS</h1><div class=post-meta><span title='2021-04-12 23:03:00 +0000 UTC'>April 12, 2021</span>&nbsp;·&nbsp;5 min</div></header><div class=post-content><h1 id=packages-on-arch>Packages on Arch<a hidden class=anchor aria-hidden=true href=#packages-on-arch>#</a></h1><h2 id=pacstrap>pacstrap<a hidden class=anchor aria-hidden=true href=#pacstrap>#</a></h2><ul><li>base</li><li>linux-lts</li><li>linux-lts-headers</li><li>base-devel</li><li>btrfs</li><li>btrfs-progs</li><li>vim</li><li>networkmanager</li><li>grub</li><li>efibootmgr</li><li>intel-ucode</li></ul><h2 id=utils>Utils<a hidden class=anchor aria-hidden=true href=#utils>#</a></h2><ul><li>mtpfs : Reading and Writing from any MTP device</li><li>ntfs-3g : NTFS filesystem driver and utilities</li><li>gvfs-mtp : Virtual filesystem implementation for GIO (MTP backend; Android, media player)</li><li>gvfs-gphoto2 : Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player)</li><li>nfs-utils : Support programs for Network File Systems</li><li>tlp : Linux Advanced Power Management</li><li>powertop : A tool to diagnose issues with power consumption and power management</li><li>python-pip : The PyPA recommended tool for installing Python packages</li><li>jre8-openjdk : OpenJDK Java 8 full runtime environment</li><li>jre8-openjdk-headless : OpenJDK Java 8 headless runtime environment</li><li>wget : Network utility to retrieve files from the Web</li><li>gnome-keyring : Stores passwords and encryption keys</li></ul><h3 id=arch>Arch<a hidden class=anchor aria-hidden=true href=#arch>#</a></h3><pre tabindex=0><code># Filesystem Support
+pacman -S mtpfs ntfs-3g gvfs-mtp gvfs-gphoto2
+
+# Power Management
+pacman -S tlp powertop
+
+# Development
+pacman -S python-pip jre8-openjdk jre8-openjdk-headless wget gnome-keyring
+</code></pre><h2 id=xorg>xorg<a hidden class=anchor aria-hidden=true href=#xorg>#</a></h2><ul><li>libx11 : X11 client-side library</li><li>xorg-xinit : X.Org initialisation program</li><li>libxinerama : X11 Xinerama extension library</li><li>libxft : FreeType-based font drawing library for X</li><li>xorg-server : Xorg X server</li><li>xorg-xrandr : Primitive command line interface to RandR extension</li><li>xorg-xrdb : X server resource database utility</li><li>xorg-xinput : Small commandline tool to configure devices</li><li>xorg-xbacklight : RandR-based backlight control application</li><li>xf86-video-intel : X.org Intel i810/i830/i915/945G/G965+ video drivers</li><li>xclip : Command line interface to the X11 clipboard</li></ul><h3 id=arch-1>Arch<a hidden class=anchor aria-hidden=true href=#arch-1>#</a></h3><pre tabindex=0><code>pacman -S libx11 xorg-xinit libxinerama libxft xorg-server xorg-xrandr xorg-xrdb xorg-xinput xorg-xbacklight xclip
+
+pacman -S xf86-video-intel
+
+yay -S libxft-bgra-git
+</code></pre><h3 id=gentoo>Gentoo<a hidden class=anchor aria-hidden=true href=#gentoo>#</a></h3><pre tabindex=0><code>emerge x11-libs/libX11 x11-base/xorg-server x11-libs/libXrandr x11-libs/libXinerama x11-libs/libXft x11-apps/xinit x11-apps/xrdb x11-apps/mesa-progs x11-apps/xrandr x11-misc/unclutter x11-misc/xclip
+</code></pre><h2 id=basic>Basic<a hidden class=anchor aria-hidden=true href=#basic>#</a></h2><ul><li>picom : X compositor that may fix tearing issues</li><li>unclutter : A small program for hiding the mouse cursor</li><li>os-prober : Utility to detect other OSes on a set of drives</li><li>man-db : A utility for reading man pages</li><li>bash-completion : Programmable completion for the bash shell</li><li>zsh-completions : Additional completion definitions for Zsh</li><li>zip,unzip,tar,bzip2,atool,unrar : Compression utils</li></ul><h3 id=arch-2>Arch<a hidden class=anchor aria-hidden=true href=#arch-2>#</a></h3><pre tabindex=0><code>pacman -S picom unclutter os-prober man-db bash-completion zsh-completions
+pacman -S atool zip unzip tar bzip2 gzip lzip unrar
+</code></pre><h2 id=fonts>Fonts<a hidden class=anchor aria-hidden=true href=#fonts>#</a></h2><ul><li>noto-fonts : Google Noto TTF fonts</li><li>noto-fonts-cjk : Google Noto CJK fonts</li><li>ttf-joypixels : Emoji as a Service (formerly EmojiOne)</li></ul><h3 id=arch-3>Arch<a hidden class=anchor aria-hidden=true href=#arch-3>#</a></h3><p><code>pacman -S noto-fonts ttf-joypixels</code></p><h2 id=music>Music<a hidden class=anchor aria-hidden=true href=#music>#</a></h2><ul><li>alsa-utils : Advanced Linux Sound Architecture - Utilities</li><li>pulseaudio : A featureful, general-purpose sound server</li><li>pamixer : Pulseaudio command-line mixer like amixer</li><li>pulsemixer : CLI and curses mixer for pulseaudio</li><li>mpd : Flexible, powerful, server-side application for playing music</li><li>mpc : Minimalist command line interface to MPD</li><li>ncmpcpp : terminal music player</li><li>mpv : video player</li></ul><h3 id=arch-4>Arch<a hidden class=anchor aria-hidden=true href=#arch-4>#</a></h3><pre tabindex=0><code>pacman -S alsa-utils pulseaudio pamixer pulsemixer
+
+pacman -S alsa-utils pipewire pipewire-alsa pipewire-pulse pulsemixer pamixer
+
+pacman -S mpd mpc ncmpcpp mpv
+</code></pre><h2 id=shell>Shell<a hidden class=anchor aria-hidden=true href=#shell>#</a></h2><ul><li>dash : POSIX compliant shell that aims to be as small as possible</li><li>dashbinsh : redirects sh to dash (aur package)</li><li>zsh : advanced and programmable shell</li></ul><h2 id=general>General<a hidden class=anchor aria-hidden=true href=#general>#</a></h2><ul><li>fd : find replacement in rust</li><li>ripgrep : grep replacement in rust</li><li>fzf : fuzzy finder</li><li>htop : system manager</li><li>nitrogen : wallpaper manager</li><li>ranger : Vim-like file fanager</li><li>pcmanfm : File manager</li><li>neomutt : email client</li><li>dunst : notification demon</li><li>libnotify : notification client</li><li>xarchiver : GTK+ frontend to command line archivers</li><li>xterm : default terminal for various program</li><li>evince : document viewer</li><li>sxiv : image viewer</li><li>ueberzug : image previewer</li><li>maim : Utility to take a screenshot using imlib2</li><li>neovim : text editor</li><li>brave-bin : internet browser</li><li>gparted : A Partition Magic clone, frontend to GNU Parted</li></ul><h3 id=arch-5>Arch<a hidden class=anchor aria-hidden=true href=#arch-5>#</a></h3><pre tabindex=0><code>pacman -S fd ripgrep fzf htop nitrogen ranger pcmanfm dunst libnotify xarchiver xterm evince sxiv ueberzug maim
+yay -S neovim-nightly-bin brave-bin
+</code></pre><h2 id=nvidia>Nvidia<a hidden class=anchor aria-hidden=true href=#nvidia>#</a></h2><ul><li>nvidia-lts</li><li>nvidia-utils</li><li>nvidia-settings</li><li>nvidia-prime</li><li>optimus-manager (yay)</li></ul><h3 id=arch-6>Arch<a hidden class=anchor aria-hidden=true href=#arch-6>#</a></h3><pre tabindex=0><code># For linux lts kernel
+pacman -S nvidia-lts nvidia-utils nvidia-settings nvidia-prime
+
+# For latest linux kernel
+pacman -S nvidia nvidia-utils nvidia-settings nvidia-prime
+</code></pre><h2 id=virtual-box>Virtual Box<a hidden class=anchor aria-hidden=true href=#virtual-box>#</a></h2><ul><li>virtualbox</li><li>virtualbox-host-dkms (for lts and other kernels)</li><li>virtualbox-host-modules-arch (for latest linux kernels)</li></ul><h3 id=arch-7>Arch<a hidden class=anchor aria-hidden=true href=#arch-7>#</a></h3><pre tabindex=0><code># For linux lts kernel
+pacman -S virtualbox virtualbox-host-dkms linux-lts-headers
+
+# For latest linux kernel
+pacman -S virtualbox virtualbox-host-modules-arch linux-headers
+
+# Add user into `vboxusers` group, here user is `rishav`
+gpasswd -a rishav vboxusers
+
+# load the `vboxdrv` module manually
+modprobe vboxdrv
+</code></pre><blockquote><p>Note: If you are on <code>linux</code> kernel then make sure you have <code>linux-headers</code> installed. Similarly if you are on <code>linux-lts</code> kernel then <code>linux-ltx-headers</code> should be installed.</p></blockquote><h2 id=qemu>QEMU<a hidden class=anchor aria-hidden=true href=#qemu>#</a></h2><ul><li>qemu : A generic and open source machine emulator and virtualizer</li><li>vert-manager : Desktop user interface for managing virtual machines</li></ul><pre tabindex=0><code>pacman -S qemu virt-manager dnsmasq ebtables
+</code></pre><h2 id=fun>Fun<a hidden class=anchor aria-hidden=true href=#fun>#</a></h2><ul><li>figlet : A program for making large letters out of ordinary text</li><li>cmatrix : A curses-based scrolling &lsquo;Matrix&rsquo;-like screen</li><li>neofetch : A CLI system information tool</li></ul><h3 id=arch-8>Arch<a hidden class=anchor aria-hidden=true href=#arch-8>#</a></h3><pre tabindex=0><code>pacman -S figlet cmatrix neofetch
+</code></pre><h2 id=latex>Latex<a hidden class=anchor aria-hidden=true href=#latex>#</a></h2><ul><li>texlive-core : TeX Live core distribution</li><li>texlive-latexextra : Large collection of add-on packages for LaTeX</li><li>texlive-science : Typesetting for mathematics, natural and computer sciences</li><li>texlive-publishers : LaTeX classes and packages for specific publishers</li><li>texlive-formatsextra : Collection of extra TeX &lsquo;formats&rsquo;</li><li>pandoc : Conversion between markup formats</li></ul><h2 id=development>Development<a hidden class=anchor aria-hidden=true href=#development>#</a></h2><ul><li>redis : An in-memory database that persists on disk</li></ul><pre tabindex=0><code>pacman -S redis
+</code></pre><ul><li>postgresql : Sophisticated object-relational DBMS (<a href=https://wiki.archlinux.org/title/PostgreSQL>link</a>)</li></ul><pre tabindex=0><code>pacman -S postgresql
+sudo -iu postgres       # login as postgres user
+initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
+
+# start the service
+systemctl enable --now postgresql.service
+</code></pre><h2 id=bluetooth>Bluetooth<a hidden class=anchor aria-hidden=true href=#bluetooth>#</a></h2><ul><li>bluez - Daemons for the bluetooth protocol stack</li><li>bluez-utils - Development and debugging utilities</li><li>blueman</li></ul><h2 id=pdf>PDF<a hidden class=anchor aria-hidden=true href=#pdf>#</a></h2><ul><li>xournalpp - Handwriting notetaking software with PDF annotation support</li></ul><h2 id=random>Random<a hidden class=anchor aria-hidden=true href=#random>#</a></h2><p>xdotools
+tesseract - OCR
+tesseract-data-eng</p><h2 id=explore>Explore<a hidden class=anchor aria-hidden=true href=#explore>#</a></h2><p>xdg-user-dirs xdg-utils</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://blog.rishavs.in/tags/linux/arch/>Linux/Arch</a></li></ul><nav class=paginav><a class=prev href=https://blog.rishavs.in/posts/3-resource/linux/xfiles/><span class=title>« Prev</span><br><span>xfiles</span>
+</a><a class=next href=https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/><span class=title>Next »</span><br><span>Git Undo Mistakes</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://blog.rishavs.in/>Rishav's Digital Garden</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
