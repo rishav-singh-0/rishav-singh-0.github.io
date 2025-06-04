@@ -86,16 +86,19 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          name: hugo-public
           path: ./hugo_root/public
 
   # Deployment job
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: hugo-public
+          path: ./hugo_root/public
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
