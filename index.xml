@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/</link><description>Recent content on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><atom:link href="https://rishav-singh-0.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://rishav-singh-0.github.io/toy-network/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/toy-network/</guid><description>&lt;p>&lt;a href="https://brege.org/post/network-graphs-in-hugo/">Reference&lt;/a>&lt;/p>
+&lt;p>
+&lt;style>
+#mynetwork {
+background-color: #f5f5f5;
+border-radius: 10px;
+border: 1px solid #cccccc;
+margin: 5px 0 40px 0;
+}
+&lt;/style>
+&lt;div id="mynetwork" data-nodes-path=ZgotmplZ data-edges-path=ZgotmplZ>&lt;/div>
+&lt;script src="https://rishav-singh-0.github.io/js/vis-network.min.js">&lt;/script>
+&lt;script src="https://rishav-singh-0.github.io/js/toy-network.js">&lt;/script>
+&lt;style>
+#mynetwork {
+background-color: #f5f5f5;
+border-radius: 10px;
+border: 1px solid #cccccc;
+margin: 5px 0 40px 0;
+}
+&lt;/style>
+&lt;div id="mynetwork" data-nodes-path=/data/toy-network/nodes.json data-edges-path=/data/toy-network/edges.json>&lt;/div>
+&lt;script src="https://rishav-singh-0.github.io/js/vis-network.min.js">&lt;/script>
+&lt;script src="https://rishav-singh-0.github.io/js/toy-network.js">&lt;/script>
+&lt;/p></description></item></channel></rss>

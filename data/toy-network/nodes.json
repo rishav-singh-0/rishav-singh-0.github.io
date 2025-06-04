@@ -1,0 +1,47 @@
+[
+    {
+      "id": 1,
+      "label": "Pear",
+      "image": "/img/fruit/pear.jpg"
+    },
+    {
+      "id": 2,
+      "label": "Apple",
+      "image": "/img/fruit/apple.jpg"
+    },
+    {
+      "id": 3,
+      "label": "Quince",
+      "image": "/img/fruit/quince.jpg"
+    },
+    {
+      "id": 4,
+      "label": "Lime",
+      "image": "/img/fruit/lime.jpg"
+    },
+    {
+      "id": 5,
+      "label": "Orange",
+      "image": "/img/fruit/orange.jpg"
+    },
+    {
+      "id": 6,
+      "label": "Lemon",
+      "image": "/img/fruit/lemon.jpg"
+    },
+    {
+      "id": 7,
+      "label": "Grapefruit",
+      "image": "/img/fruit/grapefruit.jpg"
+    },
+    {
+      "id": 8,
+      "label": "Peach",
+      "image": "/img/fruit/peach.jpg"
+    },
+    {
+      "id": 9,
+      "label": "Plum",
+      "image": "/img/fruit/plum.jpg"
+    }
+  ]
