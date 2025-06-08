@@ -1,0 +1,343 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Understanding DNS Records | Rishav's Digital Garden</title>
+<meta name=keywords content="Web"><meta name=description content='Overview of DNS
+The Domain Name System (DNS) is the cornerstone of the modern internet, acting as a distributed and hierarchical naming system that translates human-readable domain names (e.g., example.com) into IP addresses (e.g., 192.0.2.1) that networking equipment uses to route traffic.
+DNS Resolution Flow
+
+User Request: The user enters a domain in their browser.
+Recursive Resolver: The request first hits a recursive resolver (typically provided by the user&rsquo;s ISP or a public resolver like Google or Cloudflare).
+Root Servers: If not cached, the resolver queries one of the root DNS servers (13 root server clusters).
+TLD Servers: The root server responds with the TLD (e.g., .com) nameservers.
+Authoritative Server: The resolver queries the TLD server, which responds with the authoritative nameserver for the domain.
+Final Resolution: The resolver queries the authoritative nameserver, retrieves the required record (e.g., A record), and returns it to the user.
+
+DNS Hierarchy
+
+Root Zone: Managed by IANA, root servers handle the top level of DNS.
+TLD Zone: Top-Level Domains like .com, .net, .org, governed by registries.
+Authoritative Zones: Domains and subdomains managed by authoritative nameservers, controlled by domain owners.
+
+
+Major DNS Record Types
+A (Address Record)
+
+Purpose: Maps a domain to an IPv4 address.
+Example:
+api.example.com. IN A 192.0.2.1
+
+Use Cases: Web servers, API endpoints.
+
+AAAA (IPv6 Address Record)
+
+Purpose: Maps a domain to an IPv6 address.
+Example:
+api.example.com. IN AAAA 2001:db8::1
+
+Use Cases: IPv6-compliant services.
+
+CNAME (Canonical Name Record)
+
+Purpose: Points a subdomain to another domain (alias).
+Constraints: Cannot be used at the root of a domain.
+Example:
+www.example.com. IN CNAME example.com.
+
+Use Cases: Load-balanced endpoints, third-party services.
+
+ALIAS (Non-standard, provider-specific)
+
+Purpose: Like CNAME but usable at the root domain.
+Example (Cloudflare or Route 53):
+example.com. IN ALIAS example.net.
+
+Use Cases: Root domain pointing to load balancer or CDN.
+
+MX (Mail Exchange Record)
+
+Purpose: Defines mail servers for a domain.
+Priority Field: Lower numbers have higher priority.
+Example:
+example.com. IN MX 10 mail1.example.com.
+example.com. IN MX 20 mail2.example.com.
+
+Use Cases: Email routing and delivery.
+
+NS (Name Server Record)
+
+Purpose: Specifies authoritative DNS servers for a domain.
+Example:
+example.com. IN NS ns1.exampledns.com.
+example.com. IN NS ns2.exampledns.com.
+
+Use Cases: Delegating zones.
+
+SOA (Start of Authority)
+
+Purpose: Metadata for the DNS zone.
+Fields:
+
+Primary NS
+Admin email
+Serial number (zone version)
+Refresh, retry, expire, minimum TTL
+
+
+Example:
+example.com. IN SOA ns1.exampledns.com. admin.example.com. (
+    2025052101 ; serial
+    3600       ; refresh
+    600        ; retry
+    604800     ; expire
+    86400      ; minimum
+)
+
+
+TXT (Text Record)
+
+Purpose: Stores arbitrary text data.
+Use Cases:
+
+SPF (Sender Policy Framework):
+example.com. IN TXT "v=spf1 include:_spf.google.com ~all"
+
+DKIM (DomainKeys Identified Mail):
+default._domainkey.example.com. IN TXT "v=DKIM1; k=rsa; p=..."
+
+DMARC:
+_dmarc.example.com. IN TXT "v=DMARC1; p=none; rua=mailto:dmarc@example.com"
+
+
+
+
+PTR (Pointer Record)
+
+Purpose: Reverse DNS lookup.
+Example:
+1.2.0.192.in-addr.arpa. IN PTR api.example.com.
+
+Use Cases: Email server validation, diagnostics.
+
+SRV (Service Locator Record)
+
+Purpose: Defines the location of services by name.
+Fields: Priority, weight, port, target.
+Example:
+_sip._tcp.example.com. IN SRV 10 60 5060 sipserver.example.com.
+
+Use Cases: SIP, XMPP, LDAP.
+
+CAA (Certificate Authority Authorization)
+
+Purpose: Specifies which CAs are allowed to issue certificates.
+Example:
+example.com. IN CAA 0 issue "letsencrypt.org"
+
+Use Cases: TLS certificate issuance control.
+
+
+Real-World Examples and Configurations
+Subdomain Examples
+api.example.com.     IN A     192.0.2.10
+mail.example.com.    IN MX    10 mailhost.example.com.
+ftp.example.com.     IN CNAME files.example.net.
+Multiple Records
+example.com. IN MX 10 mx1.example.com.
+example.com. IN MX 20 mx2.example.com.
+
+example.com. IN A 192.0.2.1
+example.com. IN A 192.0.2.2
+TTL and Priority Tuning
+www.example.com. 3600 IN CNAME webhost.example.net.
+example.com.     300  IN MX 10 mail1.example.com.
+
+Common Pitfalls and Misconfigurations
+CNAME at Root Domain
+Using CNAME at the zone apex (example.com.) is invalid and breaks RFC compliance. Use ALIAS or ANAME records if supported by your DNS provider.'><meta name=author content><link rel=canonical href=https://rishav-singh-0.github.io/posts/understanding-dns-records/><link crossorigin=anonymous href=/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css integrity="sha256-IhHKMWS+eDACT2qtKzouUghDpk+PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as=style><link rel=icon href=https://rishav-singh-0.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://rishav-singh-0.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://rishav-singh-0.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://rishav-singh-0.github.io/apple-touch-icon.png><link rel=mask-icon href=https://rishav-singh-0.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://rishav-singh-0.github.io/posts/understanding-dns-records/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://rishav-singh-0.github.io/posts/understanding-dns-records/"><meta property="og:site_name" content="Rishav's Digital Garden"><meta property="og:title" content="Understanding DNS Records"><meta property="og:description" content='Overview of DNS The Domain Name System (DNS) is the cornerstone of the modern internet, acting as a distributed and hierarchical naming system that translates human-readable domain names (e.g., example.com) into IP addresses (e.g., 192.0.2.1) that networking equipment uses to route traffic.
+DNS Resolution Flow User Request: The user enters a domain in their browser. Recursive Resolver: The request first hits a recursive resolver (typically provided by the user’s ISP or a public resolver like Google or Cloudflare). Root Servers: If not cached, the resolver queries one of the root DNS servers (13 root server clusters). TLD Servers: The root server responds with the TLD (e.g., .com) nameservers. Authoritative Server: The resolver queries the TLD server, which responds with the authoritative nameserver for the domain. Final Resolution: The resolver queries the authoritative nameserver, retrieves the required record (e.g., A record), and returns it to the user. DNS Hierarchy Root Zone: Managed by IANA, root servers handle the top level of DNS. TLD Zone: Top-Level Domains like .com, .net, .org, governed by registries. Authoritative Zones: Domains and subdomains managed by authoritative nameservers, controlled by domain owners. Major DNS Record Types A (Address Record) Purpose: Maps a domain to an IPv4 address. Example: api.example.com. IN A 192.0.2.1 Use Cases: Web servers, API endpoints. AAAA (IPv6 Address Record) Purpose: Maps a domain to an IPv6 address. Example: api.example.com. IN AAAA 2001:db8::1 Use Cases: IPv6-compliant services. CNAME (Canonical Name Record) Purpose: Points a subdomain to another domain (alias). Constraints: Cannot be used at the root of a domain. Example: www.example.com. IN CNAME example.com. Use Cases: Load-balanced endpoints, third-party services. ALIAS (Non-standard, provider-specific) Purpose: Like CNAME but usable at the root domain. Example (Cloudflare or Route 53): example.com. IN ALIAS example.net. Use Cases: Root domain pointing to load balancer or CDN. MX (Mail Exchange Record) Purpose: Defines mail servers for a domain. Priority Field: Lower numbers have higher priority. Example: example.com. IN MX 10 mail1.example.com. example.com. IN MX 20 mail2.example.com. Use Cases: Email routing and delivery. NS (Name Server Record) Purpose: Specifies authoritative DNS servers for a domain. Example: example.com. IN NS ns1.exampledns.com. example.com. IN NS ns2.exampledns.com. Use Cases: Delegating zones. SOA (Start of Authority) Purpose: Metadata for the DNS zone. Fields: Primary NS Admin email Serial number (zone version) Refresh, retry, expire, minimum TTL Example: example.com. IN SOA ns1.exampledns.com. admin.example.com. ( 2025052101 ; serial 3600 ; refresh 600 ; retry 604800 ; expire 86400 ; minimum ) TXT (Text Record) Purpose: Stores arbitrary text data. Use Cases: SPF (Sender Policy Framework): example.com. IN TXT "v=spf1 include:_spf.google.com ~all" DKIM (DomainKeys Identified Mail): default._domainkey.example.com. IN TXT "v=DKIM1; k=rsa; p=..." DMARC: _dmarc.example.com. IN TXT "v=DMARC1; p=none; rua=mailto:dmarc@example.com" PTR (Pointer Record) Purpose: Reverse DNS lookup. Example: 1.2.0.192.in-addr.arpa. IN PTR api.example.com. Use Cases: Email server validation, diagnostics. SRV (Service Locator Record) Purpose: Defines the location of services by name. Fields: Priority, weight, port, target. Example: _sip._tcp.example.com. IN SRV 10 60 5060 sipserver.example.com. Use Cases: SIP, XMPP, LDAP. CAA (Certificate Authority Authorization) Purpose: Specifies which CAs are allowed to issue certificates. Example: example.com. IN CAA 0 issue "letsencrypt.org" Use Cases: TLS certificate issuance control. Real-World Examples and Configurations Subdomain Examples api.example.com. IN A 192.0.2.10 mail.example.com. IN MX 10 mailhost.example.com. ftp.example.com. IN CNAME files.example.net. Multiple Records example.com. IN MX 10 mx1.example.com. example.com. IN MX 20 mx2.example.com. example.com. IN A 192.0.2.1 example.com. IN A 192.0.2.2 TTL and Priority Tuning www.example.com. 3600 IN CNAME webhost.example.net. example.com. 300 IN MX 10 mail1.example.com. Common Pitfalls and Misconfigurations CNAME at Root Domain Using CNAME at the zone apex (example.com.) is invalid and breaks RFC compliance. Use ALIAS or ANAME records if supported by your DNS provider.'><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-05-21T14:41:00+00:00"><meta property="article:modified_time" content="2025-05-21T14:41:00+00:00"><meta property="article:tag" content="Web"><meta name=twitter:card content="summary"><meta name=twitter:title content="Understanding DNS Records"><meta name=twitter:description content='Overview of DNS
+The Domain Name System (DNS) is the cornerstone of the modern internet, acting as a distributed and hierarchical naming system that translates human-readable domain names (e.g., example.com) into IP addresses (e.g., 192.0.2.1) that networking equipment uses to route traffic.
+DNS Resolution Flow
+
+User Request: The user enters a domain in their browser.
+Recursive Resolver: The request first hits a recursive resolver (typically provided by the user&rsquo;s ISP or a public resolver like Google or Cloudflare).
+Root Servers: If not cached, the resolver queries one of the root DNS servers (13 root server clusters).
+TLD Servers: The root server responds with the TLD (e.g., .com) nameservers.
+Authoritative Server: The resolver queries the TLD server, which responds with the authoritative nameserver for the domain.
+Final Resolution: The resolver queries the authoritative nameserver, retrieves the required record (e.g., A record), and returns it to the user.
+
+DNS Hierarchy
+
+Root Zone: Managed by IANA, root servers handle the top level of DNS.
+TLD Zone: Top-Level Domains like .com, .net, .org, governed by registries.
+Authoritative Zones: Domains and subdomains managed by authoritative nameservers, controlled by domain owners.
+
+
+Major DNS Record Types
+A (Address Record)
+
+Purpose: Maps a domain to an IPv4 address.
+Example:
+api.example.com. IN A 192.0.2.1
+
+Use Cases: Web servers, API endpoints.
+
+AAAA (IPv6 Address Record)
+
+Purpose: Maps a domain to an IPv6 address.
+Example:
+api.example.com. IN AAAA 2001:db8::1
+
+Use Cases: IPv6-compliant services.
+
+CNAME (Canonical Name Record)
+
+Purpose: Points a subdomain to another domain (alias).
+Constraints: Cannot be used at the root of a domain.
+Example:
+www.example.com. IN CNAME example.com.
+
+Use Cases: Load-balanced endpoints, third-party services.
+
+ALIAS (Non-standard, provider-specific)
+
+Purpose: Like CNAME but usable at the root domain.
+Example (Cloudflare or Route 53):
+example.com. IN ALIAS example.net.
+
+Use Cases: Root domain pointing to load balancer or CDN.
+
+MX (Mail Exchange Record)
+
+Purpose: Defines mail servers for a domain.
+Priority Field: Lower numbers have higher priority.
+Example:
+example.com. IN MX 10 mail1.example.com.
+example.com. IN MX 20 mail2.example.com.
+
+Use Cases: Email routing and delivery.
+
+NS (Name Server Record)
+
+Purpose: Specifies authoritative DNS servers for a domain.
+Example:
+example.com. IN NS ns1.exampledns.com.
+example.com. IN NS ns2.exampledns.com.
+
+Use Cases: Delegating zones.
+
+SOA (Start of Authority)
+
+Purpose: Metadata for the DNS zone.
+Fields:
+
+Primary NS
+Admin email
+Serial number (zone version)
+Refresh, retry, expire, minimum TTL
+
+
+Example:
+example.com. IN SOA ns1.exampledns.com. admin.example.com. (
+    2025052101 ; serial
+    3600       ; refresh
+    600        ; retry
+    604800     ; expire
+    86400      ; minimum
+)
+
+
+TXT (Text Record)
+
+Purpose: Stores arbitrary text data.
+Use Cases:
+
+SPF (Sender Policy Framework):
+example.com. IN TXT "v=spf1 include:_spf.google.com ~all"
+
+DKIM (DomainKeys Identified Mail):
+default._domainkey.example.com. IN TXT "v=DKIM1; k=rsa; p=..."
+
+DMARC:
+_dmarc.example.com. IN TXT "v=DMARC1; p=none; rua=mailto:dmarc@example.com"
+
+
+
+
+PTR (Pointer Record)
+
+Purpose: Reverse DNS lookup.
+Example:
+1.2.0.192.in-addr.arpa. IN PTR api.example.com.
+
+Use Cases: Email server validation, diagnostics.
+
+SRV (Service Locator Record)
+
+Purpose: Defines the location of services by name.
+Fields: Priority, weight, port, target.
+Example:
+_sip._tcp.example.com. IN SRV 10 60 5060 sipserver.example.com.
+
+Use Cases: SIP, XMPP, LDAP.
+
+CAA (Certificate Authority Authorization)
+
+Purpose: Specifies which CAs are allowed to issue certificates.
+Example:
+example.com. IN CAA 0 issue "letsencrypt.org"
+
+Use Cases: TLS certificate issuance control.
+
+
+Real-World Examples and Configurations
+Subdomain Examples
+api.example.com.     IN A     192.0.2.10
+mail.example.com.    IN MX    10 mailhost.example.com.
+ftp.example.com.     IN CNAME files.example.net.
+Multiple Records
+example.com. IN MX 10 mx1.example.com.
+example.com. IN MX 20 mx2.example.com.
+
+example.com. IN A 192.0.2.1
+example.com. IN A 192.0.2.2
+TTL and Priority Tuning
+www.example.com. 3600 IN CNAME webhost.example.net.
+example.com.     300  IN MX 10 mail1.example.com.
+
+Common Pitfalls and Misconfigurations
+CNAME at Root Domain
+Using CNAME at the zone apex (example.com.) is invalid and breaks RFC compliance. Use ALIAS or ANAME records if supported by your DNS provider.'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://rishav-singh-0.github.io/posts/"},{"@type":"ListItem","position":2,"name":"Understanding DNS Records","item":"https://rishav-singh-0.github.io/posts/understanding-dns-records/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Understanding DNS Records","name":"Understanding DNS Records","description":"Overview of DNS The Domain Name System (DNS) is the cornerstone of the modern internet, acting as a distributed and hierarchical naming system that translates human-readable domain names (e.g., example.com) into IP addresses (e.g., 192.0.2.1) that networking equipment uses to route traffic.\nDNS Resolution Flow User Request: The user enters a domain in their browser. Recursive Resolver: The request first hits a recursive resolver (typically provided by the user\u0026rsquo;s ISP or a public resolver like Google or Cloudflare). Root Servers: If not cached, the resolver queries one of the root DNS servers (13 root server clusters). TLD Servers: The root server responds with the TLD (e.g., .com) nameservers. Authoritative Server: The resolver queries the TLD server, which responds with the authoritative nameserver for the domain. Final Resolution: The resolver queries the authoritative nameserver, retrieves the required record (e.g., A record), and returns it to the user. DNS Hierarchy Root Zone: Managed by IANA, root servers handle the top level of DNS. TLD Zone: Top-Level Domains like .com, .net, .org, governed by registries. Authoritative Zones: Domains and subdomains managed by authoritative nameservers, controlled by domain owners. Major DNS Record Types A (Address Record) Purpose: Maps a domain to an IPv4 address. Example: api.example.com. IN A 192.0.2.1 Use Cases: Web servers, API endpoints. AAAA (IPv6 Address Record) Purpose: Maps a domain to an IPv6 address. Example: api.example.com. IN AAAA 2001:db8::1 Use Cases: IPv6-compliant services. CNAME (Canonical Name Record) Purpose: Points a subdomain to another domain (alias). Constraints: Cannot be used at the root of a domain. Example: www.example.com. IN CNAME example.com. Use Cases: Load-balanced endpoints, third-party services. ALIAS (Non-standard, provider-specific) Purpose: Like CNAME but usable at the root domain. Example (Cloudflare or Route 53): example.com. IN ALIAS example.net. Use Cases: Root domain pointing to load balancer or CDN. MX (Mail Exchange Record) Purpose: Defines mail servers for a domain. Priority Field: Lower numbers have higher priority. Example: example.com. IN MX 10 mail1.example.com. example.com. IN MX 20 mail2.example.com. Use Cases: Email routing and delivery. NS (Name Server Record) Purpose: Specifies authoritative DNS servers for a domain. Example: example.com. IN NS ns1.exampledns.com. example.com. IN NS ns2.exampledns.com. Use Cases: Delegating zones. SOA (Start of Authority) Purpose: Metadata for the DNS zone. Fields: Primary NS Admin email Serial number (zone version) Refresh, retry, expire, minimum TTL Example: example.com. IN SOA ns1.exampledns.com. admin.example.com. ( 2025052101 ; serial 3600 ; refresh 600 ; retry 604800 ; expire 86400 ; minimum ) TXT (Text Record) Purpose: Stores arbitrary text data. Use Cases: SPF (Sender Policy Framework): example.com. IN TXT \u0026#34;v=spf1 include:_spf.google.com ~all\u0026#34; DKIM (DomainKeys Identified Mail): default._domainkey.example.com. IN TXT \u0026#34;v=DKIM1; k=rsa; p=...\u0026#34; DMARC: _dmarc.example.com. IN TXT \u0026#34;v=DMARC1; p=none; rua=mailto:dmarc@example.com\u0026#34; PTR (Pointer Record) Purpose: Reverse DNS lookup. Example: 1.2.0.192.in-addr.arpa. IN PTR api.example.com. Use Cases: Email server validation, diagnostics. SRV (Service Locator Record) Purpose: Defines the location of services by name. Fields: Priority, weight, port, target. Example: _sip._tcp.example.com. IN SRV 10 60 5060 sipserver.example.com. Use Cases: SIP, XMPP, LDAP. CAA (Certificate Authority Authorization) Purpose: Specifies which CAs are allowed to issue certificates. Example: example.com. IN CAA 0 issue \u0026#34;letsencrypt.org\u0026#34; Use Cases: TLS certificate issuance control. Real-World Examples and Configurations Subdomain Examples api.example.com. IN A 192.0.2.10 mail.example.com. IN MX 10 mailhost.example.com. ftp.example.com. IN CNAME files.example.net. Multiple Records example.com. IN MX 10 mx1.example.com. example.com. IN MX 20 mx2.example.com. example.com. IN A 192.0.2.1 example.com. IN A 192.0.2.2 TTL and Priority Tuning www.example.com. 3600 IN CNAME webhost.example.net. example.com. 300 IN MX 10 mail1.example.com. Common Pitfalls and Misconfigurations CNAME at Root Domain Using CNAME at the zone apex (example.com.) is invalid and breaks RFC compliance. Use ALIAS or ANAME records if supported by your DNS provider.\n","keywords":["Web"],"articleBody":"Overview of DNS The Domain Name System (DNS) is the cornerstone of the modern internet, acting as a distributed and hierarchical naming system that translates human-readable domain names (e.g., example.com) into IP addresses (e.g., 192.0.2.1) that networking equipment uses to route traffic.\nDNS Resolution Flow User Request: The user enters a domain in their browser. Recursive Resolver: The request first hits a recursive resolver (typically provided by the user’s ISP or a public resolver like Google or Cloudflare). Root Servers: If not cached, the resolver queries one of the root DNS servers (13 root server clusters). TLD Servers: The root server responds with the TLD (e.g., .com) nameservers. Authoritative Server: The resolver queries the TLD server, which responds with the authoritative nameserver for the domain. Final Resolution: The resolver queries the authoritative nameserver, retrieves the required record (e.g., A record), and returns it to the user. DNS Hierarchy Root Zone: Managed by IANA, root servers handle the top level of DNS. TLD Zone: Top-Level Domains like .com, .net, .org, governed by registries. Authoritative Zones: Domains and subdomains managed by authoritative nameservers, controlled by domain owners. Major DNS Record Types A (Address Record) Purpose: Maps a domain to an IPv4 address. Example: api.example.com. IN A 192.0.2.1 Use Cases: Web servers, API endpoints. AAAA (IPv6 Address Record) Purpose: Maps a domain to an IPv6 address. Example: api.example.com. IN AAAA 2001:db8::1 Use Cases: IPv6-compliant services. CNAME (Canonical Name Record) Purpose: Points a subdomain to another domain (alias). Constraints: Cannot be used at the root of a domain. Example: www.example.com. IN CNAME example.com. Use Cases: Load-balanced endpoints, third-party services. ALIAS (Non-standard, provider-specific) Purpose: Like CNAME but usable at the root domain. Example (Cloudflare or Route 53): example.com. IN ALIAS example.net. Use Cases: Root domain pointing to load balancer or CDN. MX (Mail Exchange Record) Purpose: Defines mail servers for a domain. Priority Field: Lower numbers have higher priority. Example: example.com. IN MX 10 mail1.example.com. example.com. IN MX 20 mail2.example.com. Use Cases: Email routing and delivery. NS (Name Server Record) Purpose: Specifies authoritative DNS servers for a domain. Example: example.com. IN NS ns1.exampledns.com. example.com. IN NS ns2.exampledns.com. Use Cases: Delegating zones. SOA (Start of Authority) Purpose: Metadata for the DNS zone. Fields: Primary NS Admin email Serial number (zone version) Refresh, retry, expire, minimum TTL Example: example.com. IN SOA ns1.exampledns.com. admin.example.com. ( 2025052101 ; serial 3600 ; refresh 600 ; retry 604800 ; expire 86400 ; minimum ) TXT (Text Record) Purpose: Stores arbitrary text data. Use Cases: SPF (Sender Policy Framework): example.com. IN TXT \"v=spf1 include:_spf.google.com ~all\" DKIM (DomainKeys Identified Mail): default._domainkey.example.com. IN TXT \"v=DKIM1; k=rsa; p=...\" DMARC: _dmarc.example.com. IN TXT \"v=DMARC1; p=none; rua=mailto:dmarc@example.com\" PTR (Pointer Record) Purpose: Reverse DNS lookup. Example: 1.2.0.192.in-addr.arpa. IN PTR api.example.com. Use Cases: Email server validation, diagnostics. SRV (Service Locator Record) Purpose: Defines the location of services by name. Fields: Priority, weight, port, target. Example: _sip._tcp.example.com. IN SRV 10 60 5060 sipserver.example.com. Use Cases: SIP, XMPP, LDAP. CAA (Certificate Authority Authorization) Purpose: Specifies which CAs are allowed to issue certificates. Example: example.com. IN CAA 0 issue \"letsencrypt.org\" Use Cases: TLS certificate issuance control. Real-World Examples and Configurations Subdomain Examples api.example.com. IN A 192.0.2.10 mail.example.com. IN MX 10 mailhost.example.com. ftp.example.com. IN CNAME files.example.net. Multiple Records example.com. IN MX 10 mx1.example.com. example.com. IN MX 20 mx2.example.com. example.com. IN A 192.0.2.1 example.com. IN A 192.0.2.2 TTL and Priority Tuning www.example.com. 3600 IN CNAME webhost.example.net. example.com. 300 IN MX 10 mail1.example.com. Common Pitfalls and Misconfigurations CNAME at Root Domain Using CNAME at the zone apex (example.com.) is invalid and breaks RFC compliance. Use ALIAS or ANAME records if supported by your DNS provider.\nIncorrect MX Records MX records must point to valid A or AAAA records, not CNAMEs.\nALIAS vs CNAME Confusion While both redirect to another name, only ALIAS can exist at the root domain. CNAME cannot coexist with other record types.\nBest Practices DNS Hierarchy Design Use subdomains to separate services (api.example.com, db.example.com). Delegate responsibility using NS records (e.g., dev.example.com can be managed by a separate team). TTL Tuning Short TTL (300s): Use for records subject to frequent changes. Long TTL (86400s): Use for static records to reduce DNS traffic. Monitoring and Propagation Use DNS monitoring tools (e.g., DNSCheck, Zonemaster). Plan for propagation delays (up to 48 hours globally). Tables and Diagrams DNS Resolution Flow User --\u003e Resolver --\u003e Root Server --\u003e TLD Server --\u003e Authoritative Server --\u003e IP Address Record Type Comparison Record Purpose IP Type Root Usage Notes A IPv4 Address IPv4 Yes Maps name to IPv4 address AAAA IPv6 Address IPv6 Yes Maps name to IPv6 address CNAME Canonical name alias N/A No Cannot coexist with other types ALIAS Root-level alias (non-RFC) N/A Yes DNS provider-specific MX Mail exchanger N/A Yes Requires valid A/AAAA target NS Nameserver N/A Yes Delegates subdomains SOA Start of authority N/A Yes Required in each zone TXT Text, policies N/A Yes Used for SPF, DKIM, DMARC PTR Reverse DNS N/A N/A Maps IP to hostname SRV Service locator N/A Yes Used in VoIP, LDAP CAA Certificate authority N/A Yes Controls cert issuance ","wordCount":"839","inLanguage":"en","datePublished":"2025-05-21T14:41:00Z","dateModified":"2025-05-21T14:41:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://rishav-singh-0.github.io/posts/understanding-dns-records/"},"publisher":{"@type":"Organization","name":"Rishav's Digital Garden","logo":{"@type":"ImageObject","url":"https://rishav-singh-0.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://rishav-singh-0.github.io/ accesskey=h title="Rishav's Digital Garden (Alt + H)">Rishav's Digital Garden</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://rishav-singh-0.github.io/archives title=Archive><span>Archive</span></a></li><li><a href=https://rishav-singh-0.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://rishav-singh-0.github.io/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Understanding DNS Records</h1><div class=post-meta><span title='2025-05-21 14:41:00 +0000 UTC'>May 21, 2025</span>&nbsp;·&nbsp;4 min</div></header><div class=post-content><h2 id=overview-of-dns>Overview of DNS<a hidden class=anchor aria-hidden=true href=#overview-of-dns>#</a></h2><p>The Domain Name System (DNS) is the cornerstone of the modern internet, acting as a distributed and hierarchical naming system that translates human-readable domain names (e.g., <code>example.com</code>) into IP addresses (e.g., <code>192.0.2.1</code>) that networking equipment uses to route traffic.</p><h3 id=dns-resolution-flow>DNS Resolution Flow<a hidden class=anchor aria-hidden=true href=#dns-resolution-flow>#</a></h3><ol><li><strong>User Request</strong>: The user enters a domain in their browser.</li><li><strong>Recursive Resolver</strong>: The request first hits a recursive resolver (typically provided by the user&rsquo;s ISP or a public resolver like Google or Cloudflare).</li><li><strong>Root Servers</strong>: If not cached, the resolver queries one of the root DNS servers (13 root server clusters).</li><li><strong>TLD Servers</strong>: The root server responds with the TLD (e.g., <code>.com</code>) nameservers.</li><li><strong>Authoritative Server</strong>: The resolver queries the TLD server, which responds with the authoritative nameserver for the domain.</li><li><strong>Final Resolution</strong>: The resolver queries the authoritative nameserver, retrieves the required record (e.g., A record), and returns it to the user.</li></ol><h3 id=dns-hierarchy>DNS Hierarchy<a hidden class=anchor aria-hidden=true href=#dns-hierarchy>#</a></h3><ul><li><strong>Root Zone</strong>: Managed by IANA, root servers handle the top level of DNS.</li><li><strong>TLD Zone</strong>: Top-Level Domains like <code>.com</code>, <code>.net</code>, <code>.org</code>, governed by registries.</li><li><strong>Authoritative Zones</strong>: Domains and subdomains managed by authoritative nameservers, controlled by domain owners.</li></ul><hr><h2 id=major-dns-record-types>Major DNS Record Types<a hidden class=anchor aria-hidden=true href=#major-dns-record-types>#</a></h2><h3 id=a-address-record>A (Address Record)<a hidden class=anchor aria-hidden=true href=#a-address-record>#</a></h3><ul><li><strong>Purpose</strong>: Maps a domain to an IPv4 address.</li><li><strong>Example</strong>:<pre tabindex=0><code>api.example.com. IN A 192.0.2.1
+</code></pre></li><li><strong>Use Cases</strong>: Web servers, API endpoints.</li></ul><h3 id=aaaa-ipv6-address-record>AAAA (IPv6 Address Record)<a hidden class=anchor aria-hidden=true href=#aaaa-ipv6-address-record>#</a></h3><ul><li><strong>Purpose</strong>: Maps a domain to an IPv6 address.</li><li><strong>Example</strong>:<pre tabindex=0><code>api.example.com. IN AAAA 2001:db8::1
+</code></pre></li><li><strong>Use Cases</strong>: IPv6-compliant services.</li></ul><h3 id=cname-canonical-name-record>CNAME (Canonical Name Record)<a hidden class=anchor aria-hidden=true href=#cname-canonical-name-record>#</a></h3><ul><li><strong>Purpose</strong>: Points a subdomain to another domain (alias).</li><li><strong>Constraints</strong>: Cannot be used at the root of a domain.</li><li><strong>Example</strong>:<pre tabindex=0><code>www.example.com. IN CNAME example.com.
+</code></pre></li><li><strong>Use Cases</strong>: Load-balanced endpoints, third-party services.</li></ul><h3 id=alias-non-standard-provider-specific>ALIAS (Non-standard, provider-specific)<a hidden class=anchor aria-hidden=true href=#alias-non-standard-provider-specific>#</a></h3><ul><li><strong>Purpose</strong>: Like CNAME but usable at the root domain.</li><li><strong>Example</strong> (Cloudflare or Route 53):<pre tabindex=0><code>example.com. IN ALIAS example.net.
+</code></pre></li><li><strong>Use Cases</strong>: Root domain pointing to load balancer or CDN.</li></ul><h3 id=mx-mail-exchange-record>MX (Mail Exchange Record)<a hidden class=anchor aria-hidden=true href=#mx-mail-exchange-record>#</a></h3><ul><li><strong>Purpose</strong>: Defines mail servers for a domain.</li><li><strong>Priority Field</strong>: Lower numbers have higher priority.</li><li><strong>Example</strong>:<pre tabindex=0><code>example.com. IN MX 10 mail1.example.com.
+example.com. IN MX 20 mail2.example.com.
+</code></pre></li><li><strong>Use Cases</strong>: Email routing and delivery.</li></ul><h3 id=ns-name-server-record>NS (Name Server Record)<a hidden class=anchor aria-hidden=true href=#ns-name-server-record>#</a></h3><ul><li><strong>Purpose</strong>: Specifies authoritative DNS servers for a domain.</li><li><strong>Example</strong>:<pre tabindex=0><code>example.com. IN NS ns1.exampledns.com.
+example.com. IN NS ns2.exampledns.com.
+</code></pre></li><li><strong>Use Cases</strong>: Delegating zones.</li></ul><h3 id=soa-start-of-authority>SOA (Start of Authority)<a hidden class=anchor aria-hidden=true href=#soa-start-of-authority>#</a></h3><ul><li><strong>Purpose</strong>: Metadata for the DNS zone.</li><li><strong>Fields</strong>:<ul><li>Primary NS</li><li>Admin email</li><li>Serial number (zone version)</li><li>Refresh, retry, expire, minimum TTL</li></ul></li><li><strong>Example</strong>:<pre tabindex=0><code>example.com. IN SOA ns1.exampledns.com. admin.example.com. (
+    2025052101 ; serial
+    3600       ; refresh
+    600        ; retry
+    604800     ; expire
+    86400      ; minimum
+)
+</code></pre></li></ul><h3 id=txt-text-record>TXT (Text Record)<a hidden class=anchor aria-hidden=true href=#txt-text-record>#</a></h3><ul><li><strong>Purpose</strong>: Stores arbitrary text data.</li><li><strong>Use Cases</strong>:<ul><li><strong>SPF</strong> (Sender Policy Framework):<pre tabindex=0><code>example.com. IN TXT &#34;v=spf1 include:_spf.google.com ~all&#34;
+</code></pre></li><li><strong>DKIM</strong> (DomainKeys Identified Mail):<pre tabindex=0><code>default._domainkey.example.com. IN TXT &#34;v=DKIM1; k=rsa; p=...&#34;
+</code></pre></li><li><strong>DMARC</strong>:<pre tabindex=0><code>_dmarc.example.com. IN TXT &#34;v=DMARC1; p=none; rua=mailto:dmarc@example.com&#34;
+</code></pre></li></ul></li></ul><h3 id=ptr-pointer-record>PTR (Pointer Record)<a hidden class=anchor aria-hidden=true href=#ptr-pointer-record>#</a></h3><ul><li><strong>Purpose</strong>: Reverse DNS lookup.</li><li><strong>Example</strong>:<pre tabindex=0><code>1.2.0.192.in-addr.arpa. IN PTR api.example.com.
+</code></pre></li><li><strong>Use Cases</strong>: Email server validation, diagnostics.</li></ul><h3 id=srv-service-locator-record>SRV (Service Locator Record)<a hidden class=anchor aria-hidden=true href=#srv-service-locator-record>#</a></h3><ul><li><strong>Purpose</strong>: Defines the location of services by name.</li><li><strong>Fields</strong>: Priority, weight, port, target.</li><li><strong>Example</strong>:<pre tabindex=0><code>_sip._tcp.example.com. IN SRV 10 60 5060 sipserver.example.com.
+</code></pre></li><li><strong>Use Cases</strong>: SIP, XMPP, LDAP.</li></ul><h3 id=caa-certificate-authority-authorization>CAA (Certificate Authority Authorization)<a hidden class=anchor aria-hidden=true href=#caa-certificate-authority-authorization>#</a></h3><ul><li><strong>Purpose</strong>: Specifies which CAs are allowed to issue certificates.</li><li><strong>Example</strong>:<pre tabindex=0><code>example.com. IN CAA 0 issue &#34;letsencrypt.org&#34;
+</code></pre></li><li><strong>Use Cases</strong>: TLS certificate issuance control.</li></ul><hr><h2 id=real-world-examples-and-configurations>Real-World Examples and Configurations<a hidden class=anchor aria-hidden=true href=#real-world-examples-and-configurations>#</a></h2><h3 id=subdomain-examples>Subdomain Examples<a hidden class=anchor aria-hidden=true href=#subdomain-examples>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-dns data-lang=dns><span style=display:flex><span>api.example.com.     <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>A</span>     <span style=color:#ae81ff>192.0.2.10</span>
+</span></span><span style=display:flex><span>mail.example.com.    <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>MX</span>    <span style=color:#e6db74>10</span> mailhost.example.com.
+</span></span><span style=display:flex><span>ftp.example.com.     <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>CNAME</span> files.example.net.
+</span></span></code></pre></div><h3 id=multiple-records>Multiple Records<a hidden class=anchor aria-hidden=true href=#multiple-records>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-dns data-lang=dns><span style=display:flex><span>example.com. <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>MX</span> <span style=color:#e6db74>10</span> mx1.example.com.
+</span></span><span style=display:flex><span>example.com. <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>MX</span> <span style=color:#e6db74>20</span> mx2.example.com.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>example.com. <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>A</span> <span style=color:#ae81ff>192.0.2.1</span>
+</span></span><span style=display:flex><span>example.com. <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>A</span> <span style=color:#ae81ff>192.0.2.2</span>
+</span></span></code></pre></div><h3 id=ttl-and-priority-tuning>TTL and Priority Tuning<a hidden class=anchor aria-hidden=true href=#ttl-and-priority-tuning>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-dns data-lang=dns><span style=display:flex><span>www.example.com. <span style=color:#e6db74>3600</span> <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>CNAME</span> webhost.example.net.
+</span></span><span style=display:flex><span>example.com.     <span style=color:#e6db74>300</span>  <span style=color:#66d9ef>IN</span> <span style=color:#66d9ef>MX</span> <span style=color:#e6db74>10</span> mail1.example.com.
+</span></span></code></pre></div><hr><h2 id=common-pitfalls-and-misconfigurations>Common Pitfalls and Misconfigurations<a hidden class=anchor aria-hidden=true href=#common-pitfalls-and-misconfigurations>#</a></h2><h3 id=cname-at-root-domain>CNAME at Root Domain<a hidden class=anchor aria-hidden=true href=#cname-at-root-domain>#</a></h3><p>Using CNAME at the zone apex (<code>example.com.</code>) is invalid and breaks RFC compliance. Use ALIAS or ANAME records if supported by your DNS provider.</p><h3 id=incorrect-mx-records>Incorrect MX Records<a hidden class=anchor aria-hidden=true href=#incorrect-mx-records>#</a></h3><p>MX records must point to valid A or AAAA records, not CNAMEs.</p><h3 id=alias-vs-cname-confusion>ALIAS vs CNAME Confusion<a hidden class=anchor aria-hidden=true href=#alias-vs-cname-confusion>#</a></h3><p>While both redirect to another name, only ALIAS can exist at the root domain. CNAME cannot coexist with other record types.</p><hr><h2 id=best-practices>Best Practices<a hidden class=anchor aria-hidden=true href=#best-practices>#</a></h2><h3 id=dns-hierarchy-design>DNS Hierarchy Design<a hidden class=anchor aria-hidden=true href=#dns-hierarchy-design>#</a></h3><ul><li>Use subdomains to separate services (<code>api.example.com</code>, <code>db.example.com</code>).</li><li>Delegate responsibility using NS records (e.g., <code>dev.example.com</code> can be managed by a separate team).</li></ul><h3 id=ttl-tuning>TTL Tuning<a hidden class=anchor aria-hidden=true href=#ttl-tuning>#</a></h3><ul><li><strong>Short TTL (300s)</strong>: Use for records subject to frequent changes.</li><li><strong>Long TTL (86400s)</strong>: Use for static records to reduce DNS traffic.</li></ul><h3 id=monitoring-and-propagation>Monitoring and Propagation<a hidden class=anchor aria-hidden=true href=#monitoring-and-propagation>#</a></h3><ul><li>Use DNS monitoring tools (e.g., DNSCheck, Zonemaster).</li><li>Plan for propagation delays (up to 48 hours globally).</li></ul><hr><h2 id=tables-and-diagrams>Tables and Diagrams<a hidden class=anchor aria-hidden=true href=#tables-and-diagrams>#</a></h2><h3 id=dns-resolution-flow-1>DNS Resolution Flow<a hidden class=anchor aria-hidden=true href=#dns-resolution-flow-1>#</a></h3><pre tabindex=0><code>User --&gt; Resolver --&gt; Root Server --&gt; TLD Server --&gt; Authoritative Server --&gt; IP Address
+</code></pre><h3 id=record-type-comparison>Record Type Comparison<a hidden class=anchor aria-hidden=true href=#record-type-comparison>#</a></h3><table><thead><tr><th>Record</th><th>Purpose</th><th>IP Type</th><th>Root Usage</th><th>Notes</th></tr></thead><tbody><tr><td>A</td><td>IPv4 Address</td><td>IPv4</td><td>Yes</td><td>Maps name to IPv4 address</td></tr><tr><td>AAAA</td><td>IPv6 Address</td><td>IPv6</td><td>Yes</td><td>Maps name to IPv6 address</td></tr><tr><td>CNAME</td><td>Canonical name alias</td><td>N/A</td><td>No</td><td>Cannot coexist with other types</td></tr><tr><td>ALIAS</td><td>Root-level alias (non-RFC)</td><td>N/A</td><td>Yes</td><td>DNS provider-specific</td></tr><tr><td>MX</td><td>Mail exchanger</td><td>N/A</td><td>Yes</td><td>Requires valid A/AAAA target</td></tr><tr><td>NS</td><td>Nameserver</td><td>N/A</td><td>Yes</td><td>Delegates subdomains</td></tr><tr><td>SOA</td><td>Start of authority</td><td>N/A</td><td>Yes</td><td>Required in each zone</td></tr><tr><td>TXT</td><td>Text, policies</td><td>N/A</td><td>Yes</td><td>Used for SPF, DKIM, DMARC</td></tr><tr><td>PTR</td><td>Reverse DNS</td><td>N/A</td><td>N/A</td><td>Maps IP to hostname</td></tr><tr><td>SRV</td><td>Service locator</td><td>N/A</td><td>Yes</td><td>Used in VoIP, LDAP</td></tr><tr><td>CAA</td><td>Certificate authority</td><td>N/A</td><td>Yes</td><td>Controls cert issuance</td></tr></tbody></table><hr></div><footer class=post-footer><ul class=post-tags><li><a href=https://rishav-singh-0.github.io/tags/web/>Web</a></li></ul><nav class=paginav><a class=next href=https://rishav-singh-0.github.io/posts/generating-package-patch-for-buildroot/><span class=title>Next »</span><br><span>Generating Package Patch for Buildroot</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://rishav-singh-0.github.io/>Rishav's Digital Garden</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

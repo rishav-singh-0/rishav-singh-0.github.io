@@ -1,9 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Development on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/development/</link><description>Recent content in Development on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Mon, 03 Feb 2025 16:37:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/development/index.xml" rel="self" type="application/rss+xml"/><item><title>GitFlow</title><link>https://blog.rishavs.in/posts/3-resource/development/git-flow/</link><pubDate>Mon, 03 Feb 2025 16:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-flow/</guid><description>&lt;p>!assets/Pasted image 20250203182747.png&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Development on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/development/</link><description>Recent content in Development on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Tue, 20 May 2025 10:13:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/development/index.xml" rel="self" type="application/rss+xml"/><item><title>Generating Package Patch for Buildroot</title><link>https://rishav-singh-0.github.io/posts/generating-package-patch-for-buildroot/</link><pubDate>Tue, 20 May 2025 10:13:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/generating-package-patch-for-buildroot/</guid><description>&lt;h2 id="generating-a-patch-using-diff">Generating a Patch Using &lt;code>diff&lt;/code>&lt;/h2>
+&lt;h3 id="1-extract-the-original-source">1. Extract the Original Source&lt;/h3>
+&lt;p>Ensure you have a pristine copy of the original source for comparison. You can extract it from the tarball in the &lt;code>dl&lt;/code> directory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>tar -xf dl/&amp;lt;package&amp;gt;-&amp;lt;version&amp;gt;.tar.gz -C /tmp/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will create a directory like &lt;code>/tmp/&amp;lt;package&amp;gt;-&amp;lt;version&amp;gt;/&lt;/code>.&lt;/p>
+&lt;h4 id="using-buildroots-mechanism">Using buildroot&amp;rsquo;s mechanism&lt;/h4>
+&lt;p>Clean the build directory and apply current patches of buildroot&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>make &amp;lt;pkg&amp;gt;-dirclean &lt;span style="color:#75715e"># Remove &amp;lt;pkg&amp;gt; build directory&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make &amp;lt;pkg&amp;gt;-extract &lt;span style="color:#75715e"># Extract &amp;lt;pkg&amp;gt; sources&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make &amp;lt;pkg&amp;gt;-patch &lt;span style="color:#75715e"># Apply patches to &amp;lt;pkg&amp;gt; (Optional)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp -r output/build/&amp;lt;package&amp;gt; /tmp/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-generate-the-patch">2. Generate the Patch&lt;/h3>
+&lt;p>Use the &lt;code>diff&lt;/code> command to create a unified diff between the original and modified sources:&lt;/p></description></item><item><title>GitFlow</title><link>https://rishav-singh-0.github.io/posts/gitflow/</link><pubDate>Mon, 03 Feb 2025 16:37:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/gitflow/</guid><description>&lt;p>![Pasted image 20250203182747](./Pasted image 20250203182747.png)&lt;/p>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;ul>
 &lt;li>GirFlow Explained: &lt;a href="https://youtu.be/Aa8RpP0sf-Y">https://youtu.be/Aa8RpP0sf-Y&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>SHA-256 (Secure Hash Algorithm 256-bit)</title><link>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</link><pubDate>Wed, 29 Jan 2025 14:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</guid><description>&lt;p>SHA-256 is a cryptographic hash function that produces a fixed-size 256-bit (32-byte) hash. It is &lt;strong>deterministic&lt;/strong>, &lt;strong>collision-resistant&lt;/strong>, and designed for security-critical applications.&lt;/p>
-&lt;p>!assets/hashing-algorithm-sha256.png&lt;/p>
+&lt;/ul></description></item><item><title>SHA-256 (Secure Hash Algorithm 256-bit)</title><link>https://rishav-singh-0.github.io/posts/sha-256-secure-hash-algorithm-256-bit/</link><pubDate>Wed, 29 Jan 2025 14:12:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/sha-256-secure-hash-algorithm-256-bit/</guid><description>&lt;p>SHA-256 is a cryptographic hash function that produces a fixed-size 256-bit (32-byte) hash. It is &lt;strong>deterministic&lt;/strong>, &lt;strong>collision-resistant&lt;/strong>, and designed for security-critical applications.&lt;/p>
+&lt;p>&lt;img src="https://rishav-singh-0.github.io/posts/sha-256-%28secure-hash-algorithm-256-bit%29/./hashing-algorithm-sha256.png" alt="hashing-algorithm-sha256"/>&lt;/p>
 &lt;h3 id="how-sha-256-works">How SHA-256 Works&lt;/h3>
 &lt;ol>
 &lt;li>&lt;strong>Preprocessing&lt;/strong>:
@@ -69,7 +82,7 @@ Repeat the compression function for each block, using the output of each iterati
 &lt;/ul>
 &lt;/li>
 &lt;li>&lt;strong>Guarantees&lt;/strong>: Pre-image resistance, collision resistance.&lt;/li>
-&lt;/ul></description></item><item><title>C,C++ Code Style Guide</title><link>https://blog.rishavs.in/posts/3-resource/development/cc-code-style-guide/</link><pubDate>Thu, 28 Nov 2024 11:28:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/cc-code-style-guide/</guid><description>&lt;p>This guide provides step-by-step instructions for setting up consistent formatting, rules checking, and documentation for C/C++ code using &lt;strong>clang-format&lt;/strong>, &lt;strong>clang-tidy&lt;/strong>, and &lt;strong>Doxygen&lt;/strong> in &lt;strong>VS Code&lt;/strong>. Follow this guide to ensure uniformity across the team.&lt;/p>
+&lt;/ul></description></item><item><title>C,C++ Code Style Guide</title><link>https://rishav-singh-0.github.io/posts/cc++-code-style-guide/</link><pubDate>Thu, 28 Nov 2024 11:28:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/cc++-code-style-guide/</guid><description>&lt;p>This guide provides step-by-step instructions for setting up consistent formatting, rules checking, and documentation for C/C++ code using &lt;strong>clang-format&lt;/strong>, &lt;strong>clang-tidy&lt;/strong>, and &lt;strong>Doxygen&lt;/strong> in &lt;strong>VS Code&lt;/strong>. Follow this guide to ensure uniformity across the team.&lt;/p>
 &lt;hr>
 &lt;h2 id="1-prerequisites">1. Prerequisites&lt;/h2>
 &lt;p>Before starting, ensure you have the following tools installed:&lt;/p>
@@ -92,80 +105,82 @@ Repeat the compression function for each block, using the output of each iterati
 &lt;/ol>
 &lt;hr>
 &lt;h2 id="2-auto-formatting-using-clang-format">2. Auto-Formatting Using &lt;code>clang-format&lt;/code>&lt;/h2>
-&lt;p>&lt;a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format&lt;/a> is used for consistent code formatting.&lt;/p></description></item><item><title>Git Undo Mistakes</title><link>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</link><pubDate>Wed, 24 Mar 2021 23:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/development/git-undo-mistakes/</guid><description>&lt;h1 id="undo-mistakes-">Undo Mistakes 😱&lt;/h1>
-&lt;h2 id="git-restore-filename">git restore filename&lt;/h2>
+&lt;p>&lt;a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format&lt;/a> is used for consistent code formatting.&lt;/p></description></item><item><title>Git Undo Mistakes</title><link>https://rishav-singh-0.github.io/posts/git-undo-mistakes/</link><pubDate>Wed, 24 Mar 2021 23:12:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/git-undo-mistakes/</guid><description>&lt;h2 id="undoing-mistakes-in-git">Undoing Mistakes in Git&lt;/h2>
+&lt;h3 id="1-discarding-uncommitted-changes">1. Discarding Uncommitted Changes&lt;/h3>
+&lt;h4 id="a-git-restore-file">a) &lt;code>git restore &amp;lt;file&amp;gt;&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>will discard uncommited change for this file&lt;/li>
-&lt;li>cannot be undone afterward&lt;/li>
+&lt;li>Discards uncommitted modifications in the specified file.&lt;/li>
+&lt;li>&lt;strong>Irreversible&lt;/strong>: once applied, changes cannot be recovered.&lt;/li>
 &lt;/ul>
-&lt;h3 id="git-restore--p-filename">git restore -p filename&lt;/h3>
+&lt;h4 id="b-git-restore--p-file">b) &lt;code>git restore -p &amp;lt;file&amp;gt;&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>p stands for patches&lt;/li>
-&lt;li>will ask for each change in this file to be restore or not&lt;/li>
+&lt;li>The &lt;code>-p&lt;/code> (patch) option lets you interactively choose hunks to discard.&lt;/li>
+&lt;li>Useful for selectively reverting parts of a file.&lt;/li>
 &lt;/ul>
-&lt;h3 id="git-restore-">git restore .&lt;/h3>
+&lt;h4 id="c-git-restore-">c) &lt;code>git restore .&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>undo all changes since last commit&lt;/li>
+&lt;li>Discards all uncommitted changes in the working directory since the last commit.&lt;/li>
 &lt;/ul>
-&lt;h2 id="git-commit-ammend--m-commit-message">git commit &amp;ndash;ammend -m &amp;ldquo;Commit Message&amp;rdquo;&lt;/h2>
+&lt;h3 id="2-amending-the-last-commit">2. Amending the Last Commit&lt;/h3>
+&lt;h4 id="git-commit---amend--m-new-commit-message">&lt;code>git commit --amend -m &amp;quot;New Commit Message&amp;quot;&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>change commit message of last commit&lt;/li>
-&lt;li>do not change already pushed commit&lt;/li>
+&lt;li>Updates the message (and/or contents) of the last commit.&lt;/li>
+&lt;li>&lt;strong>Do not amend&lt;/strong> commits that have already been shared with others.&lt;/li>
 &lt;/ul>
-&lt;h2 id="git-revert-sha">git revert &amp;lt;SHA&amp;gt;&lt;/h2>
+&lt;h3 id="3-reverting-a-specific-commit">3. Reverting a Specific Commit&lt;/h3>
+&lt;h4 id="git-revert-sha">&lt;code>git revert &amp;lt;SHA&amp;gt;&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>it reverts specified single commit&lt;/li>
-&lt;li>&amp;lt;SHA&amp;gt; can be seen through &lt;code>git log&lt;/code>, eg. 74e3b2b&lt;/li>
-&lt;li>it makes new commit by exactly doing opposite changes, so it is very safe&lt;/li>
+&lt;li>Creates a new commit that inverts the changes of the specified commit.&lt;/li>
+&lt;li>Safe way to &amp;ldquo;undo&amp;rdquo; a change without rewriting history.&lt;/li>
+&lt;li>Obtain the SHA from &lt;code>git log&lt;/code>, e.g. &lt;code>74e3b2b&lt;/code>.&lt;/li>
 &lt;/ul>
-&lt;h2 id="git-reset-hard-74e3b2b">git reset &amp;ndash;hard 74e3b2b&lt;/h2>
+&lt;h3 id="4-resetting-to-an-earlier-commit">4. Resetting to an Earlier Commit&lt;/h3>
+&lt;h4 id="a-git-reset---hard-sha">a) &lt;code>git reset --hard &amp;lt;SHA&amp;gt;&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>it resets HEAD to certain commit in history while deleting all the commits after it&lt;/li>
-&lt;li>if commits just local then they are gone forever&lt;/li>
+&lt;li>Moves &lt;code>HEAD&lt;/code> and current branch to the given commit, discarding all subsequent commits and uncommitted changes.&lt;/li>
+&lt;li>&lt;strong>Warning&lt;/strong>: unpushed commits are permanently lost.&lt;/li>
 &lt;/ul>
-&lt;h3 id="git-reset-mixed-74e3b2b">git reset &amp;ndash;mixed 74e3b2b&lt;/h3>
+&lt;h4 id="b-git-reset---mixed-sha-default">b) &lt;code>git reset --mixed &amp;lt;SHA&amp;gt;&lt;/code> (default)&lt;/h4>
 &lt;ul>
-&lt;li>same as previous one but it will store all the changes from the removed commits as uncommited changes&lt;/li>
+&lt;li>Similar to &lt;code>--hard&lt;/code>, but preserves changes from discarded commits as unstaged modifications.&lt;/li>
 &lt;/ul>
-&lt;h2 id="git-restore-source-74e3b2b-filename">git restore &amp;ndash;source 74e3b2b filename&lt;/h2>
+&lt;h3 id="5-restoring-a-file-from-a-past-commit">5. Restoring a File from a Past Commit&lt;/h3>
+&lt;h4 id="git-restore---source-sha----file">&lt;code>git restore --source &amp;lt;SHA&amp;gt; -- &amp;lt;file&amp;gt;&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>will restore this file to certain commit (just 1 file)&lt;/li>
+&lt;li>Replaces the working copy of &lt;code>&amp;lt;file&amp;gt;&lt;/code> with its state at the given commit.&lt;/li>
+&lt;li>Only affects the specified file.&lt;/li>
 &lt;/ul>
-&lt;h2 id="git-reflog">git reflog&lt;/h2>
+&lt;h3 id="6-using-the-reflog-to-recover-lost-commits">6. Using the Reflog to Recover Lost Commits&lt;/h3>
+&lt;h4 id="git-reflog">&lt;code>git reflog&lt;/code>&lt;/h4>
 &lt;ul>
-&lt;li>it is advance version of &lt;code>git log&lt;/code>&lt;/li>
+&lt;li>Records updates to &lt;code>HEAD&lt;/code> (including resets) for a limited time.&lt;/li>
+&lt;li>Find the SHA of a lost state and then create a branch or reset to it.&lt;/li>
 &lt;/ul>
-&lt;h3 id="restore-after-hard-reset">Restore after hard reset&lt;/h3>
+&lt;h5 id="restoring-after-a-hard-reset">Restoring After a Hard Reset&lt;/h5>
 &lt;ul>
-&lt;li>it even stores history for certain time after &lt;code>git reset --hard&lt;/code>&lt;/li>
-&lt;li>you can &lt;code>git reset 74e3b2b&lt;/code> but creating mew branch is preferred by &lt;code>git branch branch_name 74e3b2b&lt;/code>&lt;/li>
+&lt;li>Locate the prior &lt;code>HEAD&lt;/code> reference in the reflog.&lt;/li>
+&lt;li>Use &lt;code>git branch &amp;lt;new-branch&amp;gt; &amp;lt;reflog-SHA&amp;gt;&lt;/code> to recover.&lt;/li>
 &lt;/ul>
-&lt;h3 id="restore-after-deleting-entire-branch">Restore after deleting entire branch&lt;/h3>
-&lt;ul>
-&lt;li>look for &amp;lt;SHA&amp;gt; from &lt;code>git reflog&lt;/code>&lt;/li>
-&lt;li>then &lt;code>git branch branch_name 36a46a1&lt;/code>&lt;/li>
+&lt;h5 id="recovering-a-deleted-branch">Recovering a Deleted Branch&lt;/h5>
+&lt;ol>
+&lt;li>Identify the branch tip SHA via &lt;code>git reflog&lt;/code>.&lt;/li>
+&lt;li>Recreate the branch: &lt;code>git branch &amp;lt;branch-name&amp;gt; &amp;lt;SHA&amp;gt;&lt;/code>.&lt;/li>
+&lt;/ol>
+&lt;h3 id="7-moving-commits-to-another-branch">7. Moving Commits to Another Branch&lt;/h3>
+&lt;h4 id="a-to-a-new-branch">a) To a New Branch&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>git branch &amp;lt;new-branch&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git reset --hard HEAD~1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Creates &lt;code>&amp;lt;new-branch&amp;gt;&lt;/code> at the current &lt;code>HEAD&lt;/code>, then removes the last commit from the original branch.&lt;/li>
 &lt;/ul>
-&lt;h2 id="moving-commit-to-another-branch">Moving commit to another branch&lt;/h2>
-&lt;ul>
-&lt;li>if you want to &lt;em>move&lt;/em> cirtain commits from current branch to new branch
-&lt;pre tabindex="0">&lt;code>git branch new_branch_name
-git reset HEAD~1 --hard
-&lt;/code>&lt;/pre>&lt;/li>
-&lt;li>if moving commit to already present branch
-&lt;pre tabindex="0">&lt;code>git checkout branch_name
-git cherry-pick 36a46a1
-git checkout previous_branch_name
-git reset --hard HEAD~1
-&lt;/code>&lt;/pre>&lt;/li>
+&lt;h4 id="b-to-an-existing-branch">b) To an Existing Branch&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>git checkout &amp;lt;target-branch&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git cherry-pick &amp;lt;SHA&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git checkout &amp;lt;original-branch&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git reset --hard HEAD~1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Cherry-picks the commit into &lt;code>&amp;lt;target-branch&amp;gt;&lt;/code>, then removes it from the source branch.&lt;/li>
 &lt;/ul>
-&lt;h2 id="interactive-rebase">Interactive rebase&lt;/h2>
-&lt;ul>
-&lt;li>is very advance, &lt;em>dangerous&lt;/em> and powerful tool&lt;/li>
-&lt;li>read comments during the process&lt;/li>
-&lt;/ul>
-&lt;h3 id="change-commit-history">Change commit history&lt;/h3>
-&lt;ul>
-&lt;li>for example if you want to change commit history upto 3 commits before current HEAD&lt;/li>
-&lt;li>&lt;code>git rebase -i HEAD~3&lt;/code>&lt;/li>
-&lt;li>you can change/&lt;em>reword&lt;/em> commit messages, delete/&lt;em>drop&lt;/em> commits, &lt;em>squash&lt;/em> multiple commits together&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;h3 id="8-interactive-rebase-for-history-rewriting">8. Interactive Rebase for History Rewriting&lt;/h3>
+&lt;p>Use with caution: Interactive rebase rewrites commit history, which can break shared branches.&lt;/p></description></item></channel></rss>

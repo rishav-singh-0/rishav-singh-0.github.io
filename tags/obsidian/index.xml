@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Obsidian on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/obsidian/</link><description>Recent content in Obsidian on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Sat, 17 May 2025 09:20:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/obsidian/index.xml" rel="self" type="application/rss+xml"/><item><title>Obsidian Test File</title><link>https://rishav-singh-0.github.io/posts/obsidian-test-file/</link><pubDate>Sat, 17 May 2025 09:20:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/obsidian-test-file/</guid><description>&lt;p>This File contains all the markdown formatting which include generic markdown as well as obsidian specific markdown.&lt;/p>
+&lt;h1 id="markdown-conversion-test">Markdown Conversion Test&lt;/h1>
+&lt;h2 id="headings">Headings&lt;/h2>
+&lt;h1 id="h1">H1&lt;/h1>
+&lt;h2 id="h2">H2&lt;/h2>
+&lt;h3 id="h3">H3&lt;/h3>
+&lt;h4 id="h4">H4&lt;/h4>
+&lt;h5 id="h5">H5&lt;/h5>
+&lt;h6 id="h6">H6&lt;/h6>
+&lt;h2 id="text-formatting">Text Formatting&lt;/h2>
+&lt;ul>
+&lt;li>&lt;em>Italic&lt;/em>&lt;/li>
+&lt;li>&lt;em>Italic&lt;/em>&lt;/li>
+&lt;li>&lt;strong>Bold&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>Bold&lt;/strong>&lt;/li>
+&lt;li>&lt;em>&lt;strong>Bold Italic&lt;/strong>&lt;/em>&lt;/li>
+&lt;li>&lt;del>Strikethrough&lt;/del>&lt;/li>
+&lt;/ul>
+&lt;h2 id="lists">Lists&lt;/h2>
+&lt;ul>
+&lt;li>Unordered list
+&lt;ul>
+&lt;li>Nested item
+&lt;ul>
+&lt;li>Deeper item&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>Ordered list&lt;/li>
+&lt;li>Second item
+&lt;ol>
+&lt;li>Sub-item&lt;/li>
+&lt;li>Sub-item&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="links">Links&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://example.com">Standard Markdown Link&lt;/a>&lt;/li>
+&lt;li>Obsidian internal link: [0-Inbox/Obsidian]({&amp;lt; ref &amp;ldquo;/posts/0-inbox/obsidian/&amp;rdquo; &amp;gt;}})&lt;/li>
+&lt;li>Obsidian link with alias: [0-Inbox/Obsidian|Custom Text]({&amp;lt; ref &amp;ldquo;/posts/0-inbox/obsidian|custom-text/&amp;rdquo; &amp;gt;}})&lt;/li>
+&lt;li>Obsidian section link: [0-Inbox/Obsidian#Themes]({&amp;lt; ref &amp;ldquo;/posts/0-inbox/obsidian#themes/&amp;rdquo; &amp;gt;}})&lt;/li>
+&lt;li>Obsidian section link with alias: [0-Inbox/Obsidian#Themes|Alias Text]({&amp;lt; ref &amp;ldquo;/posts/0-inbox/obsidian#themes|alias-text/&amp;rdquo; &amp;gt;}})&lt;/li>
+&lt;li>Mixed content: &lt;a href="https://link">Regular&lt;/a> and [../0-Inbox/Obsidian Export to HUGO]({&amp;lt; ref &amp;ldquo;/posts/../0-inbox/obsidian-export-to-hugo/&amp;rdquo; &amp;gt;}})&lt;/li>
+&lt;li>Obsidian section link display content: &lt;img src="https://rishav-singh-0.github.io/posts/obsidian-test-file/./Obsidian#Themes" alt="Obsidian#Themes"/>&lt;/li>
+&lt;/ul>
+&lt;h2 id="images">Images&lt;/h2>
+&lt;ul>
+&lt;li>Markdown image: &lt;img src="https://rishav-singh-0.github.io/posts/obsidian-test-file/./test-image.png" alt="No image should be seen here"/>&lt;/li>
+&lt;li>Obsidian image: &lt;img src="https://rishav-singh-0.github.io/posts/obsidian-test-file/./paper-egg-with-bunny-ears.jpeg" alt="paper-egg-with-bunny-ears"/>&lt;/li>
+&lt;li>Obsidian image relative path: &lt;img src="https://rishav-singh-0.github.io/posts/obsidian-test-file/./paper-egg-with-bunny-ears.jpeg" alt="paper-egg-with-bunny-ears"/>&lt;/li>
+&lt;/ul>
+&lt;h2 id="code">Code&lt;/h2>
+&lt;p>Inline &lt;code>code&lt;/code> example.&lt;/p></description></item></channel></rss>

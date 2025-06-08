@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>OS/Interrupt on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/os/interrupt/</link><description>Recent content in OS/Interrupt on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Sun, 04 May 2025 22:55:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/os/interrupt/index.xml" rel="self" type="application/rss+xml"/><item><title>CPU Execution States on ARM</title><link>https://blog.rishavs.in/posts/0-inbox/cpu-execution-states-on-arm/</link><pubDate>Sun, 04 May 2025 22:55:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/cpu-execution-states-on-arm/</guid><description>&lt;h2 id="1-overview">1. Overview&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>OS/Interrupt on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/os/interrupt/</link><description>Recent content in OS/Interrupt on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Sun, 04 May 2025 22:55:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/os/interrupt/index.xml" rel="self" type="application/rss+xml"/><item><title>CPU Execution States on ARM</title><link>https://rishav-singh-0.github.io/posts/cpu-execution-states-on-arm/</link><pubDate>Sun, 04 May 2025 22:55:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/cpu-execution-states-on-arm/</guid><description>&lt;h2 id="1-overview">1. Overview&lt;/h2>
 &lt;h3 id="process-context">Process Context&lt;/h3>
 &lt;ul>
 &lt;li>The kernel executes code &lt;strong>on behalf of a user-space process&lt;/strong> (e.g., handling a system call like &lt;code>read()&lt;/code> or &lt;code>write()&lt;/code>).&lt;/li>
@@ -23,7 +23,7 @@
 &lt;/ul>
 &lt;hr>
 &lt;h2 id="2-cpu-execution-states-in-arm">2. CPU Execution States in ARM&lt;/h2>
-&lt;p>ARM architectures (e.g., ARMv8-A) define &lt;strong>exception levels (ELs)&lt;/strong> that correspond to CPU execution states:&lt;/p></description></item><item><title>System Call (Software Interrupt)</title><link>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</link><pubDate>Sun, 04 May 2025 14:24:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/system-call-software-interrupt/</guid><description>&lt;h2 id="1-system-call-basics">1. System Call Basics&lt;/h2>
+&lt;p>ARM architectures (e.g., ARMv8-A) define &lt;strong>exception levels (ELs)&lt;/strong> that correspond to CPU execution states:&lt;/p></description></item><item><title>System Call (Software Interrupt)</title><link>https://rishav-singh-0.github.io/posts/system-call-software-interrupt/</link><pubDate>Sun, 04 May 2025 14:24:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/system-call-software-interrupt/</guid><description>&lt;h2 id="1-system-call-basics">1. System Call Basics&lt;/h2>
 &lt;p>System calls (syscalls) are the interface for user-space programs to request services from the kernel. Examples include:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>File I/O&lt;/strong>: &lt;code>read()&lt;/code>, &lt;code>write()&lt;/code>, &lt;code>open()&lt;/code>, &lt;code>close()&lt;/code>.&lt;/li>
@@ -119,7 +119,7 @@
 &lt;h4 id="io-control-ioctl">I/O Control (&lt;code>ioctl&lt;/code>):&lt;/h4>
 &lt;ul>
 &lt;li>The &lt;code>ioctl&lt;/code> syscall (&lt;code>sys_ioctl()&lt;/code>) calls the driver&amp;rsquo;s &lt;code>.unlocked_ioctl&lt;/code> method.
-!../3-Resource/Platform/IOCTL in Kernel Device Drivers#3. Integrate into file_operations&lt;/li>
+![IOCTL in Kernel Device Drivers#3](./IOCTL in Kernel Device Drivers#3. Integrate into file_operations)&lt;/li>
 &lt;/ul>
 &lt;h3 id="5-return-to-user-space">5. Return to User Space:&lt;/h3>
 &lt;ul>
@@ -128,7 +128,7 @@
 &lt;/ul>
 &lt;hr>
 &lt;h2 id="4-device-file-operations">4. Device File Operations&lt;/h2>
-&lt;p>Character devices (e.g., &lt;code>/dev/char_dev&lt;/code>) expose operations via &lt;code>file_operations&lt;/code>:&lt;/p></description></item><item><title>Interrupt Handling Flow</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/</link><pubDate>Sun, 04 May 2025 14:11:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/</guid><description>&lt;h3 id="1-interrupt-generation">1. Interrupt Generation&lt;/h3>
+&lt;p>Character devices (e.g., &lt;code>/dev/char_dev&lt;/code>) expose operations via &lt;code>file_operations&lt;/code>:&lt;/p></description></item><item><title>Interrupt Handling Flow</title><link>https://rishav-singh-0.github.io/posts/interrupt-handling-flow/</link><pubDate>Sun, 04 May 2025 14:11:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/interrupt-handling-flow/</guid><description>&lt;h3 id="1-interrupt-generation">1. Interrupt Generation&lt;/h3>
 &lt;ul>
 &lt;li>A hardware device (e.g., NIC, keyboard) raises an interrupt via the Programmable Interrupt Controller (PIC/APIC).&lt;/li>
 &lt;li>The PIC converts the IRQ line into a vector number and signals the CPU via the INTR/NMI pin.&lt;/li>
@@ -190,7 +190,7 @@
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">nic_tasklet_fn&lt;/span>(&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> data) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Process packets, update kernel networking stack
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Interrupt Questions</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt-questions/</link><pubDate>Sun, 04 May 2025 13:49:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt-questions/</guid><description>&lt;h3 id="q1-what-happens-if-another-interrupt-occurs-while-a-top-half-isr-is-executing">Q1: What happens if another interrupt occurs while a top half (ISR) is executing?&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Interrupt Questions</title><link>https://rishav-singh-0.github.io/posts/interrupt-questions/</link><pubDate>Sun, 04 May 2025 13:49:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/interrupt-questions/</guid><description>&lt;h3 id="q1-what-happens-if-another-interrupt-occurs-while-a-top-half-isr-is-executing">Q1: What happens if another interrupt occurs while a top half (ISR) is executing?&lt;/h3>
 &lt;p>&lt;strong>Answer&lt;/strong>:&lt;/p>
 &lt;ul>
 &lt;li>By default, &lt;strong>interrupts are disabled&lt;/strong> during the top half execution. When the CPU enters the ISR (via the IDT), it automatically clears the &lt;strong>Interrupt Flag (IF)&lt;/strong> on x86 (using &lt;code>cli&lt;/code>), preventing further interrupts until the ISR finishes.&lt;/li>
@@ -201,7 +201,7 @@
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;p>&lt;strong>Key Takeaway&lt;/strong>:&lt;/p></description></item><item><title>Interrupt</title><link>https://blog.rishavs.in/posts/0-inbox/interrupt/</link><pubDate>Sat, 03 May 2025 12:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/interrupt/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;strong>Key Takeaway&lt;/strong>:&lt;/p></description></item><item><title>Interrupt</title><link>https://rishav-singh-0.github.io/posts/interrupt/</link><pubDate>Sat, 03 May 2025 12:33:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/interrupt/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>An &lt;em>interrupt&lt;/em> is a signal that breaks the normal execution flow to handle an event. When an interrupt occurs, the CPU &lt;strong>pauses&lt;/strong> its current task, jumps to an interrupt service routine (ISR), and after the ISR completes it &lt;strong>resumes&lt;/strong> the original task. In other words, interrupts let hardware or software requests &amp;ldquo;call&amp;rdquo; the CPU’s attention immediately, then let the program continue &amp;ldquo;as if nothing happened&amp;rdquo; after handling it.&lt;/p>
 &lt;h2 id="why-are-interrupts-needed">Why are interrupts needed?&lt;/h2>
 &lt;ul>
@@ -221,7 +221,7 @@
 &lt;/ul>
 &lt;h2 id="how-the-kernel-registers-interrupts">How the Kernel Registers Interrupts&lt;/h2>
 &lt;ol>
-&lt;li>&lt;a href="https://blog.rishavs.in/posts/0-inbox/interrupt-descriptor-table-idt/">Interrupt Descriptor Table (IDT)&lt;/a> Initialization:
+&lt;li>[Interrupt Descriptor Table (IDT)]({&amp;lt; ref &amp;ldquo;/posts/interrupt-descriptor-table-(idt)/&amp;rdquo; &amp;gt;}}) Initialization:
 &lt;ul>
 &lt;li>At boot, the kernel populates the IDT with default handlers (e.g., for exceptions).&lt;/li>
 &lt;li>Hardware interrupts are mapped to a generic entry (e.g., common_interrupt on x86).&lt;/li>
@@ -243,4 +243,4 @@
 &lt;/li>
 &lt;/ol>
 &lt;h2 id="what-happens-when-an-interrupt-is-occurred">What happens when an interrupt is occurred?&lt;/h2>
-&lt;p>See &lt;a href="https://blog.rishavs.in/posts/0-inbox/interrupt-handling-flow/">Interrupt Handling Flow&lt;/a>&lt;/p></description></item></channel></rss>
+&lt;p>See [Interrupt Handling Flow]({&amp;lt; ref &amp;ldquo;/posts/interrupt-handling-flow/&amp;rdquo; &amp;gt;}})&lt;/p></description></item></channel></rss>

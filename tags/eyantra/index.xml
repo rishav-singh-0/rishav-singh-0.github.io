@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>EYantra on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/eyantra/</link><description>Recent content in EYantra on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Thu, 30 Mar 2023 10:16:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/eyantra/index.xml" rel="self" type="application/rss+xml"/><item><title>Hola Bot</title><link>https://blog.rishavs.in/posts/2-area/resume/hola-bot/</link><pubDate>Thu, 30 Mar 2023 10:16:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/resume/hola-bot/</guid><description>&lt;h2 id="holonomic-drive-robot-a-versatile-path-planning-machine">Holonomic Drive Robot: A Versatile Path-Planning Machine&lt;/h2>
-&lt;p>!assets/Pasted image 20241201191055.png&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>EYantra on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/eyantra/</link><description>Recent content in EYantra on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Thu, 30 Mar 2023 10:16:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/eyantra/index.xml" rel="self" type="application/rss+xml"/><item><title>Hola Bot</title><link>https://rishav-singh-0.github.io/posts/hola-bot/</link><pubDate>Thu, 30 Mar 2023 10:16:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/hola-bot/</guid><description>&lt;h2 id="holonomic-drive-robot-a-versatile-path-planning-machine">Holonomic Drive Robot: A Versatile Path-Planning Machine&lt;/h2>
+&lt;p>![Pasted image 20241201191055](./Pasted image 20241201191055.png)&lt;/p>
 &lt;h3 id="overview">Overview&lt;/h3>
 &lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is an innovative, three-wheeled robot designed for precision path planning and image-based drawing. It combines advanced robotics algorithms, custom hardware, and creative problem-solving to deliver exceptional performance in a variety of tasks, from geometric pattern generation to drawing intricate images like logos.&lt;/p>
 &lt;h3 id="key-highlights">Key Highlights&lt;/h3>
@@ -49,7 +49,7 @@
 &lt;li>Integrated a servo-based pen mechanism for on/off control during drawing operations.&lt;/li>
 &lt;li>Conducted intensive testing, fixing indexing bugs, and optimizing scripts for various patterns, including the Snapchat logo and infinity shapes.&lt;/li>
 &lt;li>Demonstrated successful path-following in a simulation environment using Gazebo.
-!assets/hola-collage 1.jpg&lt;/li>
+![hola-collage 1](./hola-collage 1.jpg)&lt;/li>
 &lt;/ul>
 &lt;hr>
 &lt;h3 id="challenges-overcome">Challenges Overcome&lt;/h3>
@@ -72,7 +72,7 @@
 &lt;/ul>
 &lt;hr>
 &lt;h3 id="conclusion">Conclusion&lt;/h3>
-&lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is a testament to innovative thinking, technical expertise, and perseverance. It serves as a versatile platform for robotics experimentation, offering potential applications in art, industrial automation, and beyond.&lt;/p></description></item><item><title>Vitarana Drone</title><link>https://blog.rishavs.in/posts/2-area/resume/vitarana-drone/</link><pubDate>Thu, 01 Oct 2020 12:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/2-area/resume/vitarana-drone/</guid><description>&lt;p>&lt;strong>Duration:&lt;/strong> Oct 2020 – Feb 2021&lt;br>
+&lt;p>The &lt;em>Holonomic Drive Robot&lt;/em> is a testament to innovative thinking, technical expertise, and perseverance. It serves as a versatile platform for robotics experimentation, offering potential applications in art, industrial automation, and beyond.&lt;/p></description></item><item><title>Vitarana Drone</title><link>https://rishav-singh-0.github.io/posts/vitarana-drone/</link><pubDate>Thu, 01 Oct 2020 12:05:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/vitarana-drone/</guid><description>&lt;p>&lt;strong>Duration:&lt;/strong> Oct 2020 – Feb 2021&lt;br>
 &lt;strong>Team Members:&lt;/strong> Rishav Singh, Kashyap Joshi&lt;br>
 &lt;strong>Technology:&lt;/strong> Python, ROS, Drone/Quadcopter, Gazebo, Git, Linux&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>

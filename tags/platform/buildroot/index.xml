@@ -1,14 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Buildroot on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/platform/buildroot/</link><description>Recent content in Platform/Buildroot on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Fri, 04 Apr 2025 12:00:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/platform/buildroot/index.xml" rel="self" type="application/rss+xml"/><item><title>External Toolchain in Buildroot</title><link>https://blog.rishavs.in/posts/3-resource/platform/external-toolchain-in-buildroot/</link><pubDate>Fri, 04 Apr 2025 12:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/platform/external-toolchain-in-buildroot/</guid><description>&lt;h2 id="using-external-toolchain">Using External Toolchain&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Buildroot on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/platform/buildroot/</link><description>Recent content in Platform/Buildroot on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Tue, 20 May 2025 10:13:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/platform/buildroot/index.xml" rel="self" type="application/rss+xml"/><item><title>Generating Package Patch for Buildroot</title><link>https://rishav-singh-0.github.io/posts/generating-package-patch-for-buildroot/</link><pubDate>Tue, 20 May 2025 10:13:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/generating-package-patch-for-buildroot/</guid><description>&lt;h2 id="generating-a-patch-using-diff">Generating a Patch Using &lt;code>diff&lt;/code>&lt;/h2>
+&lt;h3 id="1-extract-the-original-source">1. Extract the Original Source&lt;/h3>
+&lt;p>Ensure you have a pristine copy of the original source for comparison. You can extract it from the tarball in the &lt;code>dl&lt;/code> directory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>tar -xf dl/&amp;lt;package&amp;gt;-&amp;lt;version&amp;gt;.tar.gz -C /tmp/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will create a directory like &lt;code>/tmp/&amp;lt;package&amp;gt;-&amp;lt;version&amp;gt;/&lt;/code>.&lt;/p>
+&lt;h4 id="using-buildroots-mechanism">Using buildroot&amp;rsquo;s mechanism&lt;/h4>
+&lt;p>Clean the build directory and apply current patches of buildroot&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>make &amp;lt;pkg&amp;gt;-dirclean &lt;span style="color:#75715e"># Remove &amp;lt;pkg&amp;gt; build directory&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make &amp;lt;pkg&amp;gt;-extract &lt;span style="color:#75715e"># Extract &amp;lt;pkg&amp;gt; sources&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make &amp;lt;pkg&amp;gt;-patch &lt;span style="color:#75715e"># Apply patches to &amp;lt;pkg&amp;gt; (Optional)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp -r output/build/&amp;lt;package&amp;gt; /tmp/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-generate-the-patch">2. Generate the Patch&lt;/h3>
+&lt;p>Use the &lt;code>diff&lt;/code> command to create a unified diff between the original and modified sources:&lt;/p></description></item><item><title>External Toolchain in Buildroot</title><link>https://rishav-singh-0.github.io/posts/external-toolchain-in-buildroot/</link><pubDate>Fri, 04 Apr 2025 12:00:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/external-toolchain-in-buildroot/</guid><description>&lt;h2 id="using-external-toolchain">Using External Toolchain&lt;/h2>
 &lt;h3 id="option-1-give-tarball-url">Option 1: Give tarball URL&lt;/h3>
 &lt;p>Specify URL for the tarball in &lt;code>BR_TOOLCHAIN_EXTERNAL_URL&lt;/code>&lt;/p>
 &lt;p>Example:&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR_TOOLCHAIN_EXTERNAL_URL=http://192.168.101.52:8082/artifactory/toolchain.tar.xz
+&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR_TOOLCHAIN_EXTERNAL_URL=http://artifactory/my-toolchain.tar.xz
 &lt;/code>&lt;/pre>&lt;blockquote>
 &lt;p>In this case you will have to deselect &lt;code>BR2_PRIMARY_SITE_ONLY&lt;/code> option&lt;/p>&lt;/blockquote>
 &lt;h3 id="option-2-give-tarball-relative-dl-path">Option 2: Give tarball relative dl path&lt;/h3>
 &lt;p>If &lt;code>BR2_PRIMARY_SITE_ONLY&lt;/code> option is selected then you have to keep the toolchain inside &lt;code>dl/toolchain-external-custom/&lt;/code> directory and pass the name of tarball to &lt;code>BR_TOOLCHAIN_EXTERNAL_URL&lt;/code>&lt;/p>
 &lt;p>Example:&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR2_PRIMARY_SITE=&amp;#34;http://192.168.101.52:8082/artifactory/dl&amp;#34;
+&lt;pre tabindex="0">&lt;code class="language-config" data-lang="config">BR2_PRIMARY_SITE=&amp;#34;http://artifactory/buildroot-sources&amp;#34;
 BR2_PRIMARY_SITE_ONLY=y
-BR_TOOLCHAIN_EXTERNAL_URL=nvrx-rk3588-toolcahin.tar.xz
+BR_TOOLCHAIN_EXTERNAL_URL=my-toolcahin.tar.xz
 &lt;/code>&lt;/pre>&lt;p>This will extract the toolchain to buildroot&amp;rsquo;s build directory &lt;code>output/host/opt/ext-toolchain&lt;/code>&lt;/p></description></item></channel></rss>

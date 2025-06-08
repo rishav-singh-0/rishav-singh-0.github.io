@@ -1,5 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Security on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/security/</link><description>Recent content in Security on Rishav's Digital Garden</description><generator>Hugo -- 0.147.5</generator><language>en-us</language><lastBuildDate>Wed, 29 Jan 2025 14:12:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/security/index.xml" rel="self" type="application/rss+xml"/><item><title>SHA-256 (Secure Hash Algorithm 256-bit)</title><link>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</link><pubDate>Wed, 29 Jan 2025 14:12:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/sha-256-secure-hash-algorithm-256-bit/</guid><description>&lt;p>SHA-256 is a cryptographic hash function that produces a fixed-size 256-bit (32-byte) hash. It is &lt;strong>deterministic&lt;/strong>, &lt;strong>collision-resistant&lt;/strong>, and designed for security-critical applications.&lt;/p>
-&lt;p>!assets/hashing-algorithm-sha256.png&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Security on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/security/</link><description>Recent content in Security on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Tue, 20 May 2025 09:39:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/security/index.xml" rel="self" type="application/rss+xml"/><item><title>ssh audit</title><link>https://rishav-singh-0.github.io/posts/ssh-audit/</link><pubDate>Tue, 20 May 2025 09:39:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/ssh-audit/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;strong>ssh-audit&lt;/strong> is a tool for ssh server &amp;amp; client configuration auditing(banner, key exchange, encryption, mac, compression, compatibility, security, etc).&lt;/p>
+&lt;h2 id="installation">Installation&lt;/h2>
+&lt;ul>
+&lt;li>On Arch&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pacman -S ssh-audit
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>pip&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>pip3 install ssh-audit
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>Generic - Download and extract tarball from release&lt;/li>
+&lt;/ul>
+&lt;h2 id="usage">Usage&lt;/h2>
+&lt;pre tabindex="0">&lt;code>./ssh-audit.py 192.168.101.201
+&lt;/code>&lt;/pre>&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/jtesta/ssh-audit">https://github.com/jtesta/ssh-audit&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.ssh-audit.com/hardening_guides.html">https://www.ssh-audit.com/hardening_guides.html&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>SHA-256 (Secure Hash Algorithm 256-bit)</title><link>https://rishav-singh-0.github.io/posts/sha-256-secure-hash-algorithm-256-bit/</link><pubDate>Wed, 29 Jan 2025 14:12:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/sha-256-secure-hash-algorithm-256-bit/</guid><description>&lt;p>SHA-256 is a cryptographic hash function that produces a fixed-size 256-bit (32-byte) hash. It is &lt;strong>deterministic&lt;/strong>, &lt;strong>collision-resistant&lt;/strong>, and designed for security-critical applications.&lt;/p>
+&lt;p>&lt;img src="https://rishav-singh-0.github.io/posts/sha-256-%28secure-hash-algorithm-256-bit%29/./hashing-algorithm-sha256.png" alt="hashing-algorithm-sha256"/>&lt;/p>
 &lt;h3 id="how-sha-256-works">How SHA-256 Works&lt;/h3>
 &lt;ol>
 &lt;li>&lt;strong>Preprocessing&lt;/strong>:
@@ -65,7 +85,7 @@ Repeat the compression function for each block, using the output of each iterati
 &lt;/ul>
 &lt;/li>
 &lt;li>&lt;strong>Guarantees&lt;/strong>: Pre-image resistance, collision resistance.&lt;/li>
-&lt;/ul></description></item><item><title>CRC (Cyclic Redundancy Check)</title><link>https://blog.rishavs.in/posts/3-resource/crc-cyclic-redundancy-check/</link><pubDate>Wed, 29 Jan 2025 14:09:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/3-resource/crc-cyclic-redundancy-check/</guid><description>&lt;p>CRC is an error-detection code used to detect accidental changes to raw data (e.g., during transmission or storage). It works by treating the data as a polynomial and performing polynomial division with a predefined &lt;strong>generator polynomial&lt;/strong>. The remainder of this division becomes the CRC value.&lt;/p>
+&lt;/ul></description></item><item><title>CRC (Cyclic Redundancy Check)</title><link>https://rishav-singh-0.github.io/posts/crc-cyclic-redundancy-check/</link><pubDate>Wed, 29 Jan 2025 14:09:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/crc-cyclic-redundancy-check/</guid><description>&lt;p>CRC is an error-detection code used to detect accidental changes to raw data (e.g., during transmission or storage). It works by treating the data as a polynomial and performing polynomial division with a predefined &lt;strong>generator polynomial&lt;/strong>. The remainder of this division becomes the CRC value.&lt;/p>
 &lt;h3 id="how-crc-is-calculated">How CRC is Calculated&lt;/h3>
 &lt;ol>
 &lt;li>&lt;strong>Convert data to binary&lt;/strong>: Treat the data as a sequence of bits.&lt;/li>
@@ -98,7 +118,7 @@ Data becomes &lt;code>010010000110100100000000&lt;/code>.&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>&lt;strong>Not secure&lt;/strong> against intentional tampering.&lt;/li>
-&lt;/ul></description></item><item><title>SSL Certificate</title><link>https://blog.rishavs.in/posts/0-inbox/ssl-certificate/</link><pubDate>Tue, 10 Dec 2024 18:05:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/0-inbox/ssl-certificate/</guid><description>&lt;p>An &lt;strong>SSL certificate&lt;/strong> is a digital certificate issued by a trusted third-party authority known as a &lt;strong>Certificate Authority (CA)&lt;/strong>. It verifies the identity of a website or server and enables secure, encrypted communication.&lt;/p>
+&lt;/ul></description></item><item><title>SSL Certificate</title><link>https://rishav-singh-0.github.io/posts/ssl-certificate/</link><pubDate>Tue, 10 Dec 2024 18:05:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/ssl-certificate/</guid><description>&lt;p>An &lt;strong>SSL certificate&lt;/strong> is a digital certificate issued by a trusted third-party authority known as a &lt;strong>Certificate Authority (CA)&lt;/strong>. It verifies the identity of a website or server and enables secure, encrypted communication.&lt;/p>
 &lt;h3 id="components-of-an-ssl-certificate">Components of an SSL Certificate&lt;/h3>
 &lt;ul>
 &lt;li>Public Key:
