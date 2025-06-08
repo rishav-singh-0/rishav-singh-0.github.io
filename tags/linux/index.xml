@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/linux/</link><description>Recent content in Linux on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Tue, 20 May 2025 09:39:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>ssh audit</title><link>https://rishav-singh-0.github.io/posts/ssh-audit/</link><pubDate>Tue, 20 May 2025 09:39:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/ssh-audit/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/linux/</link><description>Recent content in Linux on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Tue, 20 May 2025 09:39:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>ssh audit</title><link>https://blog.rishavs.in/posts/ssh-audit/</link><pubDate>Tue, 20 May 2025 09:39:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/ssh-audit/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>&lt;strong>ssh-audit&lt;/strong> is a tool for ssh server &amp;amp; client configuration auditing(banner, key exchange, encryption, mac, compression, compatibility, security, etc).&lt;/p>
 &lt;h2 id="installation">Installation&lt;/h2>
 &lt;ul>
@@ -18,7 +18,7 @@
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/jtesta/ssh-audit">https://github.com/jtesta/ssh-audit&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.ssh-audit.com/hardening_guides.html">https://www.ssh-audit.com/hardening_guides.html&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>NFS</title><link>https://rishav-singh-0.github.io/posts/nfs/</link><pubDate>Thu, 15 May 2025 17:37:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/nfs/</guid><description>&lt;p>Install &lt;code>nfs-kernel-server&lt;/code>&lt;/p>
+&lt;/ul></description></item><item><title>NFS</title><link>https://blog.rishavs.in/posts/nfs/</link><pubDate>Thu, 15 May 2025 17:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/nfs/</guid><description>&lt;p>Install &lt;code>nfs-kernel-server&lt;/code>&lt;/p>
 &lt;p>&lt;code>mkdir ~/Public&lt;/code>&lt;/p>
 &lt;p>Export the rootfs folder&lt;/p>
 &lt;p>Add the following entry to &lt;code>/etc/exports&lt;/code>:&lt;/p>
@@ -32,7 +32,7 @@ udp=y
 vers2=y
 &lt;/code>&lt;/pre>&lt;p>Restart the NFS server&lt;/p>
 &lt;pre tabindex="0">&lt;code>systemctl restart nfs-server.service
-&lt;/code>&lt;/pre></description></item><item><title>NFS</title><link>https://rishav-singh-0.github.io/posts/nfs/</link><pubDate>Thu, 15 May 2025 17:37:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/nfs/</guid><description>&lt;p>Install &lt;code>nfs-kernel-server&lt;/code>&lt;/p>
+&lt;/code>&lt;/pre></description></item><item><title>NFS</title><link>https://blog.rishavs.in/posts/nfs/</link><pubDate>Thu, 15 May 2025 17:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/nfs/</guid><description>&lt;p>Install &lt;code>nfs-kernel-server&lt;/code>&lt;/p>
 &lt;p>&lt;code>mkdir ~/Public&lt;/code>&lt;/p>
 &lt;p>Export the rootfs folder&lt;/p>
 &lt;p>Add the following entry to &lt;code>/etc/exports&lt;/code>:&lt;/p>
@@ -46,7 +46,7 @@ udp=y
 vers2=y
 &lt;/code>&lt;/pre>&lt;p>Restart the NFS server&lt;/p>
 &lt;pre tabindex="0">&lt;code>systemctl restart nfs-server.service
-&lt;/code>&lt;/pre></description></item><item><title>Format Comparison</title><link>https://rishav-singh-0.github.io/posts/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
+&lt;/code>&lt;/pre></description></item><item><title>Format Comparison</title><link>https://blog.rishavs.in/posts/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -135,17 +135,17 @@ vers2=y
 &lt;li>&lt;code>7z (.7z)&lt;/code>: Excellent compression and strong encryption; requires specific software for full support.&lt;/li>
 &lt;li>&lt;code>rar (.rar)&lt;/code>: Known for robust recovery features and encryption, but is proprietary.&lt;/li>
 &lt;li>&lt;code>lzma (.lzma)&lt;/code>: Delivers a high compression ratio and reliable decompression, though it’s slow.&lt;/li>
-&lt;/ul></description></item><item><title>CU (call up another system)</title><link>https://rishav-singh-0.github.io/posts/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
+&lt;/ul></description></item><item><title>CU (call up another system)</title><link>https://blog.rishavs.in/posts/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
 &lt;p>The  cu  command is used to call up another system and act as a dial-in terminal (mostly on a serial line ie. serial monitor). It can also do simple file transfers with no error checking.&lt;/p>
 &lt;blockquote>
 &lt;p>cu is part of the UUCP(Unix to Unix Copy Program) source but has been split into its own package because it can be useful even if you do not do uucp.&lt;/p>&lt;/blockquote>
 &lt;h2 id="usage">Usage&lt;/h2>
-&lt;p>Start&lt;/p></description></item><item><title>CU (call up another system)</title><link>https://rishav-singh-0.github.io/posts/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
+&lt;p>Start&lt;/p></description></item><item><title>CU (call up another system)</title><link>https://blog.rishavs.in/posts/cu-call-up-another-system/</link><pubDate>Tue, 18 Jun 2024 11:33:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/cu-call-up-another-system/</guid><description>&lt;h2 id="official-description">Official Description&lt;/h2>
 &lt;p>The  cu  command is used to call up another system and act as a dial-in terminal (mostly on a serial line ie. serial monitor). It can also do simple file transfers with no error checking.&lt;/p>
 &lt;blockquote>
 &lt;p>cu is part of the UUCP(Unix to Unix Copy Program) source but has been split into its own package because it can be useful even if you do not do uucp.&lt;/p>&lt;/blockquote>
 &lt;h2 id="usage">Usage&lt;/h2>
-&lt;p>Start&lt;/p></description></item><item><title>Man Pages</title><link>https://rishav-singh-0.github.io/posts/man-pages/</link><pubDate>Tue, 18 Oct 2022 11:31:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/man-pages/</guid><description>&lt;h2 id="sections">Sections&lt;/h2>
+&lt;p>Start&lt;/p></description></item><item><title>Man Pages</title><link>https://blog.rishavs.in/posts/man-pages/</link><pubDate>Tue, 18 Oct 2022 11:31:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/man-pages/</guid><description>&lt;h2 id="sections">Sections&lt;/h2>
 &lt;ol>
 &lt;li>Executable programs or shell commands&lt;/li>
 &lt;li>System calls (functions provided by the kernel)&lt;/li>
@@ -159,12 +159,12 @@ vers2=y
 &lt;/ol>
 &lt;p>To see if any &lt;code>COMMAND&lt;/code> has available sections use &lt;code>whatis&lt;/code> of &lt;code>man -f&lt;/code>&lt;/p>
 &lt;pre tabindex="0">&lt;code>man -f COMMAND
-&lt;/code>&lt;/pre></description></item><item><title>Introduction to Linux</title><link>https://rishav-singh-0.github.io/posts/introduction-to-linux/</link><pubDate>Tue, 12 Jul 2022 23:00:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/introduction-to-linux/</guid><description>&lt;h2 id="what-is-operating-system-">What is Operating System ?&lt;/h2>
+&lt;/code>&lt;/pre></description></item><item><title>Introduction to Linux</title><link>https://blog.rishavs.in/posts/introduction-to-linux/</link><pubDate>Tue, 12 Jul 2022 23:00:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/introduction-to-linux/</guid><description>&lt;h2 id="what-is-operating-system-">What is Operating System ?&lt;/h2>
 &lt;p>An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs.&lt;/p>
 &lt;h2 id="what-is-kernel">What is Kernel?&lt;/h2>
 &lt;p>The kernel is a part of operating system which has complete control over everything in the system. It is the portion of the operating system code that is always resident in memory,[2] and facilitates interactions between hardware and software components.&lt;/p>
 &lt;h2 id="what-is-linux">What is &lt;a href="https://www.kernel.org/linux.html">Linux&lt;/a>?&lt;/h2>
-&lt;p>Linux is a clone of the operating system Unix, written from scratch by Linus Torvalds with assistance from a loosely-knit team of hackers across the Net. It aims towards &lt;a href="http://get.posixcertified.ieee.org/">POSIX&lt;/a> and Single UNIX Specification compliance.&lt;/p></description></item><item><title>Compile your Custom Linux Kernel</title><link>https://rishav-singh-0.github.io/posts/compile-your-custom-linux-kernel/</link><pubDate>Fri, 17 Sep 2021 23:52:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/compile-your-custom-linux-kernel/</guid><description>&lt;h2 id="preparation">Preparation&lt;/h2>
+&lt;p>Linux is a clone of the operating system Unix, written from scratch by Linus Torvalds with assistance from a loosely-knit team of hackers across the Net. It aims towards &lt;a href="http://get.posixcertified.ieee.org/">POSIX&lt;/a> and Single UNIX Specification compliance.&lt;/p></description></item><item><title>Compile your Custom Linux Kernel</title><link>https://blog.rishavs.in/posts/compile-your-custom-linux-kernel/</link><pubDate>Fri, 17 Sep 2021 23:52:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/compile-your-custom-linux-kernel/</guid><description>&lt;h2 id="preparation">Preparation&lt;/h2>
 &lt;h3 id="install-dependencies">Install Dependencies&lt;/h3>
 &lt;pre tabindex="0">&lt;code>sudo pacman -S base-devel xmlto kmod inetutils bc libelf git --needed
 &lt;/code>&lt;/pre>&lt;h3 id="downloading-source-and-local-setup">Downloading source and local setup&lt;/h3>
@@ -178,7 +178,7 @@ cd ~/kernelbuild
 &lt;p>Extract tarball&lt;/p>
 &lt;pre tabindex="0">&lt;code>tar -xvJf linux-5.14.5.tar.xz
 &lt;/code>&lt;/pre>&lt;p>Check
-&lt;img src="https://rishav-singh-0.github.io/posts/compile-your-custom-linux-kernel/3-Resource/Linux/assets/custom_kernel_tar_ls.png" alt="ls command output"/>&lt;/p></description></item><item><title>xfiles</title><link>https://rishav-singh-0.github.io/posts/xfiles/</link><pubDate>Tue, 14 Sep 2021 22:56:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/xfiles/</guid><description>&lt;h2 id="xinitrc">.xinitrc&lt;/h2>
+&lt;img src="https://blog.rishavs.in/posts/compile-your-custom-linux-kernel/3-Resource/Linux/assets/custom_kernel_tar_ls.png" alt="ls command output"/>&lt;/p></description></item><item><title>xfiles</title><link>https://blog.rishavs.in/posts/xfiles/</link><pubDate>Tue, 14 Sep 2021 22:56:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/xfiles/</guid><description>&lt;h2 id="xinitrc">.xinitrc&lt;/h2>
 &lt;p>The &lt;code>~/.xinitrc&lt;/code> file is a shell script read by xinit and by its front-end
 startx. It is mainly used to execute desktop environments, window managers and
 other programs when starting the X server (e.g., starting daemons and setting
@@ -189,7 +189,7 @@ at the beginning of the X user session - before the window manager is started.&l
 &lt;h2 id="xresources">.Xresources&lt;/h2>
 &lt;p>Xresources is a user-level configuration dotfile, typically located at
 &lt;code>~/.Xresources&lt;/code>. It can be used to set X resources, which are configuration
-parameters for X client applications. (&lt;code>xrdb ~/.Xresources&lt;/code>)&lt;/p></description></item><item><title>Packages I use in any Linux based OS</title><link>https://rishav-singh-0.github.io/posts/packages-i-use-in-any-linux-based-os/</link><pubDate>Mon, 12 Apr 2021 23:03:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/packages-i-use-in-any-linux-based-os/</guid><description>&lt;h1 id="packages-on-arch">Packages on Arch&lt;/h1>
+parameters for X client applications. (&lt;code>xrdb ~/.Xresources&lt;/code>)&lt;/p></description></item><item><title>Packages I use in any Linux based OS</title><link>https://blog.rishavs.in/posts/packages-i-use-in-any-linux-based-os/</link><pubDate>Mon, 12 Apr 2021 23:03:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/packages-i-use-in-any-linux-based-os/</guid><description>&lt;h1 id="packages-on-arch">Packages on Arch&lt;/h1>
 &lt;h2 id="pacstrap">pacstrap&lt;/h2>
 &lt;ul>
 &lt;li>base&lt;/li>
@@ -266,7 +266,7 @@ pacman -S atool zip unzip tar bzip2 gzip lzip unrar
 &lt;li>ttf-joypixels : Emoji as a Service (formerly EmojiOne)&lt;/li>
 &lt;/ul>
 &lt;h3 id="arch-3">Arch&lt;/h3>
-&lt;p>&lt;code>pacman -S noto-fonts ttf-joypixels&lt;/code>&lt;/p></description></item><item><title>Arch installation Guide</title><link>https://rishav-singh-0.github.io/posts/arch-installation-guide/</link><pubDate>Wed, 24 Mar 2021 22:47:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/arch-installation-guide/</guid><description>&lt;p>Ofcource my notes are are derived from &lt;a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Wiki&lt;/a>. And I highly recommend to read it too. These notes contains all the things which i do at the fime of new Arch Installation, so it is well tested.&lt;/p>
+&lt;p>&lt;code>pacman -S noto-fonts ttf-joypixels&lt;/code>&lt;/p></description></item><item><title>Arch installation Guide</title><link>https://blog.rishavs.in/posts/arch-installation-guide/</link><pubDate>Wed, 24 Mar 2021 22:47:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/arch-installation-guide/</guid><description>&lt;p>Ofcource my notes are are derived from &lt;a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Wiki&lt;/a>. And I highly recommend to read it too. These notes contains all the things which i do at the fime of new Arch Installation, so it is well tested.&lt;/p>
 &lt;h2 id="create-bootable-usb">Create Bootable usb&lt;/h2>
 &lt;pre tabindex="0">&lt;code>sudo dd bs=4 if=/mnt/Tools/linux/distros/archlinux-2021.02.01-x86_64.iso of=/dev/sdb conv=fdatasync status=progress
 &lt;/code>&lt;/pre>&lt;h2 id="verify-the-boot-mode">Verify the boot mode&lt;/h2>

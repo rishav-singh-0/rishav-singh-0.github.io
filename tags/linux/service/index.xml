@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux/Service on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/linux/service/</link><description>Recent content in Linux/Service on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Thu, 15 May 2025 17:37:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/linux/service/index.xml" rel="self" type="application/rss+xml"/><item><title>NFS</title><link>https://rishav-singh-0.github.io/posts/nfs/</link><pubDate>Thu, 15 May 2025 17:37:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/nfs/</guid><description>&lt;p>Install &lt;code>nfs-kernel-server&lt;/code>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux/Service on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/linux/service/</link><description>Recent content in Linux/Service on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Thu, 15 May 2025 17:37:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/linux/service/index.xml" rel="self" type="application/rss+xml"/><item><title>NFS</title><link>https://blog.rishavs.in/posts/nfs/</link><pubDate>Thu, 15 May 2025 17:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/nfs/</guid><description>&lt;p>Install &lt;code>nfs-kernel-server&lt;/code>&lt;/p>
 &lt;p>&lt;code>mkdir ~/Public&lt;/code>&lt;/p>
 &lt;p>Export the rootfs folder&lt;/p>
 &lt;p>Add the following entry to &lt;code>/etc/exports&lt;/code>:&lt;/p>
@@ -12,7 +12,7 @@ udp=y
 vers2=y
 &lt;/code>&lt;/pre>&lt;p>Restart the NFS server&lt;/p>
 &lt;pre tabindex="0">&lt;code>systemctl restart nfs-server.service
-&lt;/code>&lt;/pre></description></item><item><title>Format Comparison</title><link>https://rishav-singh-0.github.io/posts/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
+&lt;/code>&lt;/pre></description></item><item><title>Format Comparison</title><link>https://blog.rishavs.in/posts/format-comparison/</link><pubDate>Wed, 07 Aug 2024 09:37:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/format-comparison/</guid><description>&lt;h2 id="compression-format-comparison">Compression Format Comparison&lt;/h2>
 &lt;table>
 &lt;thead>
 &lt;tr>
