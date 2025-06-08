@@ -1,4 +1,4 @@
-baseURL = 'https://rishav-singh-0.github.io/'
+baseURL = 'https://blog.rishavs.in/'
 languageCode = 'en-us'
 title = "Rishav's Digital Garden"
 theme = 'PaperMod'
@@ -51,3 +51,6 @@ ShowCodeCopyButtons = true
 home = [ "HTML", "RSS", "JSON" ]
 
 ################################
+
+[markup.goldmark.renderer]
+unsafe = true

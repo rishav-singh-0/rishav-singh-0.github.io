@@ -25,7 +25,7 @@ def convert_links(text):
     text = re.sub(r'!\[\[([^\]]+?)\]\]', lambda m: f"![{Path(m.group(1)).stem}](./{Path(m.group(1)).name})", text)
 
     # Convert Obsidian links with alias: [[Note|Text]] -> [Text](../note/index.md)
-    text = re.sub(r'\[\[([^|\]#]+)\|([^\]]+)\]\]', lambda m: f"[{m.group(2)}](../" + slugify(m.group(1)) + "/index.md)", text)
+    text = re.sub(r'\[\[([^\]]+?)\]\]', lambda m: f"[{m.group(1)}]({{< ref \"/posts/" + slugify(m.group(1)) + "/\" >}})", text)
 
     # Convert Obsidian section links: [[Note#Section]] -> [Note - Section](../note/index.md#section)
     text = re.sub(r'\[\[([^\]#]+)#([^\]]+)\]\]', lambda m: f"[{m.group(1)} - {m.group(2)}](../" + slugify(m.group(1)) + "/index.md#" + slugify(m.group(2)) + ")", text)
@@ -55,6 +55,12 @@ def process_note(original_file):
     except Exception as e:
         print(f"Failed to read frontmatter from {original_file}: {e}")
         return
+    
+    if 'draft' not in post:
+        return
+
+    # Inject title from filename (without extension)
+    post['title'] = original_file.stem.strip()
 
     post.content = convert_links(post.content)
 
