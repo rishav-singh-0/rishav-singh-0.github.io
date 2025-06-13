@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Protocol on Rishav's Digital Garden</title><link>https://blog.rishavs.in/tags/platform/protocol/</link><description>Recent content in Platform/Protocol on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Wed, 05 Feb 2025 23:06:00 +0000</lastBuildDate><atom:link href="https://blog.rishavs.in/tags/platform/protocol/index.xml" rel="self" type="application/rss+xml"/><item><title>SPI</title><link>https://blog.rishavs.in/posts/spi/</link><pubDate>Wed, 05 Feb 2025 23:06:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/spi/</guid><description>&lt;h2 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Platform/Protocol on Rishav's Digital Garden</title><link>https://rishav-singh-0.github.io/tags/platform/protocol/</link><description>Recent content in Platform/Protocol on Rishav's Digital Garden</description><generator>Hugo -- 0.147.0</generator><language>en-us</language><lastBuildDate>Wed, 05 Feb 2025 23:06:00 +0000</lastBuildDate><atom:link href="https://rishav-singh-0.github.io/tags/platform/protocol/index.xml" rel="self" type="application/rss+xml"/><item><title>SPI</title><link>https://rishav-singh-0.github.io/posts/spi/</link><pubDate>Wed, 05 Feb 2025 23:06:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/spi/</guid><description>&lt;h2 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)&lt;/h2>
 &lt;h3 id="overview">Overview&lt;/h3>
 &lt;ul>
 &lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>full-duplex&lt;/strong> serial bus.&lt;/li>
@@ -115,7 +115,7 @@
 &lt;td>None&lt;/td>
 &lt;/tr>
 &lt;/tbody>
-&lt;/table></description></item><item><title>UART</title><link>https://blog.rishavs.in/posts/uart/</link><pubDate>Wed, 05 Feb 2025 22:14:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/uart/</guid><description>&lt;h2 id="uart-universal-asynchronous-receiver-transmitter">UART (Universal Asynchronous Receiver-Transmitter)&lt;/h2>
+&lt;/table></description></item><item><title>UART</title><link>https://rishav-singh-0.github.io/posts/uart/</link><pubDate>Wed, 05 Feb 2025 22:14:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/uart/</guid><description>&lt;h2 id="uart-universal-asynchronous-receiver-transmitter">UART (Universal Asynchronous Receiver-Transmitter)&lt;/h2>
 &lt;p>UART is a simple, asynchronous serial communication protocol used for full-duplex communication between two devices.&lt;/p>
 &lt;h3 id="key-features">Key Features:&lt;/h3>
 &lt;ul>
@@ -147,7 +147,7 @@
 &lt;ul>
 &lt;li>Debugging consoles (e.g., Linux kernel &lt;code>printk&lt;/code> via UART).&lt;/li>
 &lt;li>GPS modules, Bluetooth/Wi-Fi modules.&lt;/li>
-&lt;/ul></description></item><item><title>I2C</title><link>https://blog.rishavs.in/posts/i2c/</link><pubDate>Fri, 08 Nov 2024 21:40:00 +0000</pubDate><guid>https://blog.rishavs.in/posts/i2c/</guid><description>&lt;h2 id="basics-of-i2c">Basics of I2C&lt;/h2>
+&lt;/ul></description></item><item><title>I2C</title><link>https://rishav-singh-0.github.io/posts/i2c/</link><pubDate>Fri, 08 Nov 2024 21:40:00 +0000</pubDate><guid>https://rishav-singh-0.github.io/posts/i2c/</guid><description>&lt;h2 id="basics-of-i2c">Basics of I2C&lt;/h2>
 &lt;h3 id="overview">Overview&lt;/h3>
 &lt;ul>
 &lt;li>&lt;strong>Synchronous&lt;/strong>, &lt;strong>multi-master&lt;/strong>, &lt;strong>multi-slave&lt;/strong> serial bus.&lt;/li>
