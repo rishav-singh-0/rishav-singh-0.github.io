@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 from pathlib import Path
+import urllib.parse
 
 try:
     import frontmatter
@@ -22,7 +23,14 @@ def slugify(text):
 
 def convert_links(text):
     # Convert Obsidian image embeds: ![[image.png]] -> ![image](./image.png)
-    text = re.sub(r'!\[\[([^\]]+?)\]\]', lambda m: f"![{Path(m.group(1)).stem}](./{Path(m.group(1)).name})", text)
+    text = re.sub(r'!\[\[([^\]]+?)\]\]', lambda m: f'{{{{< figure src="/images/{Path(m.group(1)).name}" alt="{Path(m.group(1)).stem}" >}}}}', text)
+
+    # Fix markdown image paths like ![alt](assets/image.jpg) => ![alt](/images/image.jpg)
+    text = re.sub(
+        r'!\[(.*?)\]\((?:\.?/)?assets/([^\)]+)\)',
+        lambda m: f'{{{{< figure src="/images/{m.group(2)}" alt="{m.group(1)}" >}}}}',
+        text
+    )
 
     # Convert Obsidian links with alias: [[Note|Text]] -> [Text](../note/index.md)
     text = re.sub(r'\[\[([^\]]+?)\]\]', lambda m: f"[{m.group(1)}]({{< ref \"/posts/" + slugify(m.group(1)) + "/\" >}})", text)
