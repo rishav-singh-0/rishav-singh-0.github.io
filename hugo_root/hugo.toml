@@ -2,6 +2,7 @@ baseURL = 'https://blog.rishavs.in/'
 languageCode = 'en-us'
 title = "Rishav's Digital Garden"
 theme = 'PaperMod'
+googleAnalytics = "G-NPJY8ZT1P0"
 
 ########### PaperMod ###########
 [params.homeInfoParams]
