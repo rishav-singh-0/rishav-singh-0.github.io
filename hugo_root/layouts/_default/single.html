@@ -57,9 +57,9 @@
     {{- end }}
   </footer>
 
-  {{- if (.Param "comments") }}
-  {{- partial "comments.html" . }}
-  {{- end }}
+  {{ if (.Param "comments") }}
+  {{ partial "giscus.html" . }}
+  {{ end }}
 </article>
 
 {{- end }}{{/* end main */}}

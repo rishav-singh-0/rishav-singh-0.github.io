@@ -25,6 +25,9 @@ url = "https://github.com/rishav-singh-0"
 name = "instagram"
 url = "https://www.instagram.com/rishavs.in"
 
+[[params.comments]]
+comments=true
+
 [[menu.main]]
 name = "Archive"
 url = "archives"
