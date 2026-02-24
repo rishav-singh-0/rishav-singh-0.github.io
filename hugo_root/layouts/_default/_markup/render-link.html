@@ -1,18 +1,55 @@
-{{- $url := urls.Parse .Destination -}}
-{{- $scheme := $url.Scheme -}}
+{{- $destination := .Destination -}}
+{{- $text := .Text | safeHTML -}}
+{{- $isMalformed := and (strings.HasPrefix $destination "({<") (strings.Contains $destination "ref") -}}
 
-<a href="
-  {{- if eq $scheme "" -}}
-    {{- if strings.HasSuffix $url.Path ".md" -}}
-      {{- relref .Page .Destination | safeURL -}}
+{{- if $isMalformed -}}
+    {{- /* Extract the content from the malformed ref shortcode */ -}}
+    {{- $inner := $destination | findRE `“([^”]+)”` | index 0 | default "" | replaceRE `[“”]` "" -}}
+
+    {{- if $inner -}}
+        {{- $inner = $inner | strings.TrimSuffix "/" -}}
+        
+        {{- /* Split path, section and alias */ -}}
+        {{- $pathAndSection := $inner -}}
+        {{- if strings.Contains $inner "|" -}}
+            {{- $parts := split $inner "|" -}}
+            {{- $pathAndSection = index $parts 0 -}}
+        {{- end -}}
+
+        {{- $path := $pathAndSection -}}
+        {{- $section := "" -}}
+        {{- if strings.Contains $pathAndSection "#" -}}
+            {{- $parts := split $pathAndSection "#" -}}
+            {{- $path = index $parts 0 -}}
+            {{- $section = index $parts 1 -}}
+        {{- end -}}
+
+        {{- /* The python script creates incorrect paths in links.
+              It uses the full obsidian path e.g. /posts/0-inbox/obsidian
+              but the file is created at /posts/obsidian.
+              We need to extract the last part of the path to find the page. */ -}}
+        {{- $pathParts := split $path "/" -}}
+        {{- $fileName := last 1 $pathParts | index 0 -}}
+        {{- $correctPath := printf "posts/%s" $fileName -}}
+
+        {{- /* Find the page using the corrected path */ -}}
+        {{- $page := .Site.GetPage $correctPath -}}
+
+        {{- if $page -}}
+            {{- $url := $page.RelPermalink -}}
+            {{- if $section -}}
+                {{- $url = printf "%s#%s" $url (strings.Anchorize $section) -}}
+            {{- end -}}
+            <a href="{{ $url | safeURL }}">{{ $text }}</a>
+        {{- else -}}
+            {{- /* Fallback for broken links */ -}}
+            <a href="#" class="broken-link" title="Broken link to {{ $correctPath }} (original: {{ $path }})">{{ $text }}</a>
+        {{- end -}}
     {{- else -}}
-      {{- .Destination | safeURL -}}
+        {{- /* Fallback for malformed links that we can't parse */ -}}
+        <a href="{{ $destination | safeURL }}">{{ $text }}</a>
     {{- end -}}
-  {{- else -}}
-    {{- .Destination | safeURL -}}
-  {{- end -}}"
-  {{- with .Title }} title="{{ . | safeHTML }}"{{- end -}}>
-  {{- .Text | safeHTML -}}
-</a>
-
-{{- /* whitespace stripped here to avoid trailing newline in rendered result caused by file EOL */ -}}
+{{- else -}}
+    {{- /* Default link rendering for normal links */ -}}
+    <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- end -}}

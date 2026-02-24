@@ -18,28 +18,57 @@ IMG_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 
 def slugify(text):
-    return re.sub(r'[\s_]+', '-', text.strip().lower())
+    text = text.strip().lower()
+    # replace spaces and underscores with dashes
+    text = re.sub(r'[\s_]+', '-', text)
+    # remove any character that is not a letter, a number, or a dash
+    text = re.sub(r'[^\w-]', '', text)
+    return text
 
 
 def convert_links(text):
-    # Convert Obsidian image embeds: ![[image.png]] -> ![image](./image.png)
+    # Convert Obsidian image embeds: ![[image.png]] -> {{< figure src="/images/image.png" alt="image" >}}
     text = re.sub(r'!\[\[([^\]]+?)\]\]', lambda m: f'{{{{< figure src="/images/{Path(m.group(1)).name}" alt="{Path(m.group(1)).stem}" >}}}}', text)
 
-    # Fix markdown image paths like ![alt](assets/image.jpg) => ![alt](/images/image.jpg)
+    # Fix markdown image paths like ![alt](assets/image.jpg) -> {{< figure src="/images/image.jpg" alt="alt" >}}
     text = re.sub(
         r'!\[(.*?)\]\((?:\.?/)?assets/([^\)]+)\)',
         lambda m: f'{{{{< figure src="/images/{m.group(2)}" alt="{m.group(1)}" >}}}}',
         text
     )
 
-    # Convert Obsidian links with alias: [[Note|Text]] -> [Text](../note/index.md)
-    text = re.sub(r'\[\[([^\]]+?)\]\]', lambda m: f"[{m.group(1)}]({{< ref \"/posts/" + slugify(m.group(1)) + "/\" >}})", text)
+    # Unified Obsidian link conversion
+    def replace_link(match):
+        full_match = match.group(1)
+        parts = full_match.split('|')
+        link_part = parts[0]
+        alias_part = parts[1] if len(parts) > 1 else ''
 
-    # Convert Obsidian section links: [[Note#Section]] -> [Note - Section](../note/index.md#section)
-    text = re.sub(r'\[\[([^\]#]+)#([^\]]+)\]\]', lambda m: f"[{m.group(1)} - {m.group(2)}](../" + slugify(m.group(1)) + "/index.md#" + slugify(m.group(2)) + ")", text)
+        link_parts = link_part.split('#')
+        path = link_parts[0]
+        section = link_parts[1] if len(link_parts) > 1 else ''
 
-    # Convert simple Obsidian links: [[Note]] -> [Note](../note/index.md)
-    text = re.sub(r'\[\[([^\]]+?)\]\]', lambda m: f"[{m.group(1)}](../" + slugify(m.group(1)) + "/index.md)", text)
+        # Determine the display text
+        if alias_part:
+            display_text = alias_part
+        elif section:
+            display_text = f"{Path(path).name}#{section}"
+        else:
+            display_text = Path(path).name
+
+        path_parts = path.split('/')
+        file_name = path_parts[-1]
+        
+        ref_path = slugify(file_name)
+        
+        # Use relative links instead of ref
+        hugo_link = f'../{ref_path}/'
+        if section:
+            hugo_link += f'#{slugify(section)}'
+
+        return f'[{display_text}]({hugo_link})'
+
+    text = re.sub(r'\[\[([^\]]+?)\]\]', replace_link, text)
 
     return text
 
