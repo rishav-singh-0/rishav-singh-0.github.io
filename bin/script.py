@@ -85,6 +85,40 @@ def process_related(related_list):
     return new_related
 
 
+def process_cover_image(cover_value):
+    """
+    Processes the 'cover' frontmatter key to ensure it matches the Hugo theme's expected format.
+    
+    Converts from:
+    - Simple string path: "assets/image.png"
+    - Obsidian link: "[[3-Resource/Platform/assets/image.png]]"
+    
+    To:
+    cover:
+      image: "images/image.png"
+      relative: false
+    """
+    if not cover_value:
+        return cover_value
+    
+    # If it's already a dict, return it as is
+    if isinstance(cover_value, dict):
+        return cover_value
+    
+    cover_str = str(cover_value).strip()
+    # Handle Obsidian links [[filename.png]] or [[path/to/filename.png]]
+    match = re.match(r'\[\[(.*?)\]\]', cover_str)
+    if match:
+        cover_str = match.group(1)
+    
+    # Extract filename and prepend images/
+    filename = Path(cover_str).name
+    return {
+        "image": f"images/{filename}",
+        "relative": False
+    }
+
+
 def process_note(original_file):
     try:
         with open(original_file, 'r', encoding='utf-8') as f:
@@ -103,6 +137,9 @@ def process_note(original_file):
 
     if 'related' in post and isinstance(post['related'], list):
         post['related'] = process_related(post['related'])
+    
+    if 'cover' in post:
+        post['cover'] = process_cover_image(post['cover'])
 
     slug = slugify(original_file.stem)
     target_dir = CONTENT_DIR / slug
