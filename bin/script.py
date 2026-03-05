@@ -110,12 +110,23 @@ def process_note(original_file):
         return
     
     title = original_file.stem.strip()
+    # Get the relative path for folder-based grouping
+    relative_path = str(original_file.parent.relative_to(VAULT_DIR))
+    if relative_path == ".":
+        relative_path = "root"
+
     post['title'] = title
     slug = slugify(title)
     url = f"/posts/{slug}/"
 
-    # Add to graph nodes
-    nodes.append({"id": title, "title": title, "url": url, "type": "page"})
+    # Add to graph nodes with path info
+    nodes.append({
+        "id": title, 
+        "title": title, 
+        "url": url, 
+        "type": "page",
+        "path": relative_path
+    })
 
     # Record tags
     if 'tags' in post and isinstance(post['tags'], list):

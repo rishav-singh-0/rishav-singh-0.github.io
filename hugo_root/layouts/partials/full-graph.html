@@ -1,21 +1,47 @@
 <div class="full-graph-wrapper">
     <div class="graph-controls">
-        <div class="control-group">
-            <label for="graph-search">Search Nodes</label>
-            <input type="text" id="graph-search" placeholder="Search by title or tag...">
+        <div class="control-section main-controls">
+            <div class="control-group">
+                <label for="graph-search">Search Nodes</label>
+                <input type="text" id="graph-search" placeholder="Title, tag, or path:folder...">
+            </div>
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-tags" checked> Tags
+                </label>
+            </div>
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="color-by-folder"> Color by Folder
+                </label>
+            </div>
+            <div class="control-info">
+                <span id="node-count">0</span> nodes, <span id="edge-count">0</span> links
+            </div>
         </div>
-        <div class="control-group">
-            <label class="checkbox-label">
-                <input type="checkbox" id="show-tags" checked> Show Tags
-            </label>
-        </div>
-        <div class="control-info">
-            <span id="node-count">0</span> nodes, <span id="edge-count">0</span> links
-        </div>
+        
+        <details class="control-section advanced-controls">
+            <summary>Advanced Forces</summary>
+            <div class="control-grid">
+                <div class="control-group">
+                    <label for="force-repulsion">Repulsion (Charge): <span id="val-repulsion">-150</span></label>
+                    <input type="range" id="force-repulsion" min="-1000" max="0" step="10" value="-150">
+                </div>
+                <div class="control-group">
+                    <label for="force-distance">Link Distance: <span id="val-distance">100</span></label>
+                    <input type="range" id="force-distance" min="20" max="300" step="5" value="100">
+                </div>
+                <div class="control-group">
+                    <label for="force-gravity">Gravity (Center): <span id="val-gravity">0.1</span></label>
+                    <input type="range" id="force-gravity" min="0" max="1" step="0.05" value="0.1">
+                </div>
+            </div>
+        </details>
     </div>
     
     <div id="full-graph-container">
         <div id="graph-loading" style="text-align: center; padding: 100px;">Loading Global Graph...</div>
+        <div id="node-tooltip" class="graph-tooltip"></div>
     </div>
 </div>
 
@@ -25,17 +51,47 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    font-family: var(--font-family, inherit);
 }
 
 .graph-controls {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 20px;
+    flex-direction: column;
+    gap: 10px;
     padding: 15px;
     background: var(--entry);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+}
+
+.control-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.main-controls {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.advanced-controls summary {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--secondary);
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 10px;
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+    padding-top: 10px;
 }
 
 .control-group {
@@ -57,6 +113,10 @@
     background: var(--theme);
     color: var(--primary);
     width: 250px;
+}
+
+.control-group input[type="range"] {
+    width: 100%;
 }
 
 .checkbox-label {
@@ -90,14 +150,28 @@
     cursor: grabbing;
 }
 
+.graph-tooltip {
+    position: absolute;
+    padding: 8px 12px;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    pointer-events: none;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
 .node {
     cursor: pointer;
 }
 
 .node circle {
     stroke: var(--theme);
-    stroke-width: 1px;
-    transition: r 0.2s ease, opacity 0.2s ease;
+    stroke-width: 1.5px;
+    transition: r 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.2s, fill 0.3s;
 }
 
 .node.page circle {
@@ -108,59 +182,53 @@
     fill: #ffaa00;
 }
 
-.node:hover circle {
-    r: 10px !important;
+/* Neighbor Highlighting */
+.node.neighbor circle {
     stroke: var(--primary);
-    stroke-width: 2px;
+    stroke-width: 2.5px;
+}
+
+.node.active circle {
+    stroke: var(--primary);
+    stroke-width: 3px;
+    r: 8px !important;
 }
 
 .node text {
-    font-size: 9px;
+    font-size: 10px;
     fill: var(--secondary);
     pointer-events: none;
     user-select: none;
-    opacity: 0.7;
-    transition: opacity 0.2s ease, font-size 0.2s ease;
+    opacity: 0.4;
+    transition: opacity 0.2s, font-size 0.2s, fill 0.2s;
     text-shadow: 0 1px 2px var(--theme), 0 -1px 2px var(--theme), 1px 0 2px var(--theme), -1px 0 2px var(--theme);
 }
 
-.node:hover text {
+.node.active text, .node.neighbor text, .node.highlighted text {
     opacity: 1;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.node.highlighted circle {
-    fill: #d4351c !important;
-    r: 8px;
-}
-
-.node.highlighted text {
-    opacity: 1;
-    font-size: 11px;
     font-weight: 700;
     fill: var(--primary);
 }
 
 .node.dimmed {
-    opacity: 0.2;
+    opacity: 0.15;
 }
 
 .link {
     stroke: var(--tertiary);
     stroke-opacity: 0.3;
     stroke-width: 1px;
-    transition: stroke-opacity 0.2s ease;
+    transition: stroke-opacity 0.2s, stroke 0.2s, stroke-width 0.2s;
 }
 
 .link.dimmed {
     stroke-opacity: 0.05;
 }
 
-.link.highlighted {
+.link.active {
     stroke: var(--secondary);
-    stroke-opacity: 0.8;
-    stroke-width: 1.5px;
+    stroke-opacity: 1;
+    stroke-width: 2px;
 }
 </style>
 
@@ -171,8 +239,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const loading = document.getElementById('graph-loading');
     const searchInput = document.getElementById('graph-search');
     const showTagsCheckbox = document.getElementById('show-tags');
+    const colorByFolderCheckbox = document.getElementById('color-by-folder');
     const nodeCountSpan = document.getElementById('node-count');
     const edgeCountSpan = document.getElementById('edge-count');
+    const tooltip = document.getElementById('node-tooltip');
+    
+    // Force inputs
+    const repulsionInput = document.getElementById('force-repulsion');
+    const distanceInput = document.getElementById('force-distance');
+    const gravityInput = document.getElementById('force-gravity');
     
     let width = container.clientWidth || 800;
     let height = container.clientHeight || 700;
@@ -182,11 +257,23 @@ document.addEventListener("DOMContentLoaded", function() {
     let filteredEdges = [];
     
     let simulation, svg, g, link, node;
+    
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    const adjList = new Map();
 
     fetch('/data/graph.json')
         .then(res => res.json())
         .then(data => {
             allData = data;
+            
+            // Build adjacency list for fast neighbor lookup
+            allData.edges.forEach(e => {
+                if (!adjList.has(e.source)) adjList.set(e.source, new Set());
+                if (!adjList.has(e.target)) adjList.set(e.target, new Set());
+                adjList.get(e.source).add(e.target);
+                adjList.get(e.target).add(e.source);
+            });
+
             if (loading) loading.style.display = 'none';
             initGraph();
             updateGraph();
@@ -210,10 +297,12 @@ document.addEventListener("DOMContentLoaded", function() {
         node = g.append("g").attr("class", "nodes");
 
         simulation = d3.forceSimulation()
-            .force("link", d3.forceLink().id(d => d.id).distance(100))
-            .force("charge", d3.forceManyBody().strength(-150))
+            .force("link", d3.forceLink().id(d => d.id).distance(+distanceInput.value))
+            .force("charge", d3.forceManyBody().strength(+repulsionInput.value))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide().radius(30));
+            .force("x", d3.forceX(width / 2).strength(+gravityInput.value))
+            .force("y", d3.forceY(height / 2).strength(+gravityInput.value))
+            .force("collision", d3.forceCollide().radius(25));
 
         simulation.on("tick", () => {
             if (!link || !node) return;
@@ -224,17 +313,38 @@ document.addEventListener("DOMContentLoaded", function() {
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
 
-            node.selectAll("g")
+            node.selectAll("g.node")
                 .attr("transform", d => `translate(${d.x},${d.y})`);
         });
         
+        // Event Listeners
         searchInput.addEventListener('input', () => updateFilters());
         showTagsCheckbox.addEventListener('change', () => updateGraph());
+        colorByFolderCheckbox.addEventListener('change', () => updateNodeColors());
         
+        // Force listeners
+        repulsionInput.addEventListener('input', (e) => {
+            document.getElementById('val-repulsion').innerText = e.target.value;
+            simulation.force("charge").strength(+e.target.value);
+            simulation.alpha(0.3).restart();
+        });
+        distanceInput.addEventListener('input', (e) => {
+            document.getElementById('val-distance').innerText = e.target.value;
+            simulation.force("link").distance(+e.target.value);
+            simulation.alpha(0.3).restart();
+        });
+        gravityInput.addEventListener('input', (e) => {
+            document.getElementById('val-gravity').innerText = e.target.value;
+            simulation.force("x").strength(+e.target.value);
+            simulation.force("y").strength(+e.target.value);
+            simulation.alpha(0.3).restart();
+        });
+
         window.addEventListener('resize', () => {
             width = container.clientWidth;
             height = container.clientHeight;
-            // Optionally update simulation center here
+            simulation.force("center", d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(0.3).restart();
         });
     }
 
@@ -244,18 +354,26 @@ document.addEventListener("DOMContentLoaded", function() {
         filteredNodes = allData.nodes.filter(n => showTags || n.type !== 'tag');
         const nodeIds = new Set(filteredNodes.map(n => n.id));
         
-        filteredEdges = allData.edges.filter(e => nodeIds.has(e.source) && nodeIds.has(e.target));
+        filteredEdges = allData.edges.filter(e => {
+            const source = e.source.id || e.source;
+            const target = e.target.id || e.target;
+            return nodeIds.has(source) && nodeIds.has(target);
+        });
         
         nodeCountSpan.innerText = filteredNodes.length;
         edgeCountSpan.innerText = filteredEdges.length;
 
         // Update links
-        const l = link.selectAll("line").data(filteredEdges, d => `${d.source.id || d.source}-${d.target.id || d.target}`);
+        const l = link.selectAll("line").data(filteredEdges, d => {
+            const s = d.source.id || d.source;
+            const t = d.target.id || d.target;
+            return s < t ? `${s}-${t}` : `${t}-${s}`;
+        });
         l.exit().remove();
         l.enter().append("line").attr("class", "link");
         
         // Update nodes
-        const n = node.selectAll("g").data(filteredNodes, d => d.id);
+        const n = node.selectAll("g.node").data(filteredNodes, d => d.id);
         n.exit().remove();
         
         const nEnter = n.enter().append("g")
@@ -267,44 +385,111 @@ document.addEventListener("DOMContentLoaded", function() {
             .on("click", (event, d) => {
                 if (event.defaultPrevented) return;
                 if (d.url) window.location.href = d.url;
+            })
+            .on("mouseover", (event, d) => {
+                highlightNode(d);
+                showTooltip(event, d);
+            })
+            .on("mouseout", () => {
+                resetHighlight();
+                hideTooltip();
             });
 
-        nEnter.append("circle").attr("r", d => d.type === 'tag' ? 4 : 5);
+        nEnter.append("circle")
+            .attr("r", d => {
+                if (d.type === 'tag') return 4;
+                const degree = (adjList.get(d.id) || new Set()).size;
+                return 4 + Math.sqrt(degree) * 1.5;
+            });
         nEnter.append("text")
             .attr("dx", 10)
             .attr("dy", ".35em")
             .text(d => d.title);
+
+        updateNodeColors();
 
         // Restart simulation
         simulation.nodes(filteredNodes);
         simulation.force("link").links(filteredEdges);
         simulation.alpha(1).restart();
         
-        updateFilters(); // Apply current search if any
+        updateFilters();
+    }
+
+    function updateNodeColors() {
+        const useFolderColor = colorByFolderCheckbox.checked;
+        node.selectAll("circle")
+            .style("fill", d => {
+                if (d.type === 'tag') return "#ffaa00";
+                if (useFolderColor && d.path) return colorScale(d.path);
+                return null; // Fallback to CSS
+            });
+    }
+
+    function highlightNode(d) {
+        const neighbors = adjList.get(d.id) || new Set();
+        
+        node.selectAll("g.node")
+            .classed("active", n => n.id === d.id)
+            .classed("neighbor", n => neighbors.has(n.id))
+            .classed("dimmed", n => n.id !== d.id && !neighbors.has(n.id));
+            
+        link.selectAll("line")
+            .classed("active", l => 
+                (l.source.id === d.id && neighbors.has(l.target.id)) || 
+                (l.target.id === d.id && neighbors.has(l.source.id))
+            )
+            .classed("dimmed", l => l.source.id !== d.id && l.target.id !== d.id);
+    }
+
+    function resetHighlight() {
+        node.selectAll("g.node").classed("active", false).classed("neighbor", false).classed("dimmed", false);
+        link.selectAll("line").classed("active", false).classed("dimmed", false);
+        updateFilters(); // Re-apply search filters if any
+    }
+
+    function showTooltip(event, d) {
+        tooltip.innerText = d.title + (d.path ? ` (${d.path})` : "");
+        tooltip.style.opacity = "1";
+        tooltip.style.left = (event.pageX - container.getBoundingClientRect().left + 15) + "px";
+        tooltip.style.top = (event.pageY - container.getBoundingClientRect().top - 15) + "px";
+    }
+
+    function hideTooltip() {
+        tooltip.style.opacity = "0";
     }
 
     function updateFilters() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         
         if (!searchTerm) {
-            node.selectAll("g").classed("highlighted", false).classed("dimmed", false);
-            link.selectAll("line").classed("highlighted", false).classed("dimmed", false);
+            // If we are not hovering, clear dimmed
+            if (!node.select(".active").node()) {
+                node.selectAll("g.node").classed("dimmed", false);
+                link.selectAll("line").classed("dimmed", false);
+            }
+            node.selectAll("g.node").classed("highlighted", false);
             return;
         }
 
-        const matches = filteredNodes.filter(n => 
-            n.title.toLowerCase().includes(searchTerm) || 
-            (n.type === 'tag' && n.id.toLowerCase().includes(searchTerm))
-        );
+        let matches;
+        if (searchTerm.startsWith("path:")) {
+            const pathTerm = searchTerm.replace("path:", "");
+            matches = filteredNodes.filter(n => n.path && n.path.toLowerCase().includes(pathTerm));
+        } else {
+            matches = filteredNodes.filter(n => 
+                n.title.toLowerCase().includes(searchTerm) || 
+                (n.type === 'tag' && n.title.toLowerCase().includes(searchTerm))
+            );
+        }
         
         const matchIds = new Set(matches.map(n => n.id));
         
-        node.selectAll("g")
+        node.selectAll("g.node")
             .classed("highlighted", d => matchIds.has(d.id))
             .classed("dimmed", d => !matchIds.has(d.id));
             
         link.selectAll("line")
-            .classed("highlighted", false)
             .classed("dimmed", true);
     }
 
