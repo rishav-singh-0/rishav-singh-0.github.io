@@ -109,6 +109,14 @@ def process_note(original_file):
         print(f"Failed to read {original_file}: {e}")
         return
     
+    # Check for environment
+    is_production = os.getenv('HUGO_ENVIRONMENT') == 'production' or os.getenv('HUGO_ENV') == 'production'
+    
+    # Logic for draft filtering: In production, only include explicitly published (draft: false) notes.
+    # If draft is missing or True, skip it in production.
+    if is_production and post.get('draft') is not False:
+        return
+    
     title = original_file.stem.strip()
     # Get the relative path for folder-based grouping
     relative_path = str(original_file.parent.relative_to(VAULT_DIR))
