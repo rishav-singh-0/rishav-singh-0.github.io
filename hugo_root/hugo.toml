@@ -34,6 +34,11 @@ url = "archives"
 weight = 5
 
 [[menu.main]]
+name = "Graph"
+url = "graph"
+weight = 7
+
+[[menu.main]]
 name = "Search"
 url = "search/"
 weight = 10

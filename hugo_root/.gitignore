@@ -12,3 +12,4 @@ hugo_stats.json
 
 static/images
 content/posts
+static/data/graph.json

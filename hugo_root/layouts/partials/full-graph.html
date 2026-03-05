@@ -1,0 +1,328 @@
+<div class="full-graph-wrapper">
+    <div class="graph-controls">
+        <div class="control-group">
+            <label for="graph-search">Search Nodes</label>
+            <input type="text" id="graph-search" placeholder="Search by title or tag...">
+        </div>
+        <div class="control-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="show-tags" checked> Show Tags
+            </label>
+        </div>
+        <div class="control-info">
+            <span id="node-count">0</span> nodes, <span id="edge-count">0</span> links
+        </div>
+    </div>
+    
+    <div id="full-graph-container">
+        <div id="graph-loading" style="text-align: center; padding: 100px;">Loading Global Graph...</div>
+    </div>
+</div>
+
+<style>
+.full-graph-wrapper {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.graph-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.control-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.control-group input[type="text"] {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--theme);
+    color: var(--primary);
+    width: 250px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--primary);
+}
+
+.control-info {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--secondary);
+}
+
+#full-graph-container {
+    width: 100%;
+    height: 700px;
+    min-height: 600px;
+    overflow: hidden;
+    cursor: grab;
+    background: var(--theme);
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+#full-graph-container:active {
+    cursor: grabbing;
+}
+
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+    stroke: var(--theme);
+    stroke-width: 1px;
+    transition: r 0.2s ease, opacity 0.2s ease;
+}
+
+.node.page circle {
+    fill: var(--secondary);
+}
+
+.node.tag circle {
+    fill: #ffaa00;
+}
+
+.node:hover circle {
+    r: 10px !important;
+    stroke: var(--primary);
+    stroke-width: 2px;
+}
+
+.node text {
+    font-size: 9px;
+    fill: var(--secondary);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, font-size 0.2s ease;
+    text-shadow: 0 1px 2px var(--theme), 0 -1px 2px var(--theme), 1px 0 2px var(--theme), -1px 0 2px var(--theme);
+}
+
+.node:hover text {
+    opacity: 1;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.node.highlighted circle {
+    fill: #d4351c !important;
+    r: 8px;
+}
+
+.node.highlighted text {
+    opacity: 1;
+    font-size: 11px;
+    font-weight: 700;
+    fill: var(--primary);
+}
+
+.node.dimmed {
+    opacity: 0.2;
+}
+
+.link {
+    stroke: var(--tertiary);
+    stroke-opacity: 0.3;
+    stroke-width: 1px;
+    transition: stroke-opacity 0.2s ease;
+}
+
+.link.dimmed {
+    stroke-opacity: 0.05;
+}
+
+.link.highlighted {
+    stroke: var(--secondary);
+    stroke-opacity: 0.8;
+    stroke-width: 1.5px;
+}
+</style>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById('full-graph-container');
+    const loading = document.getElementById('graph-loading');
+    const searchInput = document.getElementById('graph-search');
+    const showTagsCheckbox = document.getElementById('show-tags');
+    const nodeCountSpan = document.getElementById('node-count');
+    const edgeCountSpan = document.getElementById('edge-count');
+    
+    let width = container.clientWidth || 800;
+    let height = container.clientHeight || 700;
+    
+    let allData = { nodes: [], edges: [] };
+    let filteredNodes = [];
+    let filteredEdges = [];
+    
+    let simulation, svg, g, link, node;
+
+    fetch('/data/graph.json')
+        .then(res => res.json())
+        .then(data => {
+            allData = data;
+            if (loading) loading.style.display = 'none';
+            initGraph();
+            updateGraph();
+        });
+
+    function initGraph() {
+        svg = d3.select("#full-graph-container")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", [0, 0, width, height])
+            .call(d3.zoom()
+                .scaleExtent([0.1, 8])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                }));
+
+        g = svg.append("g");
+        
+        link = g.append("g").attr("class", "links");
+        node = g.append("g").attr("class", "nodes");
+
+        simulation = d3.forceSimulation()
+            .force("link", d3.forceLink().id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-150))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(30));
+
+        simulation.on("tick", () => {
+            if (!link || !node) return;
+            
+            link.selectAll("line")
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node.selectAll("g")
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+        
+        searchInput.addEventListener('input', () => updateFilters());
+        showTagsCheckbox.addEventListener('change', () => updateGraph());
+        
+        window.addEventListener('resize', () => {
+            width = container.clientWidth;
+            height = container.clientHeight;
+            // Optionally update simulation center here
+        });
+    }
+
+    function updateGraph() {
+        const showTags = showTagsCheckbox.checked;
+        
+        filteredNodes = allData.nodes.filter(n => showTags || n.type !== 'tag');
+        const nodeIds = new Set(filteredNodes.map(n => n.id));
+        
+        filteredEdges = allData.edges.filter(e => nodeIds.has(e.source) && nodeIds.has(e.target));
+        
+        nodeCountSpan.innerText = filteredNodes.length;
+        edgeCountSpan.innerText = filteredEdges.length;
+
+        // Update links
+        const l = link.selectAll("line").data(filteredEdges, d => `${d.source.id || d.source}-${d.target.id || d.target}`);
+        l.exit().remove();
+        l.enter().append("line").attr("class", "link");
+        
+        // Update nodes
+        const n = node.selectAll("g").data(filteredNodes, d => d.id);
+        n.exit().remove();
+        
+        const nEnter = n.enter().append("g")
+            .attr("class", d => `node ${d.type}`)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+            .on("click", (event, d) => {
+                if (event.defaultPrevented) return;
+                if (d.url) window.location.href = d.url;
+            });
+
+        nEnter.append("circle").attr("r", d => d.type === 'tag' ? 4 : 5);
+        nEnter.append("text")
+            .attr("dx", 10)
+            .attr("dy", ".35em")
+            .text(d => d.title);
+
+        // Restart simulation
+        simulation.nodes(filteredNodes);
+        simulation.force("link").links(filteredEdges);
+        simulation.alpha(1).restart();
+        
+        updateFilters(); // Apply current search if any
+    }
+
+    function updateFilters() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        if (!searchTerm) {
+            node.selectAll("g").classed("highlighted", false).classed("dimmed", false);
+            link.selectAll("line").classed("highlighted", false).classed("dimmed", false);
+            return;
+        }
+
+        const matches = filteredNodes.filter(n => 
+            n.title.toLowerCase().includes(searchTerm) || 
+            (n.type === 'tag' && n.id.toLowerCase().includes(searchTerm))
+        );
+        
+        const matchIds = new Set(matches.map(n => n.id));
+        
+        node.selectAll("g")
+            .classed("highlighted", d => matchIds.has(d.id))
+            .classed("dimmed", d => !matchIds.has(d.id));
+            
+        link.selectAll("line")
+            .classed("highlighted", false)
+            .classed("dimmed", true);
+    }
+
+    function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+    }
+});
+</script>

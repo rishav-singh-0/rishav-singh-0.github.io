@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import shutil
@@ -14,23 +15,28 @@ VAULT_DIR = Path("vault")
 HUGO_ROOT = Path("hugo_root")
 CONTENT_DIR = HUGO_ROOT / "content/posts"
 STATIC_IMG_DIR = HUGO_ROOT / "static/images"
+GRAPH_DATA_FILE = HUGO_ROOT / "static/data/graph.json"
 IMG_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+
+# Global state for graph
+nodes = []
+edges = []
 
 
 def slugify(text):
     text = text.strip().lower()
     # replace spaces and underscores with dashes
     text = re.sub(r'[\s_]+', '-', text)
-    # remove any character that is not a letter, a number, or a dash
-    text = re.sub(r'[^\w-]', '', text)
+    # remove any character that is not a letter, a number, a dash, or a slash
+    text = re.sub(r'[^\w/-]', '', text)
     return text
 
 
-def convert_links(text):
-    # Convert Obsidian image embeds: ![[image.png]] -> {{< figure src="/images/image.png" alt="image" >}}
+def convert_links(text, current_note_title=None):
+    # Convert Obsidian image embeds: ![[image.png]]
     text = re.sub(r'!\[\[([^\]]+?)\]\]', lambda m: f'{{{{< figure src="/images/{Path(m.group(1)).name}" alt="{Path(m.group(1)).stem}" >}}}}', text)
 
-    # Fix markdown image paths like ![alt](assets/image.jpg) -> {{< figure src="/images/image.jpg" alt="alt" >}}
+    # Fix markdown image paths: ![alt](assets/image.jpg)
     text = re.sub(
         r'!\[(.*?)\]\((?:\.?/)?assets/([^\)]+)\)',
         lambda m: f'{{{{< figure src="/images/{m.group(2)}" alt="{m.group(1)}" >}}}}',
@@ -49,19 +55,17 @@ def convert_links(text):
         section = link_parts[1] if len(link_parts) > 1 else ''
 
         # Determine the display text
-        if alias_part:
-            display_text = alias_part
-        elif section:
-            display_text = f"{Path(path).name}#{section}"
-        else:
-            display_text = Path(path).name
+        file_name = Path(path).name
+        if file_name.endswith('.md'):
+            file_name = file_name[:-3]
 
-        path_parts = path.split('/')
-        file_name = path_parts[-1]
-        
+        display_text = alias_part or (f"{file_name}#{section}" if section else file_name)
         ref_path = slugify(file_name)
         
-        # Use relative links instead of ref
+        # For the graph, record the edge
+        if current_note_title:
+            edges.append({"source": current_note_title, "target": file_name})
+
         hugo_link = f'../{ref_path}/'
         if section:
             hugo_link += f'#{slugify(section)}'
@@ -69,7 +73,6 @@ def convert_links(text):
         return f'[{display_text}]({hugo_link})'
 
     text = re.sub(r'\[\[([^\]]+?)\]\]', replace_link, text)
-
     return text
 
 
@@ -86,37 +89,16 @@ def process_related(related_list):
 
 
 def process_cover_image(cover_value):
-    """
-    Processes the 'cover' frontmatter key to ensure it matches the Hugo theme's expected format.
-    
-    Converts from:
-    - Simple string path: "assets/image.png"
-    - Obsidian link: "[[3-Resource/Platform/assets/image.png]]"
-    
-    To:
-    cover:
-      image: "images/image.png"
-      relative: false
-    """
-    if not cover_value:
-        return cover_value
-    
-    # If it's already a dict, return it as is
-    if isinstance(cover_value, dict):
+    if not cover_value or isinstance(cover_value, dict):
         return cover_value
     
     cover_str = str(cover_value).strip()
-    # Handle Obsidian links [[filename.png]] or [[path/to/filename.png]]
     match = re.match(r'\[\[(.*?)\]\]', cover_str)
     if match:
         cover_str = match.group(1)
     
-    # Extract filename and prepend images/
     filename = Path(cover_str).name
-    return {
-        "image": f"images/{filename}",
-        "relative": False
-    }
+    return {"image": f"images/{filename}", "relative": False}
 
 
 def process_note(original_file):
@@ -124,16 +106,30 @@ def process_note(original_file):
         with open(original_file, 'r', encoding='utf-8') as f:
             post = frontmatter.load(f)
     except Exception as e:
-        print(f"Failed to read frontmatter from {original_file}: {e}")
+        print(f"Failed to read {original_file}: {e}")
         return
     
-    if 'draft' not in post:
-        return
+    title = original_file.stem.strip()
+    post['title'] = title
+    slug = slugify(title)
+    url = f"/posts/{slug}/"
 
-    # Inject title from filename (without extension)
-    post['title'] = original_file.stem.strip()
+    # Add to graph nodes
+    nodes.append({"id": title, "title": title, "url": url, "type": "page"})
 
-    post.content = convert_links(post.content)
+    # Record tags
+    if 'tags' in post and isinstance(post['tags'], list):
+        for tag in post['tags']:
+            tag_id = f"tag:{tag}"
+            nodes.append({
+                "id": tag_id,
+                "title": tag,
+                "url": f"/tags/{slugify(tag)}/",
+                "type": "tag"
+            })
+            edges.append({"source": title, "target": tag_id})
+
+    post.content = convert_links(post.content, current_note_title=title)
 
     if 'related' in post and isinstance(post['related'], list):
         post['related'] = process_related(post['related'])
@@ -141,7 +137,6 @@ def process_note(original_file):
     if 'cover' in post:
         post['cover'] = process_cover_image(post['cover'])
 
-    slug = slugify(original_file.stem)
     target_dir = CONTENT_DIR / slug
     target_dir.mkdir(parents=True, exist_ok=True)
     target_file = target_dir / "index.md"
@@ -151,7 +146,7 @@ def process_note(original_file):
             f.write(frontmatter.dumps(post))
         print(f"Copied note: {original_file.relative_to(VAULT_DIR)}")
     except Exception as e:
-        print(f"Failed to write file {target_file}: {e}")
+        print(f"Failed to write {target_file}: {e}")
 
 
 def copy_images():
@@ -161,19 +156,52 @@ def copy_images():
             if Path(file).suffix.lower() in IMG_EXTENSIONS:
                 src = Path(root) / file
                 dst = STATIC_IMG_DIR / file
-                try:
-                    if not dst.exists():
+                if not dst.exists():
+                    try:
                         shutil.copy2(src, dst)
                         print(f"Copied image: {file}")
-                except Exception as e:
-                    print(f"Failed to copy image {file}: {e}")
+                    except Exception as e:
+                        print(f"Failed to copy {file}: {e}")
+
+
+def write_graph():
+    # Deduplicate nodes
+    unique_nodes = {node['id']: node for node in nodes}
+    
+    # Filter and deduplicate edges
+    valid_edges = []
+    seen_edges = set()
+    for edge in edges:
+        if edge['source'] in unique_nodes and edge['target'] in unique_nodes:
+            edge_key = tuple(sorted([edge['source'], edge['target']]))
+            if edge_key not in seen_edges:
+                valid_edges.append({"source": edge_key[0], "target": edge_key[1]})
+                seen_edges.add(edge_key)
+
+    graph_data = {"nodes": list(unique_nodes.values()), "edges": valid_edges}
+    
+    GRAPH_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(GRAPH_DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump(graph_data, f, indent=2)
+    print(f"Wrote graph data to {GRAPH_DATA_FILE}")
 
 
 def main():
+    global nodes, edges
+    nodes, edges = [], []
+
+    # Clean content dir for a fresh start
+    if CONTENT_DIR.exists():
+        shutil.rmtree(CONTENT_DIR)
+    CONTENT_DIR.mkdir(parents=True, exist_ok=True)
+
     for md_file in VAULT_DIR.rglob("*.md"):
+        if ".obsidian" in str(md_file) or ".git" in str(md_file):
+            continue
         process_note(md_file)
 
     copy_images()
+    write_graph()
 
 
 if __name__ == "__main__":
