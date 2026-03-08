@@ -1,102 +1,159 @@
-<div class="local-graph">
-    <h3>Interactive Graph</h3>
-    <div id="graph-container">
-        <div id="graph-loading" style="text-align: center; padding: 50px;">Loading Graph...</div>
+<div class="local-graph-wrapper">
+    <div class="graph-header">
+        <h3 class="graph-title">Interactive Graph</h3>
+    </div>
+    
+    <div id="local-graph-container">
+        <div id="graph-loading">Loading Graph...</div>
+        <div id="node-tooltip" class="graph-tooltip"></div>
     </div>
 </div>
 
 <style>
-.local-graph {
+.local-graph-wrapper {
     margin: 30px 0;
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--entry);
-    color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    --graph-text: var(--primary);
+    --graph-sub-text: var(--secondary);
+    --graph-entry: var(--entry);
+    --graph-border: var(--border);
+    --graph-theme: var(--theme);
+    --graph-tertiary: var(--tertiary);
 }
 
-.local-graph h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
+/* Ensure visibility in light mode */
+:root:not([data-theme='dark']) .local-graph-wrapper {
+    --graph-text: #1d1e20;
+    --graph-sub-text: #6c6c6c;
+    --graph-entry: #ffffff;
+    --graph-border: #eeeeee;
+    --graph-theme: #ffffff;
+    --graph-tertiary: #d6d6d6;
+}
+
+.graph-title {
+    margin: 0;
+    font-size: 1.1rem;
     font-weight: 600;
+    color: var(--graph-text);
 }
 
-#graph-container {
+#local-graph-container {
     width: 100%;
-    height: 400px;
+    height: 450px;
     min-height: 400px;
     overflow: hidden;
     cursor: grab;
-    background: var(--theme);
+    background: var(--graph-theme);
     position: relative;
-    border-radius: calc(var(--radius) / 2);
+    border: 1px solid var(--graph-border);
+    border-radius: var(--radius);
 }
 
-#graph-container:active {
+#local-graph-container:active {
     cursor: grabbing;
 }
 
-.node {
-    cursor: pointer;
+#graph-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--graph-sub-text);
+    font-size: 0.9rem;
+}
+
+.graph-tooltip {
+    position: absolute;
+    padding: 8px 12px;
+    background: var(--graph-entry);
+    color: var(--graph-text);
+    border: 1px solid var(--graph-border);
+    border-radius: 6px;
+    pointer-events: none;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .node circle {
-    stroke: var(--theme);
+    stroke: var(--graph-theme);
     stroke-width: 1.5px;
-    transition: r 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
 }
 
 .node.page circle {
-    fill: var(--secondary);
+    fill: var(--graph-sub-text);
 }
 
 .node.tag circle {
-    fill: #ffaa00; /* Distinct color for tags */
+    fill: #ffaa00;
 }
 
 .node.current circle {
-    fill: var(--primary);
-    stroke: var(--secondary);
-    stroke-width: 2px;
-}
-
-.node:hover circle {
-    r: 12px !important;
+    fill: var(--graph-text);
+    stroke: var(--graph-sub-text);
+    stroke-width: 2.5px;
 }
 
 .node text {
     font-size: 11px;
-    font-weight: 500;
-    fill: var(--secondary);
+    fill: var(--graph-text);
     pointer-events: none;
     user-select: none;
-    text-shadow: 0 1px 2px var(--theme), 0 -1px 2px var(--theme), 1px 0 2px var(--theme), -1px 0 2px var(--theme);
+    opacity: 0.8;
+    text-shadow: 
+        -1.5px -1.5px 0 var(--graph-theme),  
+         1.5px -1.5px 0 var(--graph-theme),
+        -1.5px  1.5px 0 var(--graph-theme),
+         1.5px  1.5px 0 var(--graph-theme);
 }
 
 .node.current text {
-    fill: var(--primary);
+    opacity: 1;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.node.active text {
+    opacity: 1;
     font-weight: 700;
 }
 
+.node.dimmed {
+    opacity: 0.2;
+}
+
 .link {
-    stroke: var(--tertiary);
-    stroke-opacity: 0.5;
+    stroke: var(--graph-sub-text);
+    stroke-opacity: 0.25;
     stroke-width: 1.5px;
 }
 
-[data-theme="dark"] .node text {
-    text-shadow: 0 1px 3px var(--theme), 0 -1px 3px var(--theme), 1px 0 3px var(--theme), -1px 0 3px var(--theme);
+.link.dimmed {
+    stroke-opacity: 0.05;
+}
+
+.link.active {
+    stroke: var(--graph-sub-text);
+    stroke-opacity: 0.8;
+    stroke-width: 2px;
 }
 </style>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const container = document.getElementById('graph-container');
+    const container = document.getElementById('local-graph-container');
     const loading = document.getElementById('graph-loading');
+    const tooltip = document.getElementById('node-tooltip');
     const width = container.clientWidth || 800;
-    const height = container.clientHeight || 400;
+    const height = container.clientHeight || 450;
     const currentTitle = {{ .Title | jsonify }};
 
     fetch('/data/graph.json')
@@ -117,46 +174,60 @@ document.addEventListener("DOMContentLoaded", function() {
         const normalize = (s) => s ? s.trim().toLowerCase() : "";
         const targetTitle = normalize(currentTitle);
         
-        // Try to find current node by title
+        // Find current node
         let currentNode = data.nodes.find(n => normalize(n.title) === targetTitle);
-        
-        // If not found, try adding 'tag:' prefix (for tag pages)
         if (!currentNode) {
             currentNode = data.nodes.find(n => normalize(n.id) === "tag:" + targetTitle);
         }
-
-        // If still not found, try finding by URL
         if (!currentNode) {
             const currentPath = window.location.pathname;
-            currentNode = data.nodes.find(n => n.url && (normalize(n.url) === normalize(currentPath) || normalize(n.url) === normalize(currentPath + "/") || normalize(n.url + "/") === normalize(currentPath)));
+            currentNode = data.nodes.find(n => n.url && (normalize(n.url) === normalize(currentPath) || normalize(n.url) === normalize(currentPath + "/")));
         }
 
         if (!currentNode) {
             if (loading) {
                 loading.style.display = 'block';
-                loading.innerText = "Interactive graph not available for this page.";
+                loading.innerText = "Graph view not available for this page.";
             }
             return;
         }
 
+        // Depth 2 logic
+        const adjList = new Map();
+        data.edges.forEach(e => {
+            if (!adjList.has(e.source)) adjList.set(e.source, new Set());
+            if (!adjList.has(e.target)) adjList.set(e.target, new Set());
+            adjList.get(e.source).add(e.target);
+            adjList.get(e.target).add(e.source);
+        });
+
         const neighborIds = new Set();
         neighborIds.add(currentNode.id);
         
-        data.edges.forEach(edge => {
-            if (edge.source === currentNode.id) neighborIds.add(edge.target);
-            if (edge.target === currentNode.id) neighborIds.add(edge.source);
+        // Depth 1
+        const depth1 = adjList.get(currentNode.id) || new Set();
+        depth1.forEach(id => neighborIds.add(id));
+        
+        // Depth 2
+        depth1.forEach(d1Id => {
+            const depth2 = adjList.get(d1Id) || new Set();
+            depth2.forEach(id => neighborIds.add(id));
         });
 
         const localNodes = data.nodes.filter(n => neighborIds.has(n.id));
-        const localEdges = data.edges.filter(e => neighborIds.has(e.source) && neighborIds.has(e.target));
+        const localEdges = data.edges.filter(e => {
+            const s = e.source.id || e.source;
+            const t = e.target.id || e.target;
+            return neighborIds.has(s) && neighborIds.has(t);
+        });
 
-        const svg = d3.select("#graph-container")
+        const svg = d3.select("#local-graph-container")
             .append("svg")
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", [0, 0, width, height])
             .call(d3.zoom()
-                .scaleExtent([0.5, 4])
+                .scaleExtent([0.2, 5])
                 .on("zoom", (event) => {
                     g.attr("transform", event.transform);
                 }));
@@ -164,10 +235,21 @@ document.addEventListener("DOMContentLoaded", function() {
         const g = svg.append("g");
 
         const simulation = d3.forceSimulation(localNodes)
-            .force("link", d3.forceLink(localEdges).id(d => d.id).distance(140))
-            .force("charge", d3.forceManyBody().strength(-400))
+            .force("link", d3.forceLink(localEdges).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(d => {
+                const degree = (adjList.get(d.id) || new Set()).size;
+                return -300 * (1 + Math.sqrt(degree) * 0.5);
+            }))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide().radius(50));
+            .force("x", d3.forceX(width / 2).strength(d => {
+                const degree = (adjList.get(d.id) || new Set()).size;
+                return 0.1 * (1 + Math.sqrt(degree) * 0.2);
+            }))
+            .force("y", d3.forceY(height / 2).strength(d => {
+                const degree = (adjList.get(d.id) || new Set()).size;
+                return 0.1 * (1 + Math.sqrt(degree) * 0.2);
+            }))
+            .force("collision", d3.forceCollide().radius(d => (d.id === currentNode.id ? 15 : 10) + 20));
 
         const link = g.append("g")
             .attr("class", "links")
@@ -187,14 +269,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 .on("drag", dragged)
                 .on("end", dragended))
             .on("click", (event, d) => {
+                if (event.defaultPrevented) return;
                 if (d.url) window.location.href = d.url;
+            })
+            .on("pointerenter", (event, d) => {
+                highlightNode(d);
+                showTooltip(event, d);
+            })
+            .on("pointerleave", () => {
+                resetHighlight();
+                hideTooltip();
             });
 
         node.append("circle")
-            .attr("r", d => d.id === currentNode.id ? 10 : 7);
+            .attr("r", d => d.id === currentNode.id ? 10 : 6);
 
         node.append("text")
-            .attr("dx", 14)
+            .attr("dx", 12)
             .attr("dy", ".35em")
             .text(d => d.title);
 
@@ -208,6 +299,31 @@ document.addEventListener("DOMContentLoaded", function() {
             node
                 .attr("transform", d => `translate(${d.x},${d.y})`);
         });
+
+        function highlightNode(d) {
+            const neighbors = adjList.get(d.id) || new Set();
+            node.classed("dimmed", n => n.id !== d.id && !neighbors.has(n.id));
+            node.classed("active", n => n.id === d.id || neighbors.has(n.id));
+            link.classed("dimmed", l => l.source.id !== d.id && l.target.id !== d.id);
+            link.classed("active", l => l.source.id === d.id || l.target.id === d.id);
+        }
+
+        function resetHighlight() {
+            node.classed("dimmed", false).classed("active", false);
+            link.classed("dimmed", false).classed("active", false);
+        }
+
+        function showTooltip(event, d) {
+            tooltip.innerText = d.title;
+            tooltip.style.opacity = "1";
+            const containerRect = container.getBoundingClientRect();
+            tooltip.style.left = (event.pageX - window.scrollX - containerRect.left + 10) + "px";
+            tooltip.style.top = (event.pageY - window.scrollY - containerRect.top - 15) + "px";
+        }
+
+        function hideTooltip() {
+            tooltip.style.opacity = "0";
+        }
 
         function dragstarted(event, d) {
             if (!event.active) simulation.alphaTarget(0.3).restart();

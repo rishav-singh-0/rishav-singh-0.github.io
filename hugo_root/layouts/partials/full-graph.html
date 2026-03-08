@@ -1,30 +1,35 @@
 <div class="full-graph-wrapper">
-    <div class="graph-controls">
-        <div class="control-section main-controls">
-            <div class="control-group">
-                <label for="graph-search">Search Nodes</label>
-                <input type="text" id="graph-search" placeholder="Title, tag, or path:folder...">
-            </div>
-            <div class="control-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="show-tags" checked> Tags
+    <div class="graph-header">
+        <div class="search-container">
+            <input type="text" id="graph-search" placeholder="Search nodes (e.g., title, tag, or path:folder)..." autocomplete="off">
+        </div>
+        <div class="header-actions">
+            <button id="settings-toggle" class="icon-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="graph-settings" class="settings-panel hidden">
+        <div class="settings-section">
+            <h4 class="settings-title">View Options</h4>
+            <div class="settings-row">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="show-tags" checked>
+                    <span class="checkbox-label">Show Tags</span>
                 </label>
-            </div>
-            <div class="control-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="color-by-folder"> Color by Folder
+                <label class="checkbox-container">
+                    <input type="checkbox" id="color-by-folder">
+                    <span class="checkbox-label">Color by Folder</span>
                 </label>
-            </div>
-            <div class="control-info">
-                <span id="node-count">0</span> nodes, <span id="edge-count">0</span> links
             </div>
         </div>
-        
-        <details class="control-section advanced-controls">
-            <summary>Advanced Forces</summary>
+
+        <div class="settings-section">
+            <h4 class="settings-title">Forces</h4>
             <div class="control-grid">
                 <div class="control-group">
-                    <label for="force-repulsion">Repulsion (Charge): <span id="val-repulsion">-150</span></label>
+                    <label for="force-repulsion">Repulsion: <span id="val-repulsion">-150</span></label>
                     <input type="range" id="force-repulsion" min="-1000" max="0" step="10" value="-150">
                 </div>
                 <div class="control-group">
@@ -32,117 +37,182 @@
                     <input type="range" id="force-distance" min="20" max="300" step="5" value="100">
                 </div>
                 <div class="control-group">
-                    <label for="force-gravity">Gravity (Center): <span id="val-gravity">0.1</span></label>
+                    <label for="force-gravity">Gravity: <span id="val-gravity">0.1</span></label>
                     <input type="range" id="force-gravity" min="0" max="1" step="0.05" value="0.1">
                 </div>
             </div>
-        </details>
+        </div>
+
+        <div class="settings-footer">
+            <span class="stat-info"><span id="node-count">0</span> nodes, <span id="edge-count">0</span> links</span>
+        </div>
     </div>
     
     <div id="full-graph-container">
-        <div id="graph-loading" style="text-align: center; padding: 100px;">Loading Global Graph...</div>
+        <div id="graph-loading">Loading Global Graph...</div>
         <div id="node-tooltip" class="graph-tooltip"></div>
     </div>
 </div>
 
 <style>
 .full-graph-wrapper {
-    margin: 20px 0;
+    margin: var(--gap) 0;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    font-family: var(--font-family, inherit);
+    --graph-text: var(--primary);
+    --graph-sub-text: var(--secondary);
+    --graph-entry: var(--entry);
+    --graph-border: var(--border);
+    --graph-theme: var(--theme);
+    --graph-tertiary: var(--tertiary);
 }
 
-.graph-controls {
+/* Ensure visibility in light mode if PaperMod variables are missing or different */
+:root:not([data-theme='dark']) .full-graph-wrapper {
+    --graph-text: #1d1e20;
+    --graph-sub-text: #6c6c6c;
+    --graph-entry: #ffffff;
+    --graph-border: #eeeeee;
+    --graph-theme: #ffffff;
+    --graph-tertiary: #d6d6d6;
+}
+
+.graph-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-container {
+    flex-grow: 1;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    border: 1px solid var(--graph-border);
+    background: var(--graph-entry);
+    color: var(--graph-text);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.search-container input::placeholder {
+    color: var(--graph-sub-text);
+    opacity: 0.6;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--graph-sub-text);
+}
+
+.icon-button {
+    background: var(--graph-entry);
+    border: 1px solid var(--graph-border);
+    color: var(--graph-sub-text);
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.icon-button:hover, .icon-button.active {
+    background: var(--graph-tertiary);
+    color: var(--graph-text);
+}
+
+.settings-panel {
+    background: var(--graph-entry);
+    border: 1px solid var(--graph-border);
+    border-radius: var(--radius);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 15px;
-    background: var(--entry);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    gap: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.control-section {
+.settings-panel.hidden {
+    display: none;
+}
+
+.settings-title {
+    margin: 0 0 10px 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--graph-sub-text);
+    font-weight: 700;
+}
+
+.settings-row {
     display: flex;
     flex-wrap: wrap;
+    gap: 25px;
+}
+
+.checkbox-container {
+    display: flex;
     align-items: center;
-    gap: 20px;
-}
-
-.main-controls {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
-    margin-bottom: 5px;
-}
-
-.advanced-controls summary {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--secondary);
+    gap: 10px;
     cursor: pointer;
     user-select: none;
-    margin-bottom: 10px;
+}
+
+.checkbox-label {
+    font-size: 0.9rem;
+    color: var(--graph-text);
 }
 
 .control-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    width: 100%;
-    padding-top: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
 }
 
 .control-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 
 .control-group label {
     font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--secondary);
-}
-
-.control-group input[type="text"] {
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--theme);
-    color: var(--primary);
-    width: 250px;
+    color: var(--graph-sub-text);
 }
 
 .control-group input[type="range"] {
     width: 100%;
+    accent-color: var(--graph-sub-text);
 }
 
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    color: var(--primary);
+.settings-footer {
+    border-top: 1px solid var(--graph-border);
+    padding-top: 12px;
+    text-align: right;
 }
 
-.control-info {
-    margin-left: auto;
-    font-size: 0.8rem;
-    color: var(--secondary);
+.stat-info {
+    font-size: 0.75rem;
+    color: var(--graph-sub-text);
 }
 
 #full-graph-container {
     width: 100%;
     height: 700px;
-    min-height: 600px;
+    min-height: 500px;
     overflow: hidden;
     cursor: grab;
-    background: var(--theme);
+    background: var(--graph-theme);
     position: relative;
-    border: 1px solid var(--border);
+    border: 1px solid var(--graph-border);
     border-radius: var(--radius);
 }
 
@@ -150,64 +220,85 @@
     cursor: grabbing;
 }
 
+#graph-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--graph-sub-text);
+    font-size: 0.9rem;
+}
+
 .graph-tooltip {
     position: absolute;
     padding: 8px 12px;
-    background: var(--entry);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    background: var(--graph-entry);
+    color: var(--graph-text);
+    border: 1px solid var(--graph-border);
+    border-radius: 6px;
     pointer-events: none;
     font-size: 0.8rem;
     opacity: 0;
     transition: opacity 0.2s;
-    z-index: 10;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.node {
-    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .node circle {
-    stroke: var(--theme);
+    stroke: var(--graph-theme);
     stroke-width: 1.5px;
-    transition: r 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.2s, fill 0.3s;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .node.page circle {
-    fill: var(--secondary);
+    fill: var(--graph-sub-text);
 }
 
 .node.tag circle {
     fill: #ffaa00;
 }
 
-/* Neighbor Highlighting */
-.node.neighbor circle {
-    stroke: var(--primary);
+.node.active circle {
+    stroke: var(--graph-text);
     stroke-width: 2.5px;
 }
 
-.node.active circle {
-    stroke: var(--primary);
-    stroke-width: 3px;
-    r: 8px !important;
+.node.neighbor circle {
+    stroke: var(--graph-text);
+    stroke-width: 1.5px;
+}
+
+.node.neighbor-2 circle {
+    stroke: var(--graph-sub-text);
+    stroke-width: 1px;
+    stroke-dasharray: 2,2;
 }
 
 .node text {
-    font-size: 10px;
-    fill: var(--secondary);
+    font-size: 11px;
+    fill: var(--graph-text);
     pointer-events: none;
     user-select: none;
-    opacity: 0.4;
-    transition: opacity 0.2s, font-size 0.2s, fill 0.2s;
-    text-shadow: 0 1px 2px var(--theme), 0 -1px 2px var(--theme), 1px 0 2px var(--theme), -1px 0 2px var(--theme);
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    text-shadow: 
+        -1.5px -1.5px 0 var(--graph-theme),  
+         1.5px -1.5px 0 var(--graph-theme),
+        -1.5px  1.5px 0 var(--graph-theme),
+         1.5px  1.5px 0 var(--graph-theme);
 }
 
-.node.active text, .node.neighbor text, .node.highlighted text {
+.node.active text, .node.highlighted text {
     opacity: 1;
     font-weight: 700;
-    fill: var(--primary);
+}
+
+.node.neighbor text {
+    opacity: 0.9;
+}
+
+.node.neighbor-2 text {
+    opacity: 0.6;
 }
 
 .node.dimmed {
@@ -215,10 +306,9 @@
 }
 
 .link {
-    stroke: var(--tertiary);
-    stroke-opacity: 0.3;
+    stroke: var(--graph-sub-text);
+    stroke-opacity: 0.25;
     stroke-width: 1px;
-    transition: stroke-opacity 0.2s, stroke 0.2s, stroke-width 0.2s;
 }
 
 .link.dimmed {
@@ -226,9 +316,16 @@
 }
 
 .link.active {
-    stroke: var(--secondary);
+    stroke: var(--graph-sub-text);
     stroke-opacity: 1;
-    stroke-width: 2px;
+    stroke-width: 1.5px;
+}
+
+.link.active-2 {
+    stroke: var(--graph-sub-text);
+    stroke-opacity: 0.5;
+    stroke-width: 1px;
+    stroke-dasharray: 2,2;
 }
 </style>
 
@@ -243,6 +340,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const nodeCountSpan = document.getElementById('node-count');
     const edgeCountSpan = document.getElementById('edge-count');
     const tooltip = document.getElementById('node-tooltip');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsPanel = document.getElementById('graph-settings');
     
     // Force inputs
     const repulsionInput = document.getElementById('force-repulsion');
@@ -255,11 +354,25 @@ document.addEventListener("DOMContentLoaded", function() {
     let allData = { nodes: [], edges: [] };
     let filteredNodes = [];
     let filteredEdges = [];
+    let isDragging = false;
     
     let simulation, svg, g, link, node;
     
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
     const adjList = new Map();
+
+    const getDegree = (d) => (adjList.get(d.id) || new Set()).size;
+    const getRadius = (d) => {
+        if (d.type === 'tag') return 5;
+        const degree = getDegree(d);
+        return 4 + Math.sqrt(degree) * 2;
+    };
+
+    // Toggle settings panel
+    settingsToggle.addEventListener('click', () => {
+        settingsPanel.classList.toggle('hidden');
+        settingsToggle.classList.toggle('active');
+    });
 
     fetch('/data/graph.json')
         .then(res => res.json())
@@ -298,11 +411,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
         simulation = d3.forceSimulation()
             .force("link", d3.forceLink().id(d => d.id).distance(+distanceInput.value))
-            .force("charge", d3.forceManyBody().strength(+repulsionInput.value))
+            .force("charge", d3.forceManyBody().strength(d => {
+                const degree = getDegree(d);
+                return (+repulsionInput.value) * (1 + Math.sqrt(degree) * 0.5);
+            }))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("x", d3.forceX(width / 2).strength(+gravityInput.value))
-            .force("y", d3.forceY(height / 2).strength(+gravityInput.value))
-            .force("collision", d3.forceCollide().radius(25));
+            .force("x", d3.forceX(width / 2).strength(d => {
+                const degree = getDegree(d);
+                return (+gravityInput.value) * (1 + Math.sqrt(degree) * 0.2);
+            }))
+            .force("y", d3.forceY(height / 2).strength(d => {
+                const degree = getDegree(d);
+                return (+gravityInput.value) * (1 + Math.sqrt(degree) * 0.2);
+            }))
+            .force("collision", d3.forceCollide().radius(d => getRadius(d) + 5));
 
         simulation.on("tick", () => {
             if (!link || !node) return;
@@ -324,8 +446,9 @@ document.addEventListener("DOMContentLoaded", function() {
         
         // Force listeners
         repulsionInput.addEventListener('input', (e) => {
-            document.getElementById('val-repulsion').innerText = e.target.value;
-            simulation.force("charge").strength(+e.target.value);
+            const val = +e.target.value;
+            document.getElementById('val-repulsion').innerText = val;
+            simulation.force("charge").strength(d => val * (1 + Math.sqrt(getDegree(d)) * 0.5));
             simulation.alpha(0.3).restart();
         });
         distanceInput.addEventListener('input', (e) => {
@@ -334,9 +457,10 @@ document.addEventListener("DOMContentLoaded", function() {
             simulation.alpha(0.3).restart();
         });
         gravityInput.addEventListener('input', (e) => {
-            document.getElementById('val-gravity').innerText = e.target.value;
-            simulation.force("x").strength(+e.target.value);
-            simulation.force("y").strength(+e.target.value);
+            const val = +e.target.value;
+            document.getElementById('val-gravity').innerText = val;
+            simulation.force("x").strength(d => val * (1 + Math.sqrt(getDegree(d)) * 0.2));
+            simulation.force("y").strength(d => val * (1 + Math.sqrt(getDegree(d)) * 0.2));
             simulation.alpha(0.3).restart();
         });
 
@@ -386,21 +510,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (event.defaultPrevented) return;
                 if (d.url) window.location.href = d.url;
             })
-            .on("mouseover", (event, d) => {
+            .on("pointerenter", (event, d) => {
+                if (isDragging) return;
                 highlightNode(d);
                 showTooltip(event, d);
             })
-            .on("mouseout", () => {
+            .on("pointerleave", () => {
+                if (isDragging) return;
                 resetHighlight();
                 hideTooltip();
             });
 
         nEnter.append("circle")
-            .attr("r", d => {
-                if (d.type === 'tag') return 4;
-                const degree = (adjList.get(d.id) || new Set()).size;
-                return 4 + Math.sqrt(degree) * 1.5;
-            });
+            .attr("r", getRadius);
         nEnter.append("text")
             .attr("dx", 10)
             .attr("dy", ".35em")
@@ -428,18 +550,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function highlightNode(d) {
         const neighbors = adjList.get(d.id) || new Set();
+        const neighbors2 = new Set(neighbors);
+        neighbors.forEach(nId => {
+            const nNeighbors = adjList.get(nId) || new Set();
+            nNeighbors.forEach(nnId => neighbors2.add(nnId));
+        });
         
         node.selectAll("g.node")
             .classed("active", n => n.id === d.id)
             .classed("neighbor", n => neighbors.has(n.id))
-            .classed("dimmed", n => n.id !== d.id && !neighbors.has(n.id));
+            .classed("neighbor-2", n => neighbors2.has(n.id) && !neighbors.has(n.id) && n.id !== d.id)
+            .classed("dimmed", n => n.id !== d.id && !neighbors2.has(n.id));
             
         link.selectAll("line")
             .classed("active", l => 
                 (l.source.id === d.id && neighbors.has(l.target.id)) || 
                 (l.target.id === d.id && neighbors.has(l.source.id))
             )
-            .classed("dimmed", l => l.source.id !== d.id && l.target.id !== d.id);
+            .classed("active-2", l => 
+                !((l.source.id === d.id && neighbors.has(l.target.id)) || (l.target.id === d.id && neighbors.has(l.source.id))) &&
+                ((neighbors.has(l.source.id) && neighbors2.has(l.target.id)) || (neighbors.has(l.target.id) && neighbors2.has(l.source.id)))
+            )
+            .classed("dimmed", l => {
+                const sId = l.source.id || l.source;
+                const tId = l.target.id || l.target;
+                return sId !== d.id && tId !== d.id && !neighbors.has(sId) && !neighbors.has(tId);
+            });
     }
 
     function resetHighlight() {
@@ -449,10 +585,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function showTooltip(event, d) {
+        if (!event || !event.pageX) return;
         tooltip.innerText = d.title + (d.path ? ` (${d.path})` : "");
         tooltip.style.opacity = "1";
-        tooltip.style.left = (event.pageX - container.getBoundingClientRect().left + 15) + "px";
-        tooltip.style.top = (event.pageY - container.getBoundingClientRect().top - 15) + "px";
+        
+        const containerRect = container.getBoundingClientRect();
+        tooltip.style.left = (event.pageX - window.scrollX - containerRect.left + 15) + "px";
+        tooltip.style.top = (event.pageY - window.scrollY - containerRect.top - 15) + "px";
     }
 
     function hideTooltip() {
@@ -463,7 +602,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         
         if (!searchTerm) {
-            // If we are not hovering, clear dimmed
             if (!node.select(".active").node()) {
                 node.selectAll("g.node").classed("dimmed", false);
                 link.selectAll("line").classed("dimmed", false);
@@ -494,9 +632,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function dragstarted(event, d) {
+        isDragging = true;
         if (!event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
+        highlightNode(d);
     }
 
     function dragged(event, d) {
@@ -505,9 +645,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function dragended(event, d) {
+        isDragging = false;
         if (!event.active) simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
+        
+        resetHighlight();
+        hideTooltip();
     }
 });
 </script>
