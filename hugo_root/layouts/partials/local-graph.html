@@ -83,7 +83,7 @@
 .node circle {
     stroke: var(--graph-theme);
     stroke-width: 1.5px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: fill 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.15s ease;
     cursor: pointer;
 }
 
@@ -107,11 +107,10 @@
     pointer-events: none;
     user-select: none;
     opacity: 0.8;
-    text-shadow: 
-        -1.5px -1.5px 0 var(--graph-theme),  
-         1.5px -1.5px 0 var(--graph-theme),
-        -1.5px  1.5px 0 var(--graph-theme),
-         1.5px  1.5px 0 var(--graph-theme);
+    paint-order: stroke fill;
+    stroke: var(--graph-theme);
+    stroke-width: 3px;
+    stroke-linejoin: round;
 }
 
 .node.current text {
@@ -155,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 450;
     const currentTitle = {{ .Title | jsonify }};
+    let isDragging = false;
 
     fetch('/data/graph.json')
         .then(res => {
@@ -192,34 +192,52 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        // Depth 2 logic
+        // Depth 2 logic — build adjList from full graph to find the subgraph
+        // Use arrays (not Sets) for lower per-entry memory overhead
         const adjList = new Map();
         data.edges.forEach(e => {
-            if (!adjList.has(e.source)) adjList.set(e.source, new Set());
-            if (!adjList.has(e.target)) adjList.set(e.target, new Set());
-            adjList.get(e.source).add(e.target);
-            adjList.get(e.target).add(e.source);
+            if (!adjList.has(e.source)) adjList.set(e.source, []);
+            if (!adjList.has(e.target)) adjList.set(e.target, []);
+            adjList.get(e.source).push(e.target);
+            adjList.get(e.target).push(e.source);
         });
 
         const neighborIds = new Set();
         neighborIds.add(currentNode.id);
         
         // Depth 1
-        const depth1 = adjList.get(currentNode.id) || new Set();
+        const depth1 = adjList.get(currentNode.id) || [];
         depth1.forEach(id => neighborIds.add(id));
         
         // Depth 2
         depth1.forEach(d1Id => {
-            const depth2 = adjList.get(d1Id) || new Set();
-            depth2.forEach(id => neighborIds.add(id));
+            (adjList.get(d1Id) || []).forEach(id => neighborIds.add(id));
         });
 
         const localNodes = data.nodes.filter(n => neighborIds.has(n.id));
-        const localEdges = data.edges.filter(e => {
-            const s = e.source.id || e.source;
-            const t = e.target.id || e.target;
-            return neighborIds.has(s) && neighborIds.has(t);
+        const localEdges = data.edges
+            .filter(e => neighborIds.has(e.source) && neighborIds.has(e.target))
+            .map(e => ({ source: e.source, target: e.target })); // compact copy
+
+        // Allow GC of the full parsed response — we have everything we need
+        data = null;
+
+        // Rebuild a local-only adjList (arrays) used for hover interactions
+        const localAdjList = new Map();
+        localEdges.forEach(e => {
+            if (!localAdjList.has(e.source)) localAdjList.set(e.source, []);
+            if (!localAdjList.has(e.target)) localAdjList.set(e.target, []);
+            localAdjList.get(e.source).push(e.target);
+            localAdjList.get(e.target).push(e.source);
         });
+
+        // Pre-compute degrees to avoid repeated Map lookups in force functions
+        const degreeMap = new Map();
+        localNodes.forEach(n => {
+            const arr = localAdjList.get(n.id);
+            degreeMap.set(n.id, arr ? arr.length : 0);
+        });
+        const getDeg = id => degreeMap.get(id) || 0;
 
         const svg = d3.select("#local-graph-container")
             .append("svg")
@@ -235,18 +253,21 @@ document.addEventListener("DOMContentLoaded", function() {
         const g = svg.append("g");
 
         const simulation = d3.forceSimulation(localNodes)
+            .alphaDecay(0.028)
+            .velocityDecay(0.4)
+            .alphaMin(0.001)
             .force("link", d3.forceLink(localEdges).id(d => d.id).distance(120))
             .force("charge", d3.forceManyBody().strength(d => {
-                const degree = (adjList.get(d.id) || new Set()).size;
+                const degree = getDeg(d.id);
                 return -300 * (1 + Math.sqrt(degree) * 0.5);
             }))
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("x", d3.forceX(width / 2).strength(d => {
-                const degree = (adjList.get(d.id) || new Set()).size;
+                const degree = getDeg(d.id);
                 return 0.1 * (1 + Math.sqrt(degree) * 0.2);
             }))
             .force("y", d3.forceY(height / 2).strength(d => {
-                const degree = (adjList.get(d.id) || new Set()).size;
+                const degree = getDeg(d.id);
                 return 0.1 * (1 + Math.sqrt(degree) * 0.2);
             }))
             .force("collision", d3.forceCollide().radius(d => (d.id === currentNode.id ? 15 : 10) + 20));
@@ -273,10 +294,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (d.url) window.location.href = d.url;
             })
             .on("pointerenter", (event, d) => {
+                if (isDragging) return;
                 highlightNode(d);
                 showTooltip(event, d);
             })
             .on("pointerleave", () => {
+                if (isDragging) return;
                 resetHighlight();
                 hideTooltip();
             });
@@ -301,7 +324,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         function highlightNode(d) {
-            const neighbors = adjList.get(d.id) || new Set();
+            const neighborArr = localAdjList.get(d.id) || [];
+            const neighbors = new Set(neighborArr);
             node.classed("dimmed", n => n.id !== d.id && !neighbors.has(n.id));
             node.classed("active", n => n.id === d.id || neighbors.has(n.id));
             link.classed("dimmed", l => l.source.id !== d.id && l.target.id !== d.id);
@@ -326,6 +350,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         function dragstarted(event, d) {
+            isDragging = true;
             if (!event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
@@ -337,10 +362,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         function dragended(event, d) {
+            isDragging = false;
             if (!event.active) simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
         }
+
+        // Pause simulation when scrolled out of view
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                if (simulation.alpha() > simulation.alphaMin()) simulation.restart();
+            } else {
+                simulation.stop();
+            }
+        }, { threshold: 0.1 });
+        observer.observe(container);
     }
 });
 </script>

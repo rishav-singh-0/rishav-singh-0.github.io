@@ -1,0 +1,54 @@
+{{- define "main" }}
+
+<header class="page-hero">
+    <h1 class="page-hero__title">{{ .Title }}</h1>
+    <p class="page-hero__subtitle">
+        {{ len .Data.Terms.Alphabetical }} {{ .Title | lower }} across all articles
+    </p>
+</header>
+
+{{- /* Compute min/max counts for scaling */ -}}
+{{- $minCount := 9999 }}
+{{- $maxCount := 0 }}
+{{- range $key, $value := .Data.Terms.Alphabetical }}
+    {{- if lt .Count $minCount }}{{ $minCount = .Count }}{{ end }}
+    {{- if gt .Count $maxCount }}{{ $maxCount = .Count }}{{ end }}
+{{- end }}
+{{- $range := sub $maxCount $minCount }}
+{{- if eq $range 0 }}{{ $range = 1 }}{{ end }}
+
+<div class="bubble-canvas">
+    {{- $type := .Type }}
+    {{- $colors := slice "#7aa2f7" "#bb9af7" "#7dcfff" "#9ece6a" "#e0af68" "#ff9e64" "#ff757f" "#1abc9c" }}
+    {{- /* Pseudo-random vertical offsets to break the grid */ -}}
+    {{- $offsets := slice 0 -12 8 -6 14 -10 4 -16 10 -4 16 -8 6 -14 2 -18 12 -2 }}
+    {{- $durations := slice 5.2 6.8 4.5 7.1 5.8 6.2 4.9 7.5 5.5 6.5 }}
+    {{- range $i, $value := .Data.Terms.Alphabetical }}
+    {{- $name := .Name }}
+    {{- $count := .Count }}
+    {{- /* Normalized 0-1 scale */ -}}
+    {{- $norm := div (sub (float $count) (float $minCount)) (float $range) }}
+    {{- /* Map to font-size range: 0.85rem → 2.2rem */ -}}
+    {{- $size := add 0.85 (mul $norm 1.35) }}
+    {{- /* Map to padding scale: 1 → 1.8 */ -}}
+    {{- $pad := add 1.0 (mul $norm 0.8) }}
+    {{- $colorIdx := mod $i (len $colors) }}
+    {{- $color := index $colors $colorIdx }}
+    {{- $offsetIdx := mod $i (len $offsets) }}
+    {{- $yOff := index $offsets $offsetIdx }}
+    {{- $durIdx := mod $i (len $durations) }}
+    {{- $dur := index $durations $durIdx }}
+    {{- /* Pick one of 4 float variants based on index */ -}}
+    {{- $floatVariant := mod $i 4 }}
+    {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+    <a class="bubble float-{{ $floatVariant }}" href="{{ .Permalink }}"
+       style="font-size:{{ $size }}rem; --bubble-pad:{{ $pad }}; --bubble-color:{{ $color }}; --y-offset:{{ $yOff }}px; --float-dur:{{ $dur }}s; --entrance-delay:{{ mul $i 50 }}ms;"
+       data-count="{{ $count }}">
+        <span class="bubble-label">{{ .LinkTitle }}</span>
+        <span class="bubble-count">{{ $count }}</span>
+    </a>
+    {{- end }}
+    {{- end }}
+</div>
+
+{{- end }}{{/* end main */ -}}

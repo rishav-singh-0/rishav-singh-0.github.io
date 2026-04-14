@@ -247,7 +247,7 @@
 .node circle {
     stroke: var(--graph-theme);
     stroke-width: 1.5px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: fill 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.15s ease;
 }
 
 .node.page circle {
@@ -280,12 +280,11 @@
     pointer-events: none;
     user-select: none;
     opacity: 0.8;
-    transition: all 0.2s ease;
-    text-shadow: 
-        -1.5px -1.5px 0 var(--graph-theme),  
-         1.5px -1.5px 0 var(--graph-theme),
-        -1.5px  1.5px 0 var(--graph-theme),
-         1.5px  1.5px 0 var(--graph-theme);
+    transition: opacity 0.2s ease;
+    paint-order: stroke fill;
+    stroke: var(--graph-theme);
+    stroke-width: 3px;
+    stroke-linejoin: round;
 }
 
 .node.active text, .node.highlighted text {
@@ -351,7 +350,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let width = container.clientWidth || 800;
     let height = container.clientHeight || 700;
     
-    let allData = { nodes: [], edges: [] };
+    // allData.nodes kept for tag-toggle re-filtering; rawEdges is a compact {s,t} array
+    let allNodes = [];
+    let rawEdges = [];  // compact: [{s, t}] — avoids keeping full parsed edge objects
     let filteredNodes = [];
     let filteredEdges = [];
     let isDragging = false;
@@ -359,14 +360,31 @@ document.addEventListener("DOMContentLoaded", function() {
     let simulation, svg, g, link, node;
     
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    // adjList as Map<string, string[]> — arrays are ~170 bytes cheaper per entry than Set
     const adjList = new Map();
+    const degreeMap = new Map();
 
-    const getDegree = (d) => (adjList.get(d.id) || new Set()).size;
+    const LABEL_MIN_DEGREE = 2; // skip <text> elements for low-degree nodes to reduce DOM
+
+    const getDegree = (d) => degreeMap.get(d.id) || 0;
     const getRadius = (d) => {
         if (d.type === 'tag') return 5;
         const degree = getDegree(d);
         return 4 + Math.sqrt(degree) * 2;
     };
+
+    function debounce(fn, delay) {
+        let timer;
+        return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
+    }
+
+    function buildDegreeMap() {
+        degreeMap.clear();
+        filteredNodes.forEach(n => {
+            const arr = adjList.get(n.id);
+            degreeMap.set(n.id, arr ? arr.length : 0);
+        });
+    }
 
     // Toggle settings panel
     settingsToggle.addEventListener('click', () => {
@@ -377,15 +395,21 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch('/data/graph.json')
         .then(res => res.json())
         .then(data => {
-            allData = data;
-            
-            // Build adjacency list for fast neighbor lookup
-            allData.edges.forEach(e => {
-                if (!adjList.has(e.source)) adjList.set(e.source, new Set());
-                if (!adjList.has(e.target)) adjList.set(e.target, new Set());
-                adjList.get(e.source).add(e.target);
-                adjList.get(e.target).add(e.source);
+            allNodes = data.nodes;
+            // Store edges compactly as {s, t} — lets GC reclaim the parsed JSON objects
+            rawEdges = data.edges.map(e => ({ s: e.source, t: e.target }));
+
+            // Build adjacency list as plain arrays (cheaper than Set per entry)
+            rawEdges.forEach(e => {
+                if (!adjList.has(e.s)) adjList.set(e.s, []);
+                if (!adjList.has(e.t)) adjList.set(e.t, []);
+                adjList.get(e.s).push(e.t);
+                adjList.get(e.t).push(e.s);
             });
+
+            // Allow GC of the full parsed response
+            // (allNodes is a direct ref, rawEdges is a remapped copy)
+            data = null;
 
             if (loading) loading.style.display = 'none';
             initGraph();
@@ -410,6 +434,9 @@ document.addEventListener("DOMContentLoaded", function() {
         node = g.append("g").attr("class", "nodes");
 
         simulation = d3.forceSimulation()
+            .alphaDecay(0.028)
+            .velocityDecay(0.4)
+            .alphaMin(0.001)
             .force("link", d3.forceLink().id(d => d.id).distance(+distanceInput.value))
             .force("charge", d3.forceManyBody().strength(d => {
                 const degree = getDegree(d);
@@ -428,19 +455,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         simulation.on("tick", () => {
             if (!link || !node) return;
-            
             link.selectAll("line")
                 .attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
-
             node.selectAll("g.node")
                 .attr("transform", d => `translate(${d.x},${d.y})`);
         });
         
         // Event Listeners
-        searchInput.addEventListener('input', () => updateFilters());
+        searchInput.addEventListener('input', debounce(() => updateFilters(), 150));
         showTagsCheckbox.addEventListener('change', () => updateGraph());
         colorByFolderCheckbox.addEventListener('change', () => updateNodeColors());
         
@@ -464,33 +489,52 @@ document.addEventListener("DOMContentLoaded", function() {
             simulation.alpha(0.3).restart();
         });
 
-        window.addEventListener('resize', () => {
+        const handleResize = debounce(() => {
             width = container.clientWidth;
             height = container.clientHeight;
+            svg.attr("viewBox", [0, 0, width, height]);
             simulation.force("center", d3.forceCenter(width / 2, height / 2));
+            simulation.force("x", d3.forceX(width / 2).strength(d => (+gravityInput.value) * (1 + Math.sqrt(getDegree(d)) * 0.2)));
+            simulation.force("y", d3.forceY(height / 2).strength(d => (+gravityInput.value) * (1 + Math.sqrt(getDegree(d)) * 0.2)));
             simulation.alpha(0.3).restart();
-        });
+        }, 150);
+        window.addEventListener('resize', handleResize);
+
+        // Pause simulation when scrolled out of view
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                if (simulation.alpha() > simulation.alphaMin()) simulation.restart();
+            } else {
+                simulation.stop();
+            }
+        }, { threshold: 0.1 });
+        observer.observe(container);
     }
 
     function updateGraph() {
         const showTags = showTagsCheckbox.checked;
-        
-        filteredNodes = allData.nodes.filter(n => showTags || n.type !== 'tag');
+
+        filteredNodes = allNodes.filter(n => showTags || n.type !== 'tag');
         const nodeIds = new Set(filteredNodes.map(n => n.id));
-        
-        filteredEdges = allData.edges.filter(e => {
-            const source = e.source.id || e.source;
-            const target = e.target.id || e.target;
-            return nodeIds.has(source) && nodeIds.has(target);
+
+        // Build fresh edge objects from compact rawEdges — D3 will mutate source/target
+        // in place so we can't reuse previous filteredEdges across updateGraph calls
+        filteredEdges = [];
+        rawEdges.forEach(e => {
+            if (nodeIds.has(e.s) && nodeIds.has(e.t)) {
+                filteredEdges.push({ source: e.s, target: e.t });
+            }
         });
-        
+
+        buildDegreeMap();
+
         nodeCountSpan.innerText = filteredNodes.length;
         edgeCountSpan.innerText = filteredEdges.length;
 
-        // Update links
+        // Update links — filteredEdges always have plain string source/target at this point
         const l = link.selectAll("line").data(filteredEdges, d => {
-            const s = d.source.id || d.source;
-            const t = d.target.id || d.target;
+            const s = typeof d.source === 'object' ? d.source.id : d.source;
+            const t = typeof d.target === 'object' ? d.target.id : d.target;
             return s < t ? `${s}-${t}` : `${t}-${s}`;
         });
         l.exit().remove();
@@ -523,7 +567,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         nEnter.append("circle")
             .attr("r", getRadius);
-        nEnter.append("text")
+        // Only create <text> DOM nodes for nodes that have enough connections to warrant
+        // a permanent label. Low-degree nodes are identified by tooltip on hover.
+        nEnter.filter(d => getDegree(d) >= LABEL_MIN_DEGREE)
+            .append("text")
             .attr("dx", 10)
             .attr("dy", ".35em")
             .text(d => d.title);
@@ -533,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Restart simulation
         simulation.nodes(filteredNodes);
         simulation.force("link").links(filteredEdges);
-        simulation.alpha(1).restart();
+        simulation.alpha(0.8).restart();
         
         updateFilters();
     }
@@ -549,18 +596,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function highlightNode(d) {
-        const neighbors = adjList.get(d.id) || new Set();
-        const neighbors2 = new Set(neighbors);
-        neighbors.forEach(nId => {
-            const nNeighbors = adjList.get(nId) || new Set();
-            nNeighbors.forEach(nnId => neighbors2.add(nnId));
+        // adjList stores arrays; build transient Sets just for O(1) lookup during this hover
+        const neighborArr = adjList.get(d.id) || [];
+        const neighbors = new Set(neighborArr);
+        const neighbors2 = new Set(neighborArr);
+        neighborArr.forEach(nId => {
+            (adjList.get(nId) || []).forEach(nnId => neighbors2.add(nnId));
         });
         
         node.selectAll("g.node")
             .classed("active", n => n.id === d.id)
             .classed("neighbor", n => neighbors.has(n.id))
             .classed("neighbor-2", n => neighbors2.has(n.id) && !neighbors.has(n.id) && n.id !== d.id)
-            .classed("dimmed", n => n.id !== d.id && !neighbors2.has(n.id));
+            .classed("dimmed", n => n.id !== d.id && !neighbors2.has(n.id))
+            .classed("highlighted", false);
             
         link.selectAll("line")
             .classed("active", l => 
@@ -579,8 +628,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function resetHighlight() {
-        node.selectAll("g.node").classed("active", false).classed("neighbor", false).classed("dimmed", false);
-        link.selectAll("line").classed("active", false).classed("dimmed", false);
+        node.selectAll("g.node")
+            .classed("active", false)
+            .classed("neighbor", false)
+            .classed("neighbor-2", false)
+            .classed("dimmed", false)
+            .classed("highlighted", false);
+        link.selectAll("line")
+            .classed("active", false)
+            .classed("active-2", false)
+            .classed("dimmed", false);
         updateFilters(); // Re-apply search filters if any
     }
 
@@ -602,7 +659,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         
         if (!searchTerm) {
-            if (!node.select(".active").node()) {
+            if (node.selectAll("g.node.active").size() === 0) {
                 node.selectAll("g.node").classed("dimmed", false);
                 link.selectAll("line").classed("dimmed", false);
             }

@@ -39,11 +39,6 @@ url = "graph"
 weight = 7
 
 [[menu.main]]
-name = "Search"
-url = "search/"
-weight = 10
-
-[[menu.main]]
 name = "Tags"
 url = "tags/"
 weight = 10
@@ -55,6 +50,9 @@ ShowReadingTime = true
 #ShowBreadCrumbs = true
 ShowPostNavLinks = true
 ShowCodeCopyButtons = true
+featuredLimit = 4
+recentLimit = 6
+selectedTags = ["Programming", "Embedded", "Linux", "Personal"]
 
 [outputs]
 home = [ "HTML", "RSS", "JSON" ]

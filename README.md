@@ -12,6 +12,20 @@ This repo contains pipeline that publishes a private Obsidian vault as a public 
 - python
 - uv
 
+## Setup
+
+Create a submodule of your actual repo as `vault`
+```bash
+git submodule command
+```
+
+- The notes which has "draft" property will be selected as posts and copied to new location in `hudo_root` directory.
+- All the obsidian to hugo format conversion of contents will be done by the python file
+- Hugo will convert pre-converted markdown files to html and generate static site
+- You will have all the features of `PaperMod` theme of hugo and few additional obsidian features which i have added
+    - Graph view (local and global)
+    - Callouts
+
 ## Run locally
 
 ```bash

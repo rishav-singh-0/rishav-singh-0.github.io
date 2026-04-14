@@ -1,0 +1,235 @@
+{{- define "main" }}
+
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- if site.Params.ShowAllPagesInArchive }}
+{{- $pages = site.RegularPages }}
+{{- end }}
+
+{{/* ===== Collect all tags + years for filters ===== */}}
+{{- $allTags := slice }}
+{{- $allYears := slice }}
+{{- range $pages }}
+  {{- with .Params.tags }}
+    {{- range . }}
+      {{- $allTags = $allTags | append . }}
+    {{- end }}
+  {{- end }}
+  {{- $year := .Date.Format "2006" }}
+  {{- if ne $year "0001" }}
+    {{- $allYears = $allYears | append $year }}
+  {{- end }}
+{{- end }}
+{{- $uniqueTags := $allTags | uniq | sort }}
+{{- $uniqueYears := $allYears | uniq | sort }}
+{{- $yearsDesc := slice }}
+{{- range $i := seq (sub (len $uniqueYears) 1) 0 }}
+  {{- $yearsDesc = $yearsDesc | append (index $uniqueYears $i) }}
+{{- end }}
+
+<header class="page-hero">
+  <h1 class="page-hero__title">Archive</h1>
+  <p class="page-hero__subtitle">
+    {{ len $pages }} articles across {{ len $uniqueYears }} years
+  </p>
+</header>
+
+{{/* ===== Filter Bar ===== */}}
+<div class="archive-filter" id="archive-filter">
+  <div class="archive-filter__search">
+    <svg class="archive-filter__search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input type="text" id="archive-search" class="archive-filter__input" placeholder="Search articles..." autocomplete="off" />
+    <button id="archive-search-clear" class="archive-filter__clear" aria-label="Clear search" style="display:none;">&times;</button>
+  </div>
+  <div class="archive-filter__row">
+    <div class="archive-filter__tags" id="archive-tags">
+      <button class="archive-filter__chip active" data-tag="all">All</button>
+      {{- range $uniqueTags }}
+      <button class="archive-filter__chip" data-tag="{{ . | lower }}">{{ . }}</button>
+      {{- end }}
+    </div>
+    <select id="archive-year" class="archive-filter__year">
+      <option value="all">All Years</option>
+      {{- range $yearsDesc }}
+      <option value="{{ . }}">{{ . }}</option>
+      {{- end }}
+    </select>
+  </div>
+  <div class="archive-filter__status" id="archive-status"></div>
+</div>
+
+{{/* ===== Card Grid ===== */}}
+<div class="archive-grid" id="archive-grid">
+  {{- range $pages }}
+  {{- if ne (.Date.Format "2006") "0001" }}
+  <article class="archive-card scroll-reveal"
+    data-title="{{ .Title | lower }}"
+    data-year="{{ .Date.Format "2006" }}"
+    data-tags="{{ with .Params.tags }}{{ delimit . "," | lower }}{{ end }}"
+    data-date="{{ .Date.Format "Jan 2, 2006" }}"
+    data-reading="{{ .ReadingTime }}">
+    <div class="archive-card__meta">
+      <time class="archive-card__date" datetime="{{ .Date.Format "2006-01-02" }}">
+        {{ .Date.Format "Jan 2, 2006" }}
+      </time>
+      <span class="archive-card__dot">&middot;</span>
+      <span class="archive-card__reading">{{ .ReadingTime }} min</span>
+    </div>
+    <h3 class="archive-card__title">{{ .Title | markdownify }}</h3>
+    {{- if (ne (.Param "hideSummary") true) }}
+    <p class="archive-card__summary">
+      {{ .Summary | plainify | htmlUnescape | truncate 100 }}
+    </p>
+    {{- end }}
+    {{- with .Params.tags }}
+    <div class="archive-card__tags">
+      {{- range first 3 . }}
+      <span class="archive-card__tag">{{ . }}</span>
+      {{- end }}
+    </div>
+    {{- end }}
+    <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+  </article>
+  {{- end }}
+  {{- end }}
+</div>
+
+{{/* ===== No Results ===== */}}
+<div class="archive-empty" id="archive-empty" style="display:none;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    <line x1="8" y1="8" x2="14" y2="14"></line>
+    <line x1="14" y1="8" x2="8" y2="14"></line>
+  </svg>
+  <p>No articles match your filters.</p>
+  <button id="archive-reset" class="archive-empty__reset">Clear all filters</button>
+</div>
+
+{{/* ===== Filter + Animation Script ===== */}}
+<script>
+(function() {
+  const searchInput = document.getElementById('archive-search');
+  const clearBtn = document.getElementById('archive-search-clear');
+  const yearSelect = document.getElementById('archive-year');
+  const tagContainer = document.getElementById('archive-tags');
+  const grid = document.getElementById('archive-grid');
+  const cards = Array.from(grid.querySelectorAll('.archive-card'));
+  const emptyState = document.getElementById('archive-empty');
+  const resetBtn = document.getElementById('archive-reset');
+  const statusEl = document.getElementById('archive-status');
+
+  let activeTag = 'all';
+  let activeYear = 'all';
+  let searchQuery = '';
+
+  function filterCards() {
+    let visibleCount = 0;
+    const query = searchQuery.toLowerCase().trim();
+
+    cards.forEach((card, i) => {
+      const title = card.dataset.title;
+      const tags = card.dataset.tags;
+      const year = card.dataset.year;
+
+      const matchesSearch = !query || title.includes(query) || tags.includes(query);
+      const matchesTag = activeTag === 'all' || tags.split(',').includes(activeTag);
+      const matchesYear = activeYear === 'all' || year === activeYear;
+
+      if (matchesSearch && matchesTag && matchesYear) {
+        card.classList.remove('archive-card--hidden');
+        card.style.animationDelay = (visibleCount * 0.04) + 's';
+        card.classList.add('archive-card--animate');
+        visibleCount++;
+      } else {
+        card.classList.add('archive-card--hidden');
+        card.classList.remove('archive-card--animate');
+      }
+    });
+
+    emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+    grid.style.display = visibleCount === 0 ? 'none' : '';
+
+    const total = cards.length;
+    if (visibleCount === total) {
+      statusEl.textContent = '';
+    } else {
+      statusEl.textContent = 'Showing ' + visibleCount + ' of ' + total + ' articles';
+    }
+  }
+
+  /* Search input */
+  searchInput.addEventListener('input', function() {
+    searchQuery = this.value;
+    clearBtn.style.display = searchQuery ? 'flex' : 'none';
+    filterCards();
+  });
+
+  clearBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    searchQuery = '';
+    clearBtn.style.display = 'none';
+    filterCards();
+    searchInput.focus();
+  });
+
+  /* Year select */
+  yearSelect.addEventListener('change', function() {
+    activeYear = this.value;
+    filterCards();
+  });
+
+  /* Tag chips */
+  tagContainer.addEventListener('click', function(e) {
+    const chip = e.target.closest('.archive-filter__chip');
+    if (!chip) return;
+    tagContainer.querySelectorAll('.archive-filter__chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeTag = chip.dataset.tag;
+    filterCards();
+  });
+
+  /* Reset */
+  resetBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    searchQuery = '';
+    clearBtn.style.display = 'none';
+    yearSelect.value = 'all';
+    activeYear = 'all';
+    activeTag = 'all';
+    tagContainer.querySelectorAll('.archive-filter__chip').forEach(c => c.classList.remove('active'));
+    tagContainer.querySelector('[data-tag="all"]').classList.add('active');
+    filterCards();
+  });
+
+  /* --- Scroll Reveal (stagger entrance per batch) --- */
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting);
+      visible.forEach((entry, i) => {
+        entry.target.style.transitionDelay = (i * 0.05) + 's';
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.05 });
+    cards.forEach(card => observer.observe(card));
+  } else {
+    cards.forEach(card => card.classList.add('revealed'));
+  }
+
+  /* --- Keyboard shortcut: focus search with / --- */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    if (e.key === 'Escape' && document.activeElement === searchInput) {
+      searchInput.blur();
+    }
+  });
+})();
+</script>
+
+{{- end }}{{/* end main */}}

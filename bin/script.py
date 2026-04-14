@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#     "python-frontmatter>=1.1.0",
+# ]
+# ///
+
 import json
 import os
 import re

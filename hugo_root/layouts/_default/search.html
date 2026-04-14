@@ -1,0 +1,7 @@
+{{- define "main" }}
+<script>window.location.replace("{{ "archives" | absURL }}");</script>
+<noscript>
+  <meta http-equiv="refresh" content="0; url={{ "archives" | absURL }}">
+</noscript>
+<p>Redirecting to <a href="{{ "archives" | absURL }}">Archive</a>...</p>
+{{- end }}

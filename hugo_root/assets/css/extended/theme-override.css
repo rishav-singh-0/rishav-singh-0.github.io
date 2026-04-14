@@ -1,0 +1,365 @@
+/* ===== Tokyo Night (Night variant) — Exact colors from tcmmichaelb139/obsidian-tokyonight ===== */
+/*
+ * Source palette (tokyonight.nvim / VSCode Tokyo Night):
+ *   --bg_dark2  #0f0f14   darkest bg
+ *   --bg_dark   #16161e   dark bg
+ *   --bg        #1a1b26   primary bg
+ *   --bg_highlight_dark #24283b  surface / card
+ *   --bg_highlight      #292e42  hover / raised surface
+ *   --terminal_black    #414868  subtle element
+ *   --comment   #565f89   muted text
+ *   --fg_dark   #a9b1d6   body text
+ *   --fg        #c0caf5   primary text / headings
+ *   --blue      #7aa2f7   accent (links, interactive)
+ *   --cyan      #7dcfff
+ *   --magenta   #bb9af7
+ *   --green     #9ece6a
+ *   --yellow    #e0af68
+ *   --orange    #ff9e64
+ *   --red       #ff757f
+ *   --teal      #1abc9c
+ */
+
+:root[data-theme="dark"] {
+    --theme:           #1a1b26;  /* bg           — page background       */
+    --entry:           #24283b;  /* bg_highlight_dark — card surface      */
+    --primary:         #c0caf5;  /* fg           — headings & icons       */
+    --secondary:       #565f89;  /* comment      — muted / meta text      */
+    --tertiary:        #414868;  /* terminal_black — divider surfaces     */
+    --content:         #a9b1d6;  /* fg_dark      — body prose text        */
+    --code-block-bg:   #16161e;  /* bg_dark      — fenced code block bg   */
+    --code-bg:         #24283b;  /* bg_highlight_dark — inline code bg    */
+    --border:          #292e42;  /* bg_highlight — borders & rules        */
+    color-scheme: dark;
+}
+
+/* Make list pages consistent with new bg */
+[data-theme="dark"] .list {
+    background: var(--theme);
+}
+
+/* ===== Accent: Tokyo Night blue #7aa2f7 ===== */
+:root[data-theme="dark"] a {
+    color: #7aa2f7;
+}
+
+:root[data-theme="dark"] a:hover {
+    color: #7dcfff;  /* cyan on hover */
+}
+
+/* Post tags & topic chips */
+:root[data-theme="dark"] .post-tags a,
+:root[data-theme="dark"] .home-topics__chip {
+    color: #a9b1d6;
+    border-color: #292e42;
+}
+
+:root[data-theme="dark"] .post-tags a:hover,
+:root[data-theme="dark"] .home-topics__chip:hover {
+    color: #7aa2f7;
+    border-color: #7aa2f7;
+}
+
+/* Featured card tags */
+:root[data-theme="dark"] .home-featured__tag {
+    color: #bb9af7;  /* magenta */
+    border-color: #bb9af7;
+}
+
+:root[data-theme="dark"] .home-featured__card:hover {
+    border-color: #7aa2f7;
+}
+
+:root[data-theme="dark"] .home-featured__card:hover .home-featured__card-title {
+    color: #c0caf5;
+}
+
+/* Recent articles "View All" */
+:root[data-theme="dark"] .home-recent__view-all a:hover {
+    color: #7aa2f7;
+}
+
+/* Nav menu active / hover links */
+:root[data-theme="dark"] .menu a:hover,
+:root[data-theme="dark"] #menu a:hover {
+    color: #7aa2f7;
+}
+
+/* Section headings */
+:root[data-theme="dark"] .home-section__heading {
+    color: #565f89;
+}
+
+/* Top-link button */
+:root[data-theme="dark"] #top-link {
+    background: #24283b;
+}
+
+
+/* ===================================================================
+   GRAPH VIEW — Tokyo Night theming
+   The graphs use CSS variables inherited from --primary/--secondary etc.
+   which are already overridden above. These rules handle hardcoded
+   colors and fine-tune SVG-specific interactive states.
+
+   Palette reference:
+     page nodes  → #565f89  (comment / muted)
+     tag nodes   → #ff9e64  (orange, matches obsidian-tokyonight graph-node-tag)
+     current node → #7aa2f7 (blue accent)
+     links       → #292e42  (bg_highlight / border)
+     active link → #7aa2f7  (blue)
+     active node stroke → #7aa2f7
+   =================================================================== */
+
+/* --- Shared graph container background --- */
+:root[data-theme="dark"] #local-graph-container,
+:root[data-theme="dark"] #full-graph-container {
+    background: #16161e;   /* bg_dark — slightly darker than page bg */
+    border-color: #292e42;
+}
+
+/* --- Node: regular page nodes --- */
+:root[data-theme="dark"] .node.page circle {
+    fill: #414868;         /* terminal_black — muted page dots */
+}
+
+/* --- Node: tag nodes (was #ffaa00) --- */
+:root[data-theme="dark"] .node.tag circle {
+    fill: #e0af68;         /* yellow — matches --h2-color / obsidian tag color */
+}
+
+/* --- Node: current page (local-graph only) --- */
+:root[data-theme="dark"] .node.current circle {
+    fill: #7aa2f7;         /* blue accent */
+    stroke: #c0caf5;
+    stroke-width: 2.5px;
+}
+
+/* --- Node: active / hovered --- */
+:root[data-theme="dark"] .node.active circle {
+    stroke: #7aa2f7;
+    stroke-width: 2.5px;
+}
+
+:root[data-theme="dark"] .node.neighbor circle {
+    stroke: #7aa2f7;
+    stroke-width: 1.5px;
+}
+
+:root[data-theme="dark"] .node.neighbor-2 circle {
+    stroke: #565f89;
+    stroke-width: 1px;
+}
+
+/* --- Node labels --- */
+:root[data-theme="dark"] .node text {
+    fill: #a9b1d6;         /* fg_dark */
+    text-shadow:
+        -1.5px -1.5px 0 #16161e,
+         1.5px -1.5px 0 #16161e,
+        -1.5px  1.5px 0 #16161e,
+         1.5px  1.5px 0 #16161e;
+}
+
+:root[data-theme="dark"] .node.active text,
+:root[data-theme="dark"] .node.highlighted text {
+    fill: #c0caf5;         /* fg */
+}
+
+/* --- Links --- */
+:root[data-theme="dark"] .link {
+    stroke: #292e42;       /* bg_highlight */
+    stroke-opacity: 0.6;
+}
+
+:root[data-theme="dark"] .link.active {
+    stroke: #7aa2f7;       /* blue accent */
+    stroke-opacity: 0.9;
+}
+
+:root[data-theme="dark"] .link.active-2 {
+    stroke: #565f89;
+    stroke-opacity: 0.5;
+}
+
+:root[data-theme="dark"] .link.dimmed {
+    stroke: #292e42;
+    stroke-opacity: 0.15;
+}
+
+/* --- Tooltip --- */
+:root[data-theme="dark"] .graph-tooltip {
+    background: #24283b;
+    color: #c0caf5;
+    border-color: #292e42;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Full-graph: search input & settings panel --- */
+:root[data-theme="dark"] #graph-search {
+    background: #24283b;
+    color: #c0caf5;
+    border-color: #292e42;
+}
+
+:root[data-theme="dark"] #graph-search:focus {
+    border-color: #7aa2f7;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
+}
+
+:root[data-theme="dark"] .settings-panel {
+    background: #24283b;
+    border-color: #292e42;
+}
+
+:root[data-theme="dark"] .icon-button {
+    background: #24283b;
+    color: #a9b1d6;
+    border-color: #292e42;
+}
+
+:root[data-theme="dark"] .icon-button:hover,
+:root[data-theme="dark"] .icon-button.active {
+    color: #7aa2f7;
+    border-color: #7aa2f7;
+}
+
+:root[data-theme="dark"] input[type="range"] {
+    accent-color: #7aa2f7;
+}
+
+/* ===================================================================
+   HEADINGS — Tokyo Night rainbow (h1-h6 colors from obsidian theme)
+   --h1-color: --red      #ff757f
+   --h2-color: --yellow   #e0af68
+   --h3-color: --green    #9ece6a
+   --h4-color: --cyan     #7dcfff
+   --h5-color: --blue     #7aa2f7
+   --h6-color: --magenta  #bb9af7
+   =================================================================== */
+:root[data-theme="dark"] h1 { color: #ff757f; }
+:root[data-theme="dark"] h2 { color: #e0af68; }
+:root[data-theme="dark"] h3 { color: #9ece6a; }
+:root[data-theme="dark"] h4 { color: #7dcfff; }
+:root[data-theme="dark"] h5 { color: #7aa2f7; }
+:root[data-theme="dark"] h6 { color: #bb9af7; }
+
+/* Keep homepage section headings in muted style (they're labels not content) */
+:root[data-theme="dark"] .home-section__heading { color: #565f89; }
+:root[data-theme="dark"] .home-hero__title      { color: #c0caf5; }
+
+/* Post title on single page */
+:root[data-theme="dark"] .post-title { color: #c0caf5; }
+
+
+/* ===================================================================
+   CODE SYNTAX — Tokyo Night Night (maps PaperMod's Chroma tokens)
+   Palette:
+     #c0caf5  fg         — base text
+     #565f89  comment    — comments (italic)
+     #7aa2f7  blue       — functions, attributes
+     #7dcfff  cyan       — builtins, operators, escape, regex
+     #bb9af7  magenta    — keywords
+     #9ece6a  green      — strings
+     #e0af68  yellow     — classes, namespaces
+     #ff9e64  orange     — numbers, constants
+     #ff757f  red        — declarations, errors, deleted
+     #1a1b26  bg         — code block background
+     #16161e  bg_dark    — darkest code bg
+     #292e42  bg_hi      — line highlight
+   =================================================================== */
+
+/* Code block container */
+:root[data-theme="dark"] .bg,
+:root[data-theme="dark"] .chroma              { color: #c0caf5; background-color: #16161e; }
+
+/* Error */
+:root[data-theme="dark"] .chroma .err         { color: #ff757f; }
+
+/* Line numbers */
+:root[data-theme="dark"] .chroma .lnt,
+:root[data-theme="dark"] .chroma .ln          { color: #414868; }
+
+/* Line highlight */
+:root[data-theme="dark"] .chroma .hl          { background-color: #292e42; }
+
+/* --- Keywords --- */
+:root[data-theme="dark"] .chroma .k,
+:root[data-theme="dark"] .chroma .kp,
+:root[data-theme="dark"] .chroma .kr          { color: #bb9af7; }            /* keyword → magenta */
+:root[data-theme="dark"] .chroma .kc          { color: #ff9e64; }            /* keyword constant (true/false/nil) → orange */
+:root[data-theme="dark"] .chroma .kd          { color: #ff757f; }            /* keyword declaration (func/var/class) → red */
+:root[data-theme="dark"] .chroma .kn          { color: #7dcfff; }            /* keyword namespace (import) → cyan */
+:root[data-theme="dark"] .chroma .kt          { color: #bb9af7; }            /* keyword type → magenta */
+
+/* --- Names --- */
+:root[data-theme="dark"] .chroma .na          { color: #7aa2f7; }            /* name attribute → blue */
+:root[data-theme="dark"] .chroma .nb,
+:root[data-theme="dark"] .chroma .bp          { color: #7dcfff; }            /* name builtin → cyan */
+:root[data-theme="dark"] .chroma .nc          { color: #e0af68; }            /* name class → yellow */
+:root[data-theme="dark"] .chroma .no          { color: #ff9e64; }            /* name constant → orange */
+:root[data-theme="dark"] .chroma .nd          { color: #7aa2f7; font-weight: bold; }  /* decorator → blue */
+:root[data-theme="dark"] .chroma .ni,
+:root[data-theme="dark"] .chroma .nl          { color: #7dcfff; }            /* name entity / label → cyan */
+:root[data-theme="dark"] .chroma .ne          { color: #ff9e64; }            /* name exception → orange */
+:root[data-theme="dark"] .chroma .nf,
+:root[data-theme="dark"] .chroma .fm          { color: #7aa2f7; }            /* function → blue */
+:root[data-theme="dark"] .chroma .nn,
+:root[data-theme="dark"] .chroma .py          { color: #e0af68; }            /* namespace / property → yellow */
+:root[data-theme="dark"] .chroma .nt          { color: #bb9af7; }            /* name tag (HTML tags) → magenta */
+:root[data-theme="dark"] .chroma .nv,
+:root[data-theme="dark"] .chroma .vc,
+:root[data-theme="dark"] .chroma .vg,
+:root[data-theme="dark"] .chroma .vi,
+:root[data-theme="dark"] .chroma .vm          { color: #c0caf5; }            /* name variable → fg */
+
+/* --- Strings --- */
+:root[data-theme="dark"] .chroma .s,
+:root[data-theme="dark"] .chroma .s1,
+:root[data-theme="dark"] .chroma .s2,
+:root[data-theme="dark"] .chroma .sb,
+:root[data-theme="dark"] .chroma .sc,
+:root[data-theme="dark"] .chroma .si,
+:root[data-theme="dark"] .chroma .sx,
+:root[data-theme="dark"] .chroma .ss          { color: #9ece6a; }            /* strings → green */
+:root[data-theme="dark"] .chroma .sa          { color: #ff757f; }            /* string affix → red */
+:root[data-theme="dark"] .chroma .dl          { color: #7aa2f7; }            /* string delimiter → blue */
+:root[data-theme="dark"] .chroma .sd,
+:root[data-theme="dark"] .chroma .sh          { color: #565f89; font-style: italic; }  /* docstring → comment */
+:root[data-theme="dark"] .chroma .se          { color: #7dcfff; }            /* string escape → cyan */
+:root[data-theme="dark"] .chroma .sr          { color: #7dcfff; }            /* string regex → cyan */
+
+/* --- Numbers --- */
+:root[data-theme="dark"] .chroma .m,
+:root[data-theme="dark"] .chroma .mb,
+:root[data-theme="dark"] .chroma .mf,
+:root[data-theme="dark"] .chroma .mh,
+:root[data-theme="dark"] .chroma .mi,
+:root[data-theme="dark"] .chroma .il,
+:root[data-theme="dark"] .chroma .mo          { color: #ff9e64; }            /* numbers → orange */
+
+/* --- Operators --- */
+:root[data-theme="dark"] .chroma .o,
+:root[data-theme="dark"] .chroma .ow          { color: #7dcfff; font-weight: bold; }  /* operators → cyan */
+
+/* --- Comments --- */
+:root[data-theme="dark"] .chroma .c,
+:root[data-theme="dark"] .chroma .ch,
+:root[data-theme="dark"] .chroma .cm,
+:root[data-theme="dark"] .chroma .c1,
+:root[data-theme="dark"] .chroma .cs,
+:root[data-theme="dark"] .chroma .cp          { color: #565f89; font-style: italic; }
+:root[data-theme="dark"] .chroma .cpf         { color: #565f89; font-weight: bold; font-style: italic; }
+
+/* --- Generic (diff output etc.) --- */
+:root[data-theme="dark"] .chroma .gd          { color: #ff757f; background-color: #3d1a1e; }  /* deleted → red */
+:root[data-theme="dark"] .chroma .ge          { font-style: italic; }
+:root[data-theme="dark"] .chroma .gr,
+:root[data-theme="dark"] .chroma .gt          { color: #ff757f; }            /* error / traceback → red */
+:root[data-theme="dark"] .chroma .gh,
+:root[data-theme="dark"] .chroma .gu          { color: #e0af68; font-weight: bold; }  /* heading → yellow */
+:root[data-theme="dark"] .chroma .gi          { color: #9ece6a; background-color: #1a2a1a; }   /* inserted → green */
+:root[data-theme="dark"] .chroma .gs          { font-weight: bold; }
+:root[data-theme="dark"] .chroma .gl          { text-decoration: underline; }
+

@@ -1,0 +1,40 @@
+/* ===================================================================
+   SHARED PAGE HERO
+   Centered heading + subtitle + divider, used across all pages:
+   Archive, Graph, Tags, List/Section pages.
+   =================================================================== */
+
+/* ===== Hero Section ===== */
+.page-hero {
+    text-align: center;
+    padding: calc(var(--gap) * 2) 0 calc(var(--gap) * 1.5);
+    margin-bottom: var(--gap);
+    border-bottom: 1px solid var(--border);
+    animation: pageFadeUp 0.6s ease both;
+}
+
+.page-hero__title {
+    font-size: 2.2rem;
+    color: var(--primary);
+    margin: 0 0 0.3rem;
+}
+
+.page-hero__subtitle {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    letter-spacing: 0.06em;
+    margin: 0;
+}
+
+/* ===== Fade-Up Animation (shared) ===== */
+@keyframes pageFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+    .page-hero {
+        animation: none;
+    }
+}

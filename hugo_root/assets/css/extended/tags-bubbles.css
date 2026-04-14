@@ -1,0 +1,169 @@
+/* ===================================================================
+   TAGS BUBBLE CANVAS
+   Open-canvas floating bubbles. Size driven by article count.
+   Count badge appears only on hover. Organic float animations.
+   =================================================================== */
+
+/* --- Canvas container --- */
+.bubble-canvas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-top: 1rem;
+    padding: 3rem 1rem;
+    min-height: 50vh;
+    position: relative;
+}
+
+/* === Entrance === */
+@keyframes bubbleIn {
+    0%   { opacity: 0; transform: translateY(var(--y-offset, 0px)) scale(0.3); }
+    70%  { opacity: 1; transform: translateY(var(--y-offset, 0px)) scale(1.06); }
+    100% { opacity: 1; transform: translateY(var(--y-offset, 0px)) scale(1); }
+}
+
+/* === Four float variants for organic movement === */
+@keyframes float0 {
+    0%, 100% { transform: translateY(var(--y-offset, 0px)) translateX(0); }
+    25%      { transform: translateY(calc(var(--y-offset, 0px) - 8px)) translateX(4px); }
+    50%      { transform: translateY(calc(var(--y-offset, 0px) - 3px)) translateX(-3px); }
+    75%      { transform: translateY(calc(var(--y-offset, 0px) - 10px)) translateX(2px); }
+}
+
+@keyframes float1 {
+    0%, 100% { transform: translateY(var(--y-offset, 0px)) translateX(0); }
+    30%      { transform: translateY(calc(var(--y-offset, 0px) + 6px)) translateX(-5px); }
+    60%      { transform: translateY(calc(var(--y-offset, 0px) - 5px)) translateX(4px); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateY(var(--y-offset, 0px)) translateX(0) rotate(0deg); }
+    33%      { transform: translateY(calc(var(--y-offset, 0px) - 7px)) translateX(6px) rotate(1deg); }
+    66%      { transform: translateY(calc(var(--y-offset, 0px) + 4px)) translateX(-4px) rotate(-1deg); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translateY(var(--y-offset, 0px)) translateX(0); }
+    20%      { transform: translateY(calc(var(--y-offset, 0px) - 4px)) translateX(-6px); }
+    50%      { transform: translateY(calc(var(--y-offset, 0px) + 7px)) translateX(3px); }
+    80%      { transform: translateY(calc(var(--y-offset, 0px) - 6px)) translateX(-2px); }
+}
+
+/* === Bubble element === */
+.bubble {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 6px 8px;
+    padding: calc(0.45em * var(--bubble-pad, 1)) calc(0.85em * var(--bubble-pad, 1));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bubble-color, #7aa2f7) 10%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--bubble-color, #7aa2f7) 20%, transparent);
+    color: var(--bubble-color, #7aa2f7);
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+    line-height: 1;
+    cursor: pointer;
+    will-change: transform;
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+
+    /* Entrance then float */
+    opacity: 0;
+    animation:
+        bubbleIn 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    animation-delay: var(--entrance-delay, 0ms);
+}
+
+/* Assign float variants after entrance */
+.bubble.float-0 {
+    animation: bubbleIn 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) forwards,
+               float0 var(--float-dur, 5s) ease-in-out infinite;
+    animation-delay: var(--entrance-delay, 0ms), calc(var(--entrance-delay, 0ms) + 0.5s);
+}
+.bubble.float-1 {
+    animation: bubbleIn 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) forwards,
+               float1 var(--float-dur, 6s) ease-in-out infinite;
+    animation-delay: var(--entrance-delay, 0ms), calc(var(--entrance-delay, 0ms) + 0.5s);
+}
+.bubble.float-2 {
+    animation: bubbleIn 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) forwards,
+               float2 var(--float-dur, 5.5s) ease-in-out infinite;
+    animation-delay: var(--entrance-delay, 0ms), calc(var(--entrance-delay, 0ms) + 0.5s);
+}
+.bubble.float-3 {
+    animation: bubbleIn 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) forwards,
+               float3 var(--float-dur, 7s) ease-in-out infinite;
+    animation-delay: var(--entrance-delay, 0ms), calc(var(--entrance-delay, 0ms) + 0.5s);
+}
+
+/* === Hover === */
+.bubble:hover {
+    background: color-mix(in srgb, var(--bubble-color, #7aa2f7) 20%, transparent);
+    border-color: var(--bubble-color, #7aa2f7);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--bubble-color, #7aa2f7) 20%, transparent);
+    animation-play-state: running, paused;
+    transform: translateY(var(--y-offset, 0px)) scale(1.1);
+    z-index: 10;
+}
+
+.bubble:active {
+    transform: translateY(var(--y-offset, 0px)) scale(1.02);
+}
+
+/* === Label: centered, no offset === */
+.bubble-label {
+    line-height: 1.1;
+}
+
+/* === Count badge: absolutely positioned, no layout shift === */
+.bubble-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55em;
+    min-width: 1.7em;
+    height: 1.7em;
+    padding: 0 0.35em;
+    border-radius: 999px;
+    background: var(--bubble-color, #7aa2f7);
+    color: var(--theme, #1a1b26);
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+}
+
+.bubble:hover .bubble-count {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* --- Hide default PaperMod terms-tags if both coexist --- */
+.terms-tags {
+    display: none !important;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+    .bubble-canvas {
+        padding: 2rem 0.5rem;
+        min-height: 40vh;
+    }
+    .bubble {
+        margin: 4px 5px;
+    }
+}
