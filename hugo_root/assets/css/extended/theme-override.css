@@ -210,8 +210,7 @@
    =================================================================== */
 
 /* --- Shared graph container background --- */
-:root[data-theme="dark"] #local-graph-container,
-:root[data-theme="dark"] #full-graph-container {
+:root[data-theme="dark"] #local-graph-container {
     background: #16161e;   /* bg_dark — slightly darker than page bg */
     border-color: #292e42;
 }
@@ -293,39 +292,7 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Full-graph: search input & settings panel --- */
-:root[data-theme="dark"] #graph-search {
-    background: #24283b;
-    color: #c0caf5;
-    border-color: #292e42;
-}
 
-:root[data-theme="dark"] #graph-search:focus {
-    border-color: #7aa2f7;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
-}
-
-:root[data-theme="dark"] .settings-panel {
-    background: #24283b;
-    border-color: #292e42;
-}
-
-:root[data-theme="dark"] .icon-button {
-    background: #24283b;
-    color: #a9b1d6;
-    border-color: #292e42;
-}
-
-:root[data-theme="dark"] .icon-button:hover,
-:root[data-theme="dark"] .icon-button.active {
-    color: #7aa2f7;
-    border-color: #7aa2f7;
-}
-
-:root[data-theme="dark"] input[type="range"] {
-    accent-color: #7aa2f7;
-}
 
 /* ===================================================================
    HEADINGS — Tokyo Night rainbow (h1-h6 colors from obsidian theme)
@@ -378,8 +345,7 @@ h6 { color: #6b3a6b; }
 /* ===================================================================
    GRAPH VIEW — Coffee Light theming
    =================================================================== */
-#local-graph-container,
-#full-graph-container {
+#local-graph-container {
     background: #ede7db;
     border-color: #d4c5a9;
 }
@@ -454,38 +420,7 @@ h6 { color: #6b3a6b; }
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-#graph-search {
-    background: #ede7db;
-    color: #3d2b1f;
-    border-color: #d4c5a9;
-}
 
-#graph-search:focus {
-    border-color: #9b4d3a;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(155, 77, 58, 0.2);
-}
-
-.settings-panel {
-    background: #ede7db;
-    border-color: #d4c5a9;
-}
-
-.icon-button {
-    background: #ede7db;
-    color: #4a3728;
-    border-color: #d4c5a9;
-}
-
-.icon-button:hover,
-.icon-button.active {
-    color: #9b4d3a;
-    border-color: #9b4d3a;
-}
-
-input[type="range"] {
-    accent-color: #9b4d3a;
-}
 
 
 /* ===================================================================

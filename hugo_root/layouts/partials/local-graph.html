@@ -11,33 +11,38 @@
 
 <style>
 .local-graph-wrapper {
+    /* Match full-graph kg-* colour palette */
+    --kg-canvas:    #ede7db;
+    --kg-text:      var(--primary);
+    --kg-muted:     var(--secondary);
+    --kg-border:    var(--border);
+    --kg-radius:    var(--radius);
+    --kg-accent:    #9b4d3a;
+    --kg-node-page: #c4b89a;
+    --kg-node-tag:  #b88a4a;
+    --kg-shadow:    rgba(0, 0, 0, 0.08);
+    /* tooltip vars */
+    --kg-surface:   var(--entry);
+
     margin: 30px 0;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    --graph-text: var(--primary);
-    --graph-sub-text: var(--secondary);
-    --graph-entry: var(--entry);
-    --graph-border: var(--border);
-    --graph-theme: var(--theme);
-    --graph-tertiary: var(--tertiary);
 }
 
-/* Ensure visibility in light mode */
-:root:not([data-theme='dark']) .local-graph-wrapper {
-    --graph-text: #1d1e20;
-    --graph-sub-text: #6c6c6c;
-    --graph-entry: #ffffff;
-    --graph-border: #eeeeee;
-    --graph-theme: #ffffff;
-    --graph-tertiary: #d6d6d6;
+:root[data-theme="dark"] .local-graph-wrapper {
+    --kg-canvas:    #16161e;
+    --kg-accent:    #7aa2f7;
+    --kg-node-page: #414868;
+    --kg-node-tag:  #e0af68;
+    --kg-shadow:    rgba(0, 0, 0, 0.35);
 }
 
 .graph-title {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--graph-text);
+    color: var(--kg-text);
 }
 
 #local-graph-container {
@@ -46,102 +51,110 @@
     min-height: 400px;
     overflow: hidden;
     cursor: grab;
-    background: var(--graph-theme);
+    background: var(--kg-canvas);
     position: relative;
-    border: 1px solid var(--graph-border);
-    border-radius: var(--radius);
+    border: 1px solid var(--kg-border);
+    border-radius: var(--kg-radius);
 }
 
-#local-graph-container:active {
-    cursor: grabbing;
-}
+#local-graph-container:active { cursor: grabbing; }
 
 #graph-loading {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--graph-sub-text);
+    color: var(--kg-muted);
     font-size: 0.9rem;
 }
 
 .graph-tooltip {
     position: absolute;
     padding: 8px 12px;
-    background: var(--graph-entry);
-    color: var(--graph-text);
-    border: 1px solid var(--graph-border);
+    background: var(--kg-surface);
+    color: var(--kg-text);
+    border: 1px solid var(--kg-border);
     border-radius: 6px;
     pointer-events: none;
     font-size: 0.8rem;
     opacity: 0;
     transition: opacity 0.2s;
     z-index: 100;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px var(--kg-shadow);
 }
 
+/* ── Node circles ── */
 .node circle {
-    stroke: var(--graph-theme);
+    stroke: var(--kg-canvas);
     stroke-width: 1.5px;
-    transition: fill 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.15s ease;
+    transition: fill 0.2s, stroke 0.2s, stroke-width 0.2s, opacity 0.15s, filter 0.25s;
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: lgNodeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     cursor: pointer;
 }
 
-.node.page circle {
-    fill: var(--graph-sub-text);
+@keyframes lgNodeIn {
+    from { opacity: 0; transform: scale(0.3); }
+    to   { opacity: 1; transform: scale(1); }
 }
 
-.node.tag circle {
-    fill: #ffaa00;
-}
+.node.page circle  { fill: var(--kg-node-page); }
+.node.tag circle   { fill: var(--kg-node-tag); }
 
 .node.current circle {
-    fill: var(--graph-text);
-    stroke: var(--graph-sub-text);
-    stroke-width: 2.5px;
+    stroke: var(--kg-accent);
+    stroke-width: 3px;
+    filter: url(#local-glow);
 }
 
+.node.active circle {
+    stroke: var(--kg-accent);
+    stroke-width: 2px;
+}
+
+.node.dimmed { opacity: 0.1; }
+
+/* ── Labels ── */
 .node text {
     font-size: 11px;
-    fill: var(--graph-text);
+    fill: var(--kg-text);
     pointer-events: none;
     user-select: none;
-    opacity: 0.8;
+    opacity: 0.7;
     paint-order: stroke fill;
-    stroke: var(--graph-theme);
+    stroke: var(--kg-canvas);
     stroke-width: 3px;
     stroke-linejoin: round;
+    transition: opacity 0.2s, font-weight 0.15s;
 }
 
-.node.current text {
-    opacity: 1;
-    font-weight: 700;
-    font-size: 12px;
-}
-
+.node.current text,
 .node.active text {
     opacity: 1;
     font-weight: 700;
 }
 
-.node.dimmed {
-    opacity: 0.2;
-}
-
+/* ── Links ── */
 .link {
-    stroke: var(--graph-sub-text);
-    stroke-opacity: 0.25;
-    stroke-width: 1.5px;
+    stroke: var(--kg-border);
+    stroke-opacity: 0.35;
+    stroke-width: 1px;
+    transition: stroke-opacity 0.2s, stroke 0.2s;
+    animation: lgLinkIn 0.5s ease both;
 }
 
-.link.dimmed {
-    stroke-opacity: 0.05;
+@keyframes lgLinkIn {
+    from { stroke-opacity: 0; }
+    to   { stroke-opacity: 0.35; }
 }
+
+.link.dimmed { stroke-opacity: 0.06; }
 
 .link.active {
-    stroke: var(--graph-sub-text);
-    stroke-opacity: 0.8;
-    stroke-width: 2px;
+    stroke: var(--kg-accent);
+    stroke-opacity: 0.9;
+    stroke-width: 1.8px;
 }
 </style>
 
@@ -156,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentTitle = {{ .Title | jsonify }};
     let isDragging = false;
 
-    fetch('/data/graph.json')
+    fetch('/data/graph.json', { cache: 'no-store' })
         .then(res => {
             if (!res.ok) throw new Error("Failed to fetch graph data");
             return res.json();
@@ -239,6 +252,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         const getDeg = id => degreeMap.get(id) || 0;
 
+        const getR = d => {
+            if (d.id === currentNode.id) return 9;
+            if (d.type === "tag") return 5;
+            return 4 + Math.sqrt(getDeg(d.id)) * 1.5;
+        };
+
         const svg = d3.select("#local-graph-container")
             .append("svg")
             .attr("width", "100%")
@@ -249,6 +268,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 .on("zoom", (event) => {
                     g.attr("transform", event.transform);
                 }));
+
+        /* Glow filter for current/active nodes */
+        const defs = svg.append("defs");
+        const glow = defs.append("filter").attr("id", "local-glow").attr("x", "-50%").attr("y", "-50%").attr("width", "200%").attr("height", "200%");
+        glow.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "blur");
+        glow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).enter().append("feMergeNode").attr("in", d => d);
 
         const g = svg.append("g");
 
@@ -304,8 +329,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 hideTooltip();
             });
 
-        node.append("circle")
-            .attr("r", d => d.id === currentNode.id ? 10 : 6);
+        node.append("circle").attr("r", getR);
 
         node.append("text")
             .attr("dx", 12)

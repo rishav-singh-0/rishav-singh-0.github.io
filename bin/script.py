@@ -39,6 +39,30 @@ def slugify(text):
     return text
 
 
+def split_hierarchical_tags(tags):
+    """
+    Split hierarchical tags separated by '/'.
+    
+    Example:
+    - Input: ["Platform/Buildroot", "Programming"]
+    - Output: ["Platform", "Buildroot", "Programming"]
+    
+    Each component of a hierarchical tag is treated as a separate tag.
+    """
+    split_tags = set()
+    for tag in tags:
+        if '/' in tag:
+            # Split the tag and add each component
+            components = tag.split('/')
+            for component in components:
+                if component.strip():
+                    split_tags.add(component.strip())
+        else:
+            split_tags.add(tag.strip())
+    
+    return sorted(list(split_tags))
+
+
 def convert_links(text, current_note_title=None):
     # Convert Obsidian image embeds: ![[image.png]]
     text = re.sub(r'!\[\[([^\]]+?)\]\]', lambda m: f'{{{{< figure src="/images/{Path(m.group(1)).name}" alt="{Path(m.group(1)).stem}" >}}}}', text)
@@ -145,7 +169,14 @@ def process_note(original_file):
 
     # Record tags
     if 'tags' in post and isinstance(post['tags'], list):
-        for tag in post['tags']:
+        # Split hierarchical tags (e.g., "Platform/Buildroot" → ["Platform", "Buildroot"])
+        split_tags = split_hierarchical_tags(post['tags'])
+        
+        # Update the post frontmatter with split tags
+        post['tags'] = split_tags
+        
+        # Create nodes and edges for each split tag
+        for tag in split_tags:
             tag_id = f"tag:{tag}"
             nodes.append({
                 "id": tag_id,

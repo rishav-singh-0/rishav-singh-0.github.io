@@ -188,6 +188,18 @@ unsafe = true
 
 ---
 
+## Tag Rules
+
+Tags containing `/` represent a **hierarchy** and must be split into multiple separate tags:
+
+- A tag like `Platform/Buildroot` produces **3 tags**: `Platform`, `Buildroot`, and the combined `Platform/Buildroot` is **never** treated as a single tag.
+- If an article has tags `Platform/Buildroot` and `Platform/FileSystem`, the resulting individual tags are: `Platform`, `Buildroot`, `FileSystem`.
+- The `/` denotes that the right-hand side is a subcategory of the left-hand side (e.g., `Buildroot` is a subcategory of `Platform`), but each part is also a standalone tag usable independently.
+- Tag-specific pages (taxonomy term pages, tag listings) must reflect these split tags — each individual tag (`Platform`, `Buildroot`, `FileSystem`) should have its own page listing all articles that belong to it.
+- Never render or link `Platform/Buildroot` as a single combined tag in the UI or in Hugo taxonomy configuration.
+
+---
+
 ## Key Technology Stack
 
 - **Static Site Generator:** Hugo

@@ -1,19 +1,11 @@
 {{- define "main" }}
 
-<article class="post-single">
-  <header class="page-hero">
-    <h1 class="page-hero__title">{{ .Title }}</h1>
-    <p class="page-hero__subtitle">{{ .Description | default "Explore connections between notes" }}</p>
-  </header>
+<header class="page-hero page-hero--no-rule">
+  <h1 class="page-hero__title">{{ .Title }}</h1>
+  <p class="page-hero__subtitle">{{ .Description | default "Explore connections between all notes and tags" }}</p>
+</header>
+<hr class="page-hero__rule">
 
-  {{- if .Content }}
-  <div class="post-content">
-    {{ .Content }}
-  </div>
-  {{- end }}
-
-  {{- partial "full-graph.html" . -}}
-
-</article>
+{{- partial "full-graph.html" . -}}
 
 {{- end }}{{/* end main */}}

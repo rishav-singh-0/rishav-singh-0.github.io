@@ -26,6 +26,19 @@
     margin: 0;
 }
 
+.page-hero__rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 var(--gap);
+}
+
+/* Used when an explicit <hr> follows, avoids double border */
+.page-hero--no-rule {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: calc(var(--gap) * 1);
+}
+
 /* ===== Fade-Up Animation (shared) ===== */
 @keyframes pageFadeUp {
     from { opacity: 0; transform: translateY(16px); }

@@ -1,714 +1,439 @@
-<div class="full-graph-wrapper">
-    <div class="graph-header">
-        <div class="search-container">
-            <input type="text" id="graph-search" placeholder="Search nodes (e.g., title, tag, or path:folder)..." autocomplete="off">
+<!-- Knowledge Graph Explorer — Immersive redesign -->
+<div class="kg" id="knowledge-graph">
+
+    <!-- ─── Top Bar ─── -->
+    <div class="kg-topbar">
+        <div class="kg-search">
+            <svg class="kg-search__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="kg-search" placeholder="Search notes and tags…" autocomplete="off">
+            <kbd class="kg-search__kbd">/</kbd>
         </div>
-        <div class="header-actions">
-            <button id="settings-toggle" class="icon-button" title="Settings">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <div class="kg-topbar__actions">
+            <button id="kg-btn-sidebar" class="kg-btn" title="Toggle settings panel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            </button>
+            <button id="kg-btn-fullscreen" class="kg-btn" title="Toggle fullscreen">
+                <svg id="kg-fs-expand" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                <svg id="kg-fs-shrink" class="kg-hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
             </button>
         </div>
     </div>
 
-    <div id="graph-settings" class="settings-panel hidden">
-        <div class="settings-section">
-            <h4 class="settings-title">View Options</h4>
-            <div class="settings-row">
-                <label class="checkbox-container">
-                    <input type="checkbox" id="show-tags" checked>
-                    <span class="checkbox-label">Show Tags</span>
+    <!-- ─── Main: Sidebar + Canvas ─── -->
+    <div class="kg-body">
+
+        <!-- Sidebar -->
+        <aside class="kg-sidebar kg-sidebar--closed" id="kg-sidebar">
+            <!-- Display -->
+            <div class="kg-sidebar__section">
+                <h4 class="kg-sidebar__heading">Display</h4>
+                <label class="kg-check">
+                    <input type="checkbox" id="kg-show-tags" checked>
+                    <span>Show Tags</span>
                 </label>
-                <label class="checkbox-container">
-                    <input type="checkbox" id="color-by-folder">
-                    <span class="checkbox-label">Color by Folder</span>
+                <label class="kg-check">
+                    <input type="checkbox" id="kg-color-folders">
+                    <span>Color by Folder</span>
                 </label>
+                <label class="kg-check">
+                    <input type="checkbox" id="kg-show-labels" checked>
+                    <span>Show Labels</span>
+                </label>
+            </div>
+
+            <!-- Physics -->
+            <div class="kg-sidebar__section">
+                <h4 class="kg-sidebar__heading">Physics</h4>
+                <div class="kg-range">
+                    <div class="kg-range__header">
+                        <span>Repulsion</span><span id="kg-val-repulsion">-150</span>
+                    </div>
+                    <input type="range" id="kg-force-repulsion" min="-1000" max="0" step="10" value="-150">
+                </div>
+                <div class="kg-range">
+                    <div class="kg-range__header">
+                        <span>Distance</span><span id="kg-val-distance">100</span>
+                    </div>
+                    <input type="range" id="kg-force-distance" min="20" max="300" step="5" value="100">
+                </div>
+                <div class="kg-range">
+                    <div class="kg-range__header">
+                        <span>Gravity</span><span id="kg-val-gravity">0.1</span>
+                    </div>
+                    <input type="range" id="kg-force-gravity" min="0" max="1" step="0.05" value="0.1">
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="kg-sidebar__section">
+                <h4 class="kg-sidebar__heading">Legend</h4>
+                <div class="kg-legend">
+                    <span class="kg-legend__item"><span class="kg-legend__dot kg-legend__dot--page"></span>Page</span>
+                    <span class="kg-legend__item"><span class="kg-legend__dot kg-legend__dot--tag"></span>Tag</span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="kg-sidebar__footer">
+                <span><strong id="kg-node-count">0</strong> nodes</span>
+                <span class="kg-sidebar__sep">·</span>
+                <span><strong id="kg-edge-count">0</strong> links</span>
+            </div>
+        </aside>
+
+        <!-- Graph canvas -->
+        <div class="kg-canvas" id="kg-canvas">
+            <div class="kg-loading" id="kg-loading">
+                <div class="kg-loading__ring"></div>
+                <span>Loading graph&hellip;</span>
+            </div>
+            <div class="kg-tooltip" id="kg-tooltip"></div>
+
+            <!-- Floating zoom controls -->
+            <div class="kg-zoom" id="kg-zoom">
+                <button class="kg-btn kg-btn--sm" id="kg-zoom-in" title="Zoom in">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button class="kg-btn kg-btn--sm" id="kg-zoom-out" title="Zoom out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button class="kg-btn kg-btn--sm" id="kg-recenter" title="Reset view">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
             </div>
         </div>
 
-        <div class="settings-section">
-            <h4 class="settings-title">Forces</h4>
-            <div class="control-grid">
-                <div class="control-group">
-                    <label for="force-repulsion">Repulsion: <span id="val-repulsion">-150</span></label>
-                    <input type="range" id="force-repulsion" min="-1000" max="0" step="10" value="-150">
-                </div>
-                <div class="control-group">
-                    <label for="force-distance">Link Distance: <span id="val-distance">100</span></label>
-                    <input type="range" id="force-distance" min="20" max="300" step="5" value="100">
-                </div>
-                <div class="control-group">
-                    <label for="force-gravity">Gravity: <span id="val-gravity">0.1</span></label>
-                    <input type="range" id="force-gravity" min="0" max="1" step="0.05" value="0.1">
-                </div>
-            </div>
-        </div>
-
-        <div class="settings-footer">
-            <span class="stat-info"><span id="node-count">0</span> nodes, <span id="edge-count">0</span> links</span>
-        </div>
-    </div>
-    
-    <div id="full-graph-container">
-        <div id="graph-loading">Loading Global Graph...</div>
-        <div id="node-tooltip" class="graph-tooltip"></div>
     </div>
 </div>
 
-<style>
-.full-graph-wrapper {
-    margin: var(--gap) 0;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    --graph-text: var(--primary);
-    --graph-sub-text: var(--secondary);
-    --graph-entry: var(--entry);
-    --graph-border: var(--border);
-    --graph-theme: var(--theme);
-    --graph-tertiary: var(--tertiary);
-}
-
-/* Ensure visibility in light mode if PaperMod variables are missing or different */
-:root:not([data-theme='dark']) .full-graph-wrapper {
-    --graph-text: #1d1e20;
-    --graph-sub-text: #6c6c6c;
-    --graph-entry: #ffffff;
-    --graph-border: #eeeeee;
-    --graph-theme: #ffffff;
-    --graph-tertiary: #d6d6d6;
-}
-
-.graph-header {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.search-container {
-    flex-grow: 1;
-}
-
-.search-container input {
-    width: 100%;
-    padding: 10px 15px;
-    border-radius: var(--radius);
-    border: 1px solid var(--graph-border);
-    background: var(--graph-entry);
-    color: var(--graph-text);
-    font-size: 1rem;
-    transition: all 0.2s;
-}
-
-.search-container input::placeholder {
-    color: var(--graph-sub-text);
-    opacity: 0.6;
-}
-
-.search-container input:focus {
-    outline: none;
-    border-color: var(--graph-sub-text);
-}
-
-.icon-button {
-    background: var(--graph-entry);
-    border: 1px solid var(--graph-border);
-    color: var(--graph-sub-text);
-    width: 42px;
-    height: 42px;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.icon-button:hover, .icon-button.active {
-    background: var(--graph-tertiary);
-    color: var(--graph-text);
-}
-
-.settings-panel {
-    background: var(--graph-entry);
-    border: 1px solid var(--graph-border);
-    border-radius: var(--radius);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.settings-panel.hidden {
-    display: none;
-}
-
-.settings-title {
-    margin: 0 0 10px 0;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--graph-sub-text);
-    font-weight: 700;
-}
-
-.settings-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-}
-
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.checkbox-label {
-    font-size: 0.9rem;
-    color: var(--graph-text);
-}
-
-.control-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 25px;
-}
-
-.control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.control-group label {
-    font-size: 0.8rem;
-    color: var(--graph-sub-text);
-}
-
-.control-group input[type="range"] {
-    width: 100%;
-    accent-color: var(--graph-sub-text);
-}
-
-.settings-footer {
-    border-top: 1px solid var(--graph-border);
-    padding-top: 12px;
-    text-align: right;
-}
-
-.stat-info {
-    font-size: 0.75rem;
-    color: var(--graph-sub-text);
-}
-
-#full-graph-container {
-    width: 100%;
-    height: 700px;
-    min-height: 500px;
-    overflow: hidden;
-    cursor: grab;
-    background: var(--graph-theme);
-    position: relative;
-    border: 1px solid var(--graph-border);
-    border-radius: var(--radius);
-}
-
-#full-graph-container:active {
-    cursor: grabbing;
-}
-
-#graph-loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--graph-sub-text);
-    font-size: 0.9rem;
-}
-
-.graph-tooltip {
-    position: absolute;
-    padding: 8px 12px;
-    background: var(--graph-entry);
-    color: var(--graph-text);
-    border: 1px solid var(--graph-border);
-    border-radius: 6px;
-    pointer-events: none;
-    font-size: 0.8rem;
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 100;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.node circle {
-    stroke: var(--graph-theme);
-    stroke-width: 1.5px;
-    transition: fill 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.15s ease;
-}
-
-.node.page circle {
-    fill: var(--graph-sub-text);
-}
-
-.node.tag circle {
-    fill: #ffaa00;
-}
-
-.node.active circle {
-    stroke: var(--graph-text);
-    stroke-width: 2.5px;
-}
-
-.node.neighbor circle {
-    stroke: var(--graph-text);
-    stroke-width: 1.5px;
-}
-
-.node.neighbor-2 circle {
-    stroke: var(--graph-sub-text);
-    stroke-width: 1px;
-    stroke-dasharray: 2,2;
-}
-
-.node text {
-    font-size: 11px;
-    fill: var(--graph-text);
-    pointer-events: none;
-    user-select: none;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
-    paint-order: stroke fill;
-    stroke: var(--graph-theme);
-    stroke-width: 3px;
-    stroke-linejoin: round;
-}
-
-.node.active text, .node.highlighted text {
-    opacity: 1;
-    font-weight: 700;
-}
-
-.node.neighbor text {
-    opacity: 0.9;
-}
-
-.node.neighbor-2 text {
-    opacity: 0.6;
-}
-
-.node.dimmed {
-    opacity: 0.15;
-}
-
-.link {
-    stroke: var(--graph-sub-text);
-    stroke-opacity: 0.25;
-    stroke-width: 1px;
-}
-
-.link.dimmed {
-    stroke-opacity: 0.05;
-}
-
-.link.active {
-    stroke: var(--graph-sub-text);
-    stroke-opacity: 1;
-    stroke-width: 1.5px;
-}
-
-.link.active-2 {
-    stroke: var(--graph-sub-text);
-    stroke-opacity: 0.5;
-    stroke-width: 1px;
-    stroke-dasharray: 2,2;
-}
-</style>
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const container = document.getElementById('full-graph-container');
-    const loading = document.getElementById('graph-loading');
-    const searchInput = document.getElementById('graph-search');
-    const showTagsCheckbox = document.getElementById('show-tags');
-    const colorByFolderCheckbox = document.getElementById('color-by-folder');
-    const nodeCountSpan = document.getElementById('node-count');
-    const edgeCountSpan = document.getElementById('edge-count');
-    const tooltip = document.getElementById('node-tooltip');
-    const settingsToggle = document.getElementById('settings-toggle');
-    const settingsPanel = document.getElementById('graph-settings');
-    
-    // Force inputs
-    const repulsionInput = document.getElementById('force-repulsion');
-    const distanceInput = document.getElementById('force-distance');
-    const gravityInput = document.getElementById('force-gravity');
-    
-    let width = container.clientWidth || 800;
-    let height = container.clientHeight || 700;
-    
-    // allData.nodes kept for tag-toggle re-filtering; rawEdges is a compact {s,t} array
-    let allNodes = [];
-    let rawEdges = [];  // compact: [{s, t}] — avoids keeping full parsed edge objects
-    let filteredNodes = [];
-    let filteredEdges = [];
-    let isDragging = false;
-    
-    let simulation, svg, g, link, node;
-    
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-    // adjList as Map<string, string[]> — arrays are ~170 bytes cheaper per entry than Set
+document.addEventListener("DOMContentLoaded", function () {
+    /* ── DOM refs ── */
+    const $ = (s, p) => (p || document).querySelector(s);
+    const canvas    = $("#kg-canvas");
+    const loading   = $("#kg-loading");
+    const search    = $("#kg-search");
+    const sidebar   = $("#kg-sidebar");
+    const tooltip   = $("#kg-tooltip");
+    const showTags  = $("#kg-show-tags");
+    const colorDir  = $("#kg-color-folders");
+    const showLbls  = $("#kg-show-labels");
+    const nodeCount = $("#kg-node-count");
+    const edgeCount = $("#kg-edge-count");
+    const graphRoot = $("#knowledge-graph");
+
+    const repIn  = $("#kg-force-repulsion");
+    const distIn = $("#kg-force-distance");
+    const gravIn = $("#kg-force-gravity");
+
+    /* ── State ── */
+    let allNodes = [], rawEdges = [];
+    let filteredNodes = [], filteredEdges = [];
+    let isDragging = false, sidebarOpen = false;
+    let width, height;
+    let simulation, svg, g, linkG, nodeG, zoomBehavior;
     const adjList = new Map();
     const degreeMap = new Map();
+    const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
+    const LABEL_MIN_DEGREE = 2;
 
-    const LABEL_MIN_DEGREE = 2; // skip <text> elements for low-degree nodes to reduce DOM
+    const getDeg = d => degreeMap.get(d.id) || 0;
+    const getR   = d => d.type === "tag" ? 5 : 4 + Math.sqrt(getDeg(d)) * 2;
 
-    const getDegree = (d) => degreeMap.get(d.id) || 0;
-    const getRadius = (d) => {
-        if (d.type === 'tag') return 5;
-        const degree = getDegree(d);
-        return 4 + Math.sqrt(degree) * 2;
-    };
-
-    function debounce(fn, delay) {
-        let timer;
-        return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
+    function debounce(fn, ms) {
+        let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
     }
-
     function buildDegreeMap() {
         degreeMap.clear();
-        filteredNodes.forEach(n => {
-            const arr = adjList.get(n.id);
-            degreeMap.set(n.id, arr ? arr.length : 0);
-        });
+        filteredNodes.forEach(n => { degreeMap.set(n.id, (adjList.get(n.id) || []).length); });
     }
 
-    // Toggle settings panel
-    settingsToggle.addEventListener('click', () => {
-        settingsPanel.classList.toggle('hidden');
-        settingsToggle.classList.toggle('active');
+    /* ── Sidebar toggle ── */
+    $("#kg-btn-sidebar").addEventListener("click", () => {
+        sidebarOpen = !sidebarOpen;
+        sidebar.classList.toggle("kg-sidebar--closed", !sidebarOpen);
+        $("#kg-btn-sidebar").classList.toggle("kg-btn--active", sidebarOpen);
+        setTimeout(handleResize, 320);
     });
 
-    fetch('/data/graph.json')
-        .then(res => res.json())
+    /* ── Fullscreen ── */
+    $("#kg-btn-fullscreen").addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+            (graphRoot.requestFullscreen || graphRoot.webkitRequestFullscreen || graphRoot.msRequestFullscreen).call(graphRoot);
+        } else {
+            (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
+        }
+    });
+    function onFSChange() {
+        const fs = !!document.fullscreenElement;
+        graphRoot.classList.toggle("kg--fullscreen", fs);
+        $("#kg-fs-expand").classList.toggle("kg-hidden", fs);
+        $("#kg-fs-shrink").classList.toggle("kg-hidden", !fs);
+        setTimeout(handleResize, 100);
+    }
+    document.addEventListener("fullscreenchange", onFSChange);
+    document.addEventListener("webkitfullscreenchange", onFSChange);
+
+    /* ── Keyboard shortcuts ── */
+    document.addEventListener("keydown", e => {
+        if (e.key === "/" && document.activeElement !== search) { e.preventDefault(); search.focus(); }
+        if (e.key === "Escape") { search.blur(); resetHighlight(); }
+    });
+
+    /* ── Fetch & init ── */
+    fetch("/data/graph.json", { cache: 'no-store' })
+        .then(r => r.json())
         .then(data => {
             allNodes = data.nodes;
-            // Store edges compactly as {s, t} — lets GC reclaim the parsed JSON objects
             rawEdges = data.edges.map(e => ({ s: e.source, t: e.target }));
-
-            // Build adjacency list as plain arrays (cheaper than Set per entry)
             rawEdges.forEach(e => {
                 if (!adjList.has(e.s)) adjList.set(e.s, []);
                 if (!adjList.has(e.t)) adjList.set(e.t, []);
                 adjList.get(e.s).push(e.t);
                 adjList.get(e.t).push(e.s);
             });
-
-            // Allow GC of the full parsed response
-            // (allNodes is a direct ref, rawEdges is a remapped copy)
             data = null;
-
-            if (loading) loading.style.display = 'none';
+            if (loading) loading.style.display = "none";
             initGraph();
             updateGraph();
         });
 
     function initGraph() {
-        svg = d3.select("#full-graph-container")
+        width  = canvas.clientWidth  || 900;
+        height = canvas.clientHeight || 650;
+
+        zoomBehavior = d3.zoom()
+            .scaleExtent([0.1, 8])
+            .on("zoom", e => g.attr("transform", e.transform));
+
+        svg = d3.select("#kg-canvas")
             .append("svg")
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", [0, 0, width, height])
-            .call(d3.zoom()
-                .scaleExtent([0.1, 8])
-                .on("zoom", (event) => {
-                    g.attr("transform", event.transform);
-                }));
+            .call(zoomBehavior);
+
+        /* Glow filter for active nodes */
+        const defs = svg.append("defs");
+        const glow = defs.append("filter").attr("id", "glow").attr("x", "-50%").attr("y", "-50%").attr("width", "200%").attr("height", "200%");
+        glow.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "blur");
+        glow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).enter().append("feMergeNode").attr("in", d => d);
 
         g = svg.append("g");
-        
-        link = g.append("g").attr("class", "links");
-        node = g.append("g").attr("class", "nodes");
+        linkG = g.append("g").attr("class", "links");
+        nodeG = g.append("g").attr("class", "nodes");
 
         simulation = d3.forceSimulation()
             .alphaDecay(0.028)
             .velocityDecay(0.4)
             .alphaMin(0.001)
-            .force("link", d3.forceLink().id(d => d.id).distance(+distanceInput.value))
-            .force("charge", d3.forceManyBody().strength(d => {
-                const degree = getDegree(d);
-                return (+repulsionInput.value) * (1 + Math.sqrt(degree) * 0.5);
-            }))
-            .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("x", d3.forceX(width / 2).strength(d => {
-                const degree = getDegree(d);
-                return (+gravityInput.value) * (1 + Math.sqrt(degree) * 0.2);
-            }))
-            .force("y", d3.forceY(height / 2).strength(d => {
-                const degree = getDegree(d);
-                return (+gravityInput.value) * (1 + Math.sqrt(degree) * 0.2);
-            }))
-            .force("collision", d3.forceCollide().radius(d => getRadius(d) + 5));
+            .force("link",      d3.forceLink().id(d => d.id).distance(+distIn.value))
+            .force("charge",    d3.forceManyBody().strength(d => (+repIn.value) * (1 + Math.sqrt(getDeg(d)) * 0.5)))
+            .force("center",    d3.forceCenter(width / 2, height / 2))
+            .force("x",         d3.forceX(width / 2).strength(d => (+gravIn.value) * (1 + Math.sqrt(getDeg(d)) * 0.2)))
+            .force("y",         d3.forceY(height / 2).strength(d => (+gravIn.value) * (1 + Math.sqrt(getDeg(d)) * 0.2)))
+            .force("collision", d3.forceCollide().radius(d => getR(d) + 5));
 
         simulation.on("tick", () => {
-            if (!link || !node) return;
-            link.selectAll("line")
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
-            node.selectAll("g.node")
+            linkG.selectAll("line")
+                .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            nodeG.selectAll("g.node")
                 .attr("transform", d => `translate(${d.x},${d.y})`);
         });
-        
-        // Event Listeners
-        searchInput.addEventListener('input', debounce(() => updateFilters(), 150));
-        showTagsCheckbox.addEventListener('change', () => updateGraph());
-        colorByFolderCheckbox.addEventListener('change', () => updateNodeColors());
-        
-        // Force listeners
-        repulsionInput.addEventListener('input', (e) => {
-            const val = +e.target.value;
-            document.getElementById('val-repulsion').innerText = val;
-            simulation.force("charge").strength(d => val * (1 + Math.sqrt(getDegree(d)) * 0.5));
+
+        /* ── Event listeners ── */
+        search.addEventListener("input", debounce(updateFilters, 150));
+        showTags.addEventListener("change", () => updateGraph());
+        colorDir.addEventListener("change", () => updateNodeColors());
+        showLbls.addEventListener("change", () => {
+            nodeG.selectAll("text").style("display", showLbls.checked ? null : "none");
+        });
+
+        repIn.addEventListener("input", e => {
+            const v = +e.target.value;
+            $("#kg-val-repulsion").textContent = v;
+            simulation.force("charge").strength(d => v * (1 + Math.sqrt(getDeg(d)) * 0.5));
             simulation.alpha(0.3).restart();
         });
-        distanceInput.addEventListener('input', (e) => {
-            document.getElementById('val-distance').innerText = e.target.value;
+        distIn.addEventListener("input", e => {
+            $("#kg-val-distance").textContent = e.target.value;
             simulation.force("link").distance(+e.target.value);
             simulation.alpha(0.3).restart();
         });
-        gravityInput.addEventListener('input', (e) => {
-            const val = +e.target.value;
-            document.getElementById('val-gravity').innerText = val;
-            simulation.force("x").strength(d => val * (1 + Math.sqrt(getDegree(d)) * 0.2));
-            simulation.force("y").strength(d => val * (1 + Math.sqrt(getDegree(d)) * 0.2));
+        gravIn.addEventListener("input", e => {
+            const v = +e.target.value;
+            $("#kg-val-gravity").textContent = v;
+            simulation.force("x").strength(d => v * (1 + Math.sqrt(getDeg(d)) * 0.2));
+            simulation.force("y").strength(d => v * (1 + Math.sqrt(getDeg(d)) * 0.2));
             simulation.alpha(0.3).restart();
         });
 
-        const handleResize = debounce(() => {
-            width = container.clientWidth;
-            height = container.clientHeight;
-            svg.attr("viewBox", [0, 0, width, height]);
-            simulation.force("center", d3.forceCenter(width / 2, height / 2));
-            simulation.force("x", d3.forceX(width / 2).strength(d => (+gravityInput.value) * (1 + Math.sqrt(getDegree(d)) * 0.2)));
-            simulation.force("y", d3.forceY(height / 2).strength(d => (+gravityInput.value) * (1 + Math.sqrt(getDegree(d)) * 0.2)));
-            simulation.alpha(0.3).restart();
-        }, 150);
-        window.addEventListener('resize', handleResize);
+        /* Zoom buttons */
+        $("#kg-zoom-in").addEventListener("click", () => svg.transition().duration(300).call(zoomBehavior.scaleBy, 1.4));
+        $("#kg-zoom-out").addEventListener("click", () => svg.transition().duration(300).call(zoomBehavior.scaleBy, 0.7));
+        $("#kg-recenter").addEventListener("click", () => svg.transition().duration(500).call(zoomBehavior.transform, d3.zoomIdentity));
 
-        // Pause simulation when scrolled out of view
-        const observer = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting) {
-                if (simulation.alpha() > simulation.alphaMin()) simulation.restart();
-            } else {
-                simulation.stop();
-            }
+        /* Resize handler */
+        window.addEventListener("resize", debounce(handleResize, 150));
+
+        /* Initial zoom-out once simulation cools */
+        const initialZoomDone = { done: false };
+        simulation.on("end.initialZoom", () => {
+            if (initialZoomDone.done) return;
+            initialZoomDone.done = true;
+            const scale = 0.55;
+            const tx = (width  - width  * scale) / 2;
+            const ty = (height - height * scale) / 2;
+            svg.transition().duration(800).ease(d3.easeCubicInOut)
+                .call(zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+        });
+
+        /* Pause simulation off-screen */
+        const obs = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) { if (simulation.alpha() > simulation.alphaMin()) simulation.restart(); }
+            else simulation.stop();
         }, { threshold: 0.1 });
-        observer.observe(container);
+        obs.observe(canvas);
     }
 
+    function handleResize() {
+        width  = canvas.clientWidth;
+        height = canvas.clientHeight;
+        svg.attr("viewBox", [0, 0, width, height]);
+        simulation.force("center", d3.forceCenter(width / 2, height / 2));
+        simulation.force("x", d3.forceX(width / 2).strength(d => (+gravIn.value) * (1 + Math.sqrt(getDeg(d)) * 0.2)));
+        simulation.force("y", d3.forceY(height / 2).strength(d => (+gravIn.value) * (1 + Math.sqrt(getDeg(d)) * 0.2)));
+        simulation.alpha(0.3).restart();
+    }
+
+    /* ── Graph update ── */
     function updateGraph() {
-        const showTags = showTagsCheckbox.checked;
-
-        filteredNodes = allNodes.filter(n => showTags || n.type !== 'tag');
-        const nodeIds = new Set(filteredNodes.map(n => n.id));
-
-        // Build fresh edge objects from compact rawEdges — D3 will mutate source/target
-        // in place so we can't reuse previous filteredEdges across updateGraph calls
+        const st = showTags.checked;
+        filteredNodes = allNodes.filter(n => st || n.type !== "tag");
+        const ids = new Set(filteredNodes.map(n => n.id));
         filteredEdges = [];
-        rawEdges.forEach(e => {
-            if (nodeIds.has(e.s) && nodeIds.has(e.t)) {
-                filteredEdges.push({ source: e.s, target: e.t });
-            }
-        });
-
+        rawEdges.forEach(e => { if (ids.has(e.s) && ids.has(e.t)) filteredEdges.push({ source: e.s, target: e.t }); });
         buildDegreeMap();
+        nodeCount.textContent = filteredNodes.length;
+        edgeCount.textContent = filteredEdges.length;
 
-        nodeCountSpan.innerText = filteredNodes.length;
-        edgeCountSpan.innerText = filteredEdges.length;
-
-        // Update links — filteredEdges always have plain string source/target at this point
-        const l = link.selectAll("line").data(filteredEdges, d => {
-            const s = typeof d.source === 'object' ? d.source.id : d.source;
-            const t = typeof d.target === 'object' ? d.target.id : d.target;
-            return s < t ? `${s}-${t}` : `${t}-${s}`;
+        /* Links */
+        const l = linkG.selectAll("line").data(filteredEdges, d => {
+            const s = typeof d.source === "object" ? d.source.id : d.source;
+            const t = typeof d.target === "object" ? d.target.id : d.target;
+            return s < t ? s + "-" + t : t + "-" + s;
         });
         l.exit().remove();
         l.enter().append("line").attr("class", "link");
-        
-        // Update nodes
-        const n = node.selectAll("g.node").data(filteredNodes, d => d.id);
+
+        /* Nodes */
+        const n = nodeG.selectAll("g.node").data(filteredNodes, d => d.id);
         n.exit().remove();
-        
-        const nEnter = n.enter().append("g")
-            .attr("class", d => `node ${d.type}`)
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended))
-            .on("click", (event, d) => {
-                if (event.defaultPrevented) return;
+        const nE = n.enter().append("g")
+            .attr("class", d => "node " + d.type)
+            .call(d3.drag().on("start", dragS).on("drag", dragD).on("end", dragE))
+            .on("click", (ev, d) => {
+                if (ev.defaultPrevented) return;
                 if (d.url) window.location.href = d.url;
             })
-            .on("pointerenter", (event, d) => {
-                if (isDragging) return;
-                highlightNode(d);
-                showTooltip(event, d);
+            .on("pointerenter", (ev, d) => {
+                if (!isDragging) {
+                    highlightNode(d);
+                    nodeG.selectAll("g.node").classed("hovered", n => n.id === d.id);
+                }
             })
             .on("pointerleave", () => {
-                if (isDragging) return;
-                resetHighlight();
-                hideTooltip();
+                if (!isDragging) {
+                    nodeG.selectAll("g.node").classed("hovered", false);
+                    resetHighlight();
+                }
             });
+        nE.append("circle").attr("r", getR);
+        nE.append("text").attr("dx", 10).attr("dy", ".35em").text(d => d.title);
 
-        nEnter.append("circle")
-            .attr("r", getRadius);
-        // Only create <text> DOM nodes for nodes that have enough connections to warrant
-        // a permanent label. Low-degree nodes are identified by tooltip on hover.
-        nEnter.filter(d => getDegree(d) >= LABEL_MIN_DEGREE)
-            .append("text")
-            .attr("dx", 10)
-            .attr("dy", ".35em")
-            .text(d => d.title);
-
+        if (!showLbls.checked) nodeG.selectAll("text").style("display", "none");
         updateNodeColors();
 
-        // Restart simulation
         simulation.nodes(filteredNodes);
         simulation.force("link").links(filteredEdges);
         simulation.alpha(0.8).restart();
-        
+
+        /* Animate new nodes in */
+        nE.style("opacity", 0).transition().duration(400).ease(d3.easeCubicOut)
+            .style("opacity", 1);
+
         updateFilters();
     }
 
     function updateNodeColors() {
-        const useFolderColor = colorByFolderCheckbox.checked;
-        node.selectAll("circle")
-            .style("fill", d => {
-                if (d.type === 'tag') return "#ffaa00";
-                if (useFolderColor && d.path) return colorScale(d.path);
-                return null; // Fallback to CSS
-            });
+        const useFolder = colorDir.checked;
+        nodeG.selectAll("circle").style("fill", d => {
+            if (d.type === "tag") return null;
+            if (useFolder && d.path) return colorScale(d.path);
+            return null;
+        });
     }
 
+    /* ── Highlight ── */
     function highlightNode(d) {
-        // adjList stores arrays; build transient Sets just for O(1) lookup during this hover
-        const neighborArr = adjList.get(d.id) || [];
-        const neighbors = new Set(neighborArr);
-        const neighbors2 = new Set(neighborArr);
-        neighborArr.forEach(nId => {
-            (adjList.get(nId) || []).forEach(nnId => neighbors2.add(nnId));
-        });
-        
-        node.selectAll("g.node")
-            .classed("active", n => n.id === d.id)
-            .classed("neighbor", n => neighbors.has(n.id))
-            .classed("neighbor-2", n => neighbors2.has(n.id) && !neighbors.has(n.id) && n.id !== d.id)
-            .classed("dimmed", n => n.id !== d.id && !neighbors2.has(n.id))
+        const nArr = adjList.get(d.id) || [];
+        const n1 = new Set(nArr);
+        const n2 = new Set(nArr);
+        nArr.forEach(id => (adjList.get(id) || []).forEach(id2 => n2.add(id2)));
+
+        nodeG.selectAll("g.node")
+            .classed("active",     n => n.id === d.id)
+            .classed("neighbor",   n => n1.has(n.id))
+            .classed("neighbor-2", n => n2.has(n.id) && !n1.has(n.id) && n.id !== d.id)
+            .classed("dimmed",     n => n.id !== d.id && !n2.has(n.id))
             .classed("highlighted", false);
-            
-        link.selectAll("line")
-            .classed("active", l => 
-                (l.source.id === d.id && neighbors.has(l.target.id)) || 
-                (l.target.id === d.id && neighbors.has(l.source.id))
-            )
-            .classed("active-2", l => 
-                !((l.source.id === d.id && neighbors.has(l.target.id)) || (l.target.id === d.id && neighbors.has(l.source.id))) &&
-                ((neighbors.has(l.source.id) && neighbors2.has(l.target.id)) || (neighbors.has(l.target.id) && neighbors2.has(l.source.id)))
-            )
+
+        linkG.selectAll("line")
+            .classed("active", l => (l.source.id === d.id && n1.has(l.target.id)) || (l.target.id === d.id && n1.has(l.source.id)))
+            .classed("active-2", l => {
+                const a = (l.source.id === d.id && n1.has(l.target.id)) || (l.target.id === d.id && n1.has(l.source.id));
+                return !a && ((n1.has(l.source.id) && n2.has(l.target.id)) || (n1.has(l.target.id) && n2.has(l.source.id)));
+            })
             .classed("dimmed", l => {
-                const sId = l.source.id || l.source;
-                const tId = l.target.id || l.target;
-                return sId !== d.id && tId !== d.id && !neighbors.has(sId) && !neighbors.has(tId);
+                const s = l.source.id || l.source, t = l.target.id || l.target;
+                return s !== d.id && t !== d.id && !n1.has(s) && !n1.has(t);
             });
     }
 
     function resetHighlight() {
-        node.selectAll("g.node")
-            .classed("active", false)
-            .classed("neighbor", false)
-            .classed("neighbor-2", false)
-            .classed("dimmed", false)
-            .classed("highlighted", false);
-        link.selectAll("line")
-            .classed("active", false)
-            .classed("active-2", false)
-            .classed("dimmed", false);
-        updateFilters(); // Re-apply search filters if any
+        nodeG.selectAll("g.node").classed("active neighbor neighbor-2 dimmed highlighted", false);
+        linkG.selectAll("line").classed("active active-2 dimmed", false);
+        updateFilters();
     }
 
-    function showTooltip(event, d) {
-        if (!event || !event.pageX) return;
-        tooltip.innerText = d.title + (d.path ? ` (${d.path})` : "");
-        tooltip.style.opacity = "1";
-        
-        const containerRect = container.getBoundingClientRect();
-        tooltip.style.left = (event.pageX - window.scrollX - containerRect.left + 15) + "px";
-        tooltip.style.top = (event.pageY - window.scrollY - containerRect.top - 15) + "px";
-    }
-
-    function hideTooltip() {
-        tooltip.style.opacity = "0";
-    }
-
+    /* ── Search filter ── */
     function updateFilters() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        
-        if (!searchTerm) {
-            if (node.selectAll("g.node.active").size() === 0) {
-                node.selectAll("g.node").classed("dimmed", false);
-                link.selectAll("line").classed("dimmed", false);
+        const q = search.value.toLowerCase().trim();
+        if (!q) {
+            if (nodeG.selectAll("g.node.active").size() === 0) {
+                nodeG.selectAll("g.node").classed("dimmed", false);
+                linkG.selectAll("line").classed("dimmed", false);
             }
-            node.selectAll("g.node").classed("highlighted", false);
+            nodeG.selectAll("g.node").classed("highlighted", false);
             return;
         }
-
         let matches;
-        if (searchTerm.startsWith("path:")) {
-            const pathTerm = searchTerm.replace("path:", "");
-            matches = filteredNodes.filter(n => n.path && n.path.toLowerCase().includes(pathTerm));
+        if (q.startsWith("path:")) {
+            const p = q.slice(5);
+            matches = filteredNodes.filter(n => n.path && n.path.toLowerCase().includes(p));
         } else {
-            matches = filteredNodes.filter(n => 
-                n.title.toLowerCase().includes(searchTerm) || 
-                (n.type === 'tag' && n.title.toLowerCase().includes(searchTerm))
-            );
+            matches = filteredNodes.filter(n => n.title.toLowerCase().includes(q));
         }
-        
-        const matchIds = new Set(matches.map(n => n.id));
-        
-        node.selectAll("g.node")
-            .classed("highlighted", d => matchIds.has(d.id))
-            .classed("dimmed", d => !matchIds.has(d.id));
-            
-        link.selectAll("line")
-            .classed("dimmed", true);
+        const mIds = new Set(matches.map(n => n.id));
+        nodeG.selectAll("g.node").classed("highlighted", d => mIds.has(d.id)).classed("dimmed", d => !mIds.has(d.id));
+        linkG.selectAll("line").classed("dimmed", true);
     }
 
-    function dragstarted(event, d) {
-        isDragging = true;
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-        highlightNode(d);
-    }
-
-    function dragged(event, d) {
-        d.fx = event.x;
-        d.fy = event.y;
-    }
-
-    function dragended(event, d) {
-        isDragging = false;
-        if (!event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-        
-        resetHighlight();
-        hideTooltip();
-    }
+    /* ── Drag ── */
+    function dragS(ev, d) { isDragging = true; if (!ev.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; highlightNode(d); }
+    function dragD(ev, d) { d.fx = ev.x; d.fy = ev.y; }
+    function dragE(ev, d) { isDragging = false; if (!ev.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; resetHighlight(); }
 });
 </script>
