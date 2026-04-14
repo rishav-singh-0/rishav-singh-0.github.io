@@ -1,16 +1,50 @@
-<script src="https://giscus.app/client.js"
-        data-repo="rishav-singh-0/rishav-singh-0.github.io"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkzNTEwODI2MDI="
-        data-category="General"
-        data-category-id="DIC_kwDOFO0Yas4CzqA9"
-        data-mapping="title"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
+<div class="giscus"></div>
+<script>
+(function () {
+    // Map PaperMod's data-theme value to a Giscus theme name.
+    // Light → clean GitHub light; Dark → dim dark that suits Tokyo Night.
+    function giscusTheme() {
+        return document.documentElement.dataset.theme === 'dark'
+            ? 'dark_dimmed'
+            : 'light';
+    }
+
+    // Dynamically inject the Giscus script so the initial theme is correct
+    // even when the user's pref-theme has already been applied to <html>.
+    var s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    s.setAttribute('data-repo',              'rishav-singh-0/rishav-singh-0.github.io');
+    s.setAttribute('data-repo-id',           'MDEwOlJlcG9zaXRvcnkzNTEwODI2MDI=');
+    s.setAttribute('data-category',          'General');
+    s.setAttribute('data-category-id',       'DIC_kwDOFO0Yas4CzqA9');
+    s.setAttribute('data-mapping',           'title');
+    s.setAttribute('data-strict',            '0');
+    s.setAttribute('data-reactions-enabled', '1');
+    s.setAttribute('data-emit-metadata',     '0');
+    s.setAttribute('data-input-position',    'top');
+    s.setAttribute('data-theme',             giscusTheme());
+    s.setAttribute('data-lang',              'en');
+    s.setAttribute('data-loading',           'lazy');
+    s.setAttribute('crossorigin',            'anonymous');
+    s.async = true;
+    document.currentScript.parentNode.appendChild(s);
+
+    // Watch for PaperMod theme-toggle mutations and relay the new theme
+    // to the already-loaded Giscus iframe via its postMessage API.
+    var observer = new MutationObserver(function () {
+        var theme = giscusTheme();
+        var iframe = document.querySelector('iframe.giscus-frame');
+        if (iframe) {
+            iframe.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: theme } } },
+                'https://giscus.app'
+            );
+        }
+    });
+
+    observer.observe(document.documentElement, {
+        attributes:      true,
+        attributeFilter: ['data-theme']
+    });
+})();
 </script>
