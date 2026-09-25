@@ -47,62 +47,28 @@
 {{- end }}
 
 {{/* --- Topic Chips (Marquee) --- */}}
-{{- $selectedTags := site.Params.selectedTags }}
-{{- if $selectedTags }}
+{{- $topics := slice }}
+{{- range site.Params.selectedTags }}
+  {{- $pages := index site.Taxonomies.tags (lower .) }}
+  {{- $topics = $topics | append (dict "title" . "url" (printf "/tags/%s/" (. | urlize)) "count" (len $pages)) }}
+{{- else }}
+  {{- range $name, $pages := site.Taxonomies.tags }}
+    {{- if lt (len $topics) 12 }}
+      {{- $topics = $topics | append (dict "title" $name "url" (printf "/tags/%s/" ($name | urlize)) "count" (len $pages)) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- with $topics }}
 <section class="home-topics">
   <h2 class="home-section__heading scroll-reveal">Topics</h2>
   <div class="home-topics__marquee">
     <div class="home-topics__track">
-      {{- range $selectedTags }}
-      {{- $tag := index site.Taxonomies.tags (lower .) }}
-      {{- if $tag }}
-      <a class="home-topics__chip" href="{{ printf "/tags/%s/" (. | urlize) }}">
-        {{ . }}
-        <span class="home-topics__chip-count">{{ len $tag }}</span>
-      </a>
-      {{- else }}
-      <a class="home-topics__chip" href="{{ printf "/tags/%s/" (. | urlize) }}">{{ . }}</a>
-      {{- end }}
-      {{- end }}
-      {{/* Duplicate for seamless loop */}}
-      {{- range $selectedTags }}
-      {{- $tag := index site.Taxonomies.tags (lower .) }}
-      {{- if $tag }}
-      <a class="home-topics__chip" href="{{ printf "/tags/%s/" (. | urlize) }}" aria-hidden="true">
-        {{ . }}
-        <span class="home-topics__chip-count">{{ len $tag }}</span>
-      </a>
-      {{- else }}
-      <a class="home-topics__chip" href="{{ printf "/tags/%s/" (. | urlize) }}" aria-hidden="true">{{ . }}</a>
-      {{- end }}
-      {{- end }}
-    </div>
-  </div>
-</section>
-{{- else if site.Taxonomies.tags }}
-<section class="home-topics">
-  <h2 class="home-section__heading scroll-reveal">Topics</h2>
-  <div class="home-topics__marquee">
-    <div class="home-topics__track">
-      {{- $tagCount := 0 }}
-      {{- range $name, $pages := site.Taxonomies.tags }}
-      {{- if lt $tagCount 12 }}
-      <a class="home-topics__chip" href="{{ printf "/tags/%s/" ($name | urlize) }}">
-        {{ $name }}
-        <span class="home-topics__chip-count">{{ len $pages }}</span>
-      </a>
-      {{- $tagCount = add $tagCount 1 }}
-      {{- end }}
-      {{- end }}
-      {{/* Duplicate for seamless loop */}}
-      {{- $tagCount = 0 }}
-      {{- range $name, $pages := site.Taxonomies.tags }}
-      {{- if lt $tagCount 12 }}
-      <a class="home-topics__chip" href="{{ printf "/tags/%s/" ($name | urlize) }}" aria-hidden="true">
-        {{ $name }}
-        <span class="home-topics__chip-count">{{ len $pages }}</span>
-      </a>
-      {{- $tagCount = add $tagCount 1 }}
+      {{- /* Repeat the same chips for the seamless marquee. */}}
+      {{- range $copy := seq 0 1 }}
+      {{- range $topics }}
+      <a class="home-topics__chip" href="{{ .url }}"{{ if $copy }} aria-hidden="true"{{ end }}>{{ .title }}{{ with .count }}
+        <span class="home-topics__chip-count">{{ . }}</span>
+      {{ end }}</a>
       {{- end }}
       {{- end }}
     </div>
@@ -250,7 +216,6 @@
   /* --- Scroll Reveal (Intersection Observer) --- */
   const reveals = document.querySelectorAll('.scroll-reveal');
   if (reveals.length && 'IntersectionObserver' in window) {
-    let staggerIndex = 0;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
