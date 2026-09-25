@@ -431,6 +431,10 @@ h6 { color: #6b3a6b; }
 .bg,
 .chroma              { color: #4a3728; background-color: #ece4d4; }
 
+.md-content pre code {
+    color: var(--content);
+}
+
 /* Error */
 .chroma .err         { color: #8a3324; }
 
@@ -523,8 +527,7 @@ h6 { color: #6b3a6b; }
 
 /* ===================================================================
    HEADING SPACING — Proper line spacing above each heading level
-   PaperMod's reset.css zeroes all heading margins; .md-content defines
-   margins but .post-content (used by posts) does not.
+   Keep the garden's heading rhythm over PaperMod's .md-content defaults.
    =================================================================== */
 .post-content h1 {
     margin: 2.0em 0 0.8em;
