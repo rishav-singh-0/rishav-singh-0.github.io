@@ -1,563 +1,508 @@
-/* ===== Coffee Light — Warm nostalgic palette inspired by Primary theme (Obsidian) ===== */
-/*
- * Primary theme palette reference (Cecilia May):
- *   Warm, yellowing magazine pages / Scandinavian / Bauhaus
- *   Base grays use hue ~34-36 with warm saturation (24-38%)
- *   Accent colors: muted red, orange, yellow, green, blue, purple
- *
- *   --bg        hsla(35, 36%, 96%)    cream / off-white
- *   --bg_alt    hsla(35, 37%, 92%)    slightly darker cream
- *   --surface   hsla(34, 34%, 90%)    card surface
- *   --border    hsla(37, 38%, 83%)    warm divider
- *   --muted     hsla(34, 29%, 60%)    muted text
- *   --fg        hsla(31, 45%, 24%)    dark brown — body text
- *   --fg_dark   hsla(33, 54%, 17%)    darkest brown — headings
- *   --accent    hsla(4, 56%, 48%)     warm red — links
- *   --green     hsla(149, 50%, 39%)
- *   --yellow    hsla(40, 79%, 47%)
- *   --blue      hsla(200, 64%, 37%)
- *   --orange    hsla(18, 69%, 50%)
- *   --purple    hsla(275, 37%, 43%)
- */
-
+/* Coffee Light (Primary-inspired) and Tokyo Night share component rules. */
 :root {
-    --theme:           #f5f0e8;  /* warm cream background                */
-    --entry:           #ede7db;  /* warm off-white card surface           */
-    --primary:         #3d2b1f;  /* dark brown — headings & icons         */
-    --secondary:       #8b7355;  /* warm muted — meta text                */
-    --tertiary:        #d4c5a9;  /* warm tan — divider surfaces           */
-    --content:         #4a3728;  /* dark warm brown — body prose text      */
-    --code-block-bg:   #ece4d4;  /* light parchment — fenced code bg      */
-    --code-bg:         #ede7db;  /* warm cream — inline code bg           */
-    --border:          #d4c5a9;  /* warm tan — borders & rules            */
+    --theme: #f5f0e8;
+    --entry: #ede7db;
+    --primary: #3d2b1f;
+    --secondary: #8b7355;
+    --tertiary: #d4c5a9;
+    --content: #4a3728;
+    --code-block-bg: #ece4d4;
+    --code-bg: #ede7db;
+    --border: #d4c5a9;
     color-scheme: light;
+    --list-bg: var(--code-bg);
+    --accent: #9b4d3a;
+    --accent-hover: #c0563e;
+    --featured-tag: #7a5230;
+    --red: #8a3324;
+    --yellow: #8a6d2b;
+    --green: #4a7c3f;
+    --cyan: #2d6e6e;
+    --blue: #2d5a8a;
+    --purple: #6b3a6b;
+    --orange: #b5651d;
+    --syntax-text: #4a3728;
+    --syntax-line-number: #b0a08a;
+    --syntax-line-highlight: #e3d9c5;
+    --syntax-deleted-bg: #f0ddd8;
+    --syntax-inserted-bg: #ddeedd;
+    --graph-node-page: #c4b89a;
+    --graph-node-tag: #b88a4a;
+    --graph-canvas: #ede7db;
+    --graph-tooltip-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --graph-label-halo: #f5f0e8;
 }
 
-/* Make list pages consistent */
-.list {
-    background: var(--code-bg);
+:root[data-theme="dark"] {
+    --theme: #1a1b26;
+    --entry: #24283b;
+    --primary: #c0caf5;
+    --secondary: #565f89;
+    --tertiary: #414868;
+    --content: #a9b1d6;
+    --code-block-bg: #16161e;
+    --code-bg: #24283b;
+    --border: #292e42;
+    color-scheme: dark;
+    --list-bg: var(--theme);
+    --accent: #7aa2f7;
+    --accent-hover: #7dcfff;
+    --featured-tag: #bb9af7;
+    --red: #ff757f;
+    --yellow: #e0af68;
+    --green: #9ece6a;
+    --cyan: #7dcfff;
+    --blue: #7aa2f7;
+    --purple: #bb9af7;
+    --orange: #ff9e64;
+    --syntax-text: #c0caf5;
+    --syntax-line-number: #414868;
+    --syntax-line-highlight: #292e42;
+    --syntax-deleted-bg: #3d1a1e;
+    --syntax-inserted-bg: #1a2a1a;
+    --graph-node-page: #414868;
+    --graph-node-tag: #e0af68;
+    --graph-canvas: #16161e;
+    --graph-tooltip-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    --graph-label-halo: #16161e;
 }
 
-/* ===== Coffee accent: warm red ===== */
-:root a {
-    color: #9b4d3a;
+.list,
+[data-theme="dark"] .list {
+    background: var(--list-bg);
 }
 
-:root a:hover {
-    color: #c0563e;
+:root a,
+:root[data-theme="dark"] a,
+:root .home-recent__view-all a:hover,
+:root[data-theme="dark"] .home-recent__view-all a:hover,
+:root .menu a:hover,
+:root #menu a:hover,
+:root[data-theme="dark"] .menu a:hover,
+:root[data-theme="dark"] #menu a:hover {
+    color: var(--accent);
 }
 
-/* Post tags & topic chips */
+:root a:hover,
+:root[data-theme="dark"] a:hover {
+    color: var(--accent-hover);
+}
+
 :root .post-tags a,
-:root .home-topics__chip {
-    color: #4a3728;
-    border-color: #d4c5a9;
+:root .home-topics__chip,
+:root[data-theme="dark"] .post-tags a,
+:root[data-theme="dark"] .home-topics__chip {
+    color: var(--content);
+    border-color: var(--border);
 }
 
 :root .post-tags a:hover,
-:root .home-topics__chip:hover {
-    color: #9b4d3a;
-    border-color: #9b4d3a;
-}
-
-/* Featured card tags */
-:root .home-featured__tag {
-    color: #7a5230;
-    border-color: #7a5230;
-}
-
-:root .home-featured__card:hover {
-    border-color: #9b4d3a;
-}
-
-:root .home-featured__card:hover .home-featured__card-title {
-    color: #3d2b1f;
-}
-
-/* Recent articles "View All" */
-:root .home-recent__view-all a:hover {
-    color: #9b4d3a;
-}
-
-/* Nav menu active / hover links */
-:root .menu a:hover,
-:root #menu a:hover {
-    color: #9b4d3a;
-}
-
-/* Section headings */
-:root .home-section__heading {
-    color: #8b7355;
-}
-
-/* Top-link button */
-:root #top-link {
-    background: #ede7db;
-}
-
-
-/* ===== Tokyo Night (Night variant) — Exact colors from tcmmichaelb139/obsidian-tokyonight ===== */
-/*
- * Source palette (tokyonight.nvim / VSCode Tokyo Night):
- *   --bg_dark2  #0f0f14   darkest bg
- *   --bg_dark   #16161e   dark bg
- *   --bg        #1a1b26   primary bg
- *   --bg_highlight_dark #24283b  surface / card
- *   --bg_highlight      #292e42  hover / raised surface
- *   --terminal_black    #414868  subtle element
- *   --comment   #565f89   muted text
- *   --fg_dark   #a9b1d6   body text
- *   --fg        #c0caf5   primary text / headings
- *   --blue      #7aa2f7   accent (links, interactive)
- *   --cyan      #7dcfff
- *   --magenta   #bb9af7
- *   --green     #9ece6a
- *   --yellow    #e0af68
- *   --orange    #ff9e64
- *   --red       #ff757f
- *   --teal      #1abc9c
- */
-
-:root[data-theme="dark"] {
-    --theme:           #1a1b26;  /* bg           — page background       */
-    --entry:           #24283b;  /* bg_highlight_dark — card surface      */
-    --primary:         #c0caf5;  /* fg           — headings & icons       */
-    --secondary:       #565f89;  /* comment      — muted / meta text      */
-    --tertiary:        #414868;  /* terminal_black — divider surfaces     */
-    --content:         #a9b1d6;  /* fg_dark      — body prose text        */
-    --code-block-bg:   #16161e;  /* bg_dark      — fenced code block bg   */
-    --code-bg:         #24283b;  /* bg_highlight_dark — inline code bg    */
-    --border:          #292e42;  /* bg_highlight — borders & rules        */
-    color-scheme: dark;
-}
-
-/* Make list pages consistent with new bg */
-[data-theme="dark"] .list {
-    background: var(--theme);
-}
-
-/* ===== Accent: Tokyo Night blue #7aa2f7 ===== */
-:root[data-theme="dark"] a {
-    color: #7aa2f7;
-}
-
-:root[data-theme="dark"] a:hover {
-    color: #7dcfff;  /* cyan on hover */
-}
-
-/* Post tags & topic chips */
-:root[data-theme="dark"] .post-tags a,
-:root[data-theme="dark"] .home-topics__chip {
-    color: #a9b1d6;
-    border-color: #292e42;
-}
-
+:root .home-topics__chip:hover,
 :root[data-theme="dark"] .post-tags a:hover,
 :root[data-theme="dark"] .home-topics__chip:hover {
-    color: #7aa2f7;
-    border-color: #7aa2f7;
+    color: var(--accent);
+    border-color: var(--accent);
 }
 
-/* Featured card tags */
+:root .home-featured__tag,
 :root[data-theme="dark"] .home-featured__tag {
-    color: #bb9af7;  /* magenta */
-    border-color: #bb9af7;
+    color: var(--featured-tag);
+    border-color: var(--featured-tag);
 }
 
+:root .home-featured__card:hover,
 :root[data-theme="dark"] .home-featured__card:hover {
-    border-color: #7aa2f7;
+    border-color: var(--accent);
 }
 
-:root[data-theme="dark"] .home-featured__card:hover .home-featured__card-title {
-    color: #c0caf5;
+:root .home-featured__card:hover .home-featured__card-title,
+:root[data-theme="dark"] .home-featured__card:hover .home-featured__card-title,
+.home-hero__title,
+:root[data-theme="dark"] .home-hero__title,
+.post-title,
+:root[data-theme="dark"] .post-title {
+    color: var(--primary);
 }
 
-/* Recent articles "View All" */
-:root[data-theme="dark"] .home-recent__view-all a:hover {
-    color: #7aa2f7;
-}
-
-/* Nav menu active / hover links */
-:root[data-theme="dark"] .menu a:hover,
-:root[data-theme="dark"] #menu a:hover {
-    color: #7aa2f7;
-}
-
-/* Section headings */
+:root .home-section__heading,
 :root[data-theme="dark"] .home-section__heading {
-    color: #565f89;
+    color: var(--secondary);
 }
 
-/* Top-link button */
+:root #top-link,
 :root[data-theme="dark"] #top-link {
-    background: #24283b;
+    background: var(--code-bg);
 }
 
+/* Heading colors. */
+h1,
+:root[data-theme="dark"] h1 {
+    color: var(--red);
+}
 
-/* ===================================================================
-   GRAPH VIEW — Tokyo Night theming
-   The graphs use CSS variables inherited from --primary/--secondary etc.
-   which are already overridden above. These rules handle hardcoded
-   colors and fine-tune SVG-specific interactive states.
+h2,
+:root[data-theme="dark"] h2 {
+    color: var(--yellow);
+}
 
-   Palette reference:
-     page nodes  → #565f89  (comment / muted)
-     tag nodes   → #ff9e64  (orange, matches obsidian-tokyonight graph-node-tag)
-     current node → #7aa2f7 (blue accent)
-     links       → #292e42  (bg_highlight / border)
-     active link → #7aa2f7  (blue)
-     active node stroke → #7aa2f7
-   =================================================================== */
+h3,
+:root[data-theme="dark"] h3 {
+    color: var(--green);
+}
 
-/* --- Shared graph container background --- */
+h4,
+:root[data-theme="dark"] h4 {
+    color: var(--cyan);
+}
+
+h5,
+:root[data-theme="dark"] h5 {
+    color: var(--blue);
+}
+
+h6,
+:root[data-theme="dark"] h6 {
+    color: var(--purple);
+}
+
+/* Graph colors; layout stays in graph.css and the graph partials. */
+#local-graph-container,
 :root[data-theme="dark"] #local-graph-container {
-    background: #16161e;   /* bg_dark — slightly darker than page bg */
-    border-color: #292e42;
+    background: var(--graph-canvas);
+    border-color: var(--border);
 }
 
-/* --- Node: regular page nodes --- */
+.node.page circle,
 :root[data-theme="dark"] .node.page circle {
-    fill: #414868;         /* terminal_black — muted page dots */
+    fill: var(--graph-node-page);
 }
 
-/* --- Node: tag nodes (was #ffaa00) --- */
+.node.tag circle,
 :root[data-theme="dark"] .node.tag circle {
-    fill: #e0af68;         /* yellow — matches --h2-color / obsidian tag color */
+    fill: var(--graph-node-tag);
 }
 
-/* --- Node: current page (local-graph only) --- */
+.node.current circle,
 :root[data-theme="dark"] .node.current circle {
-    fill: #7aa2f7;         /* blue accent */
-    stroke: #c0caf5;
+    fill: var(--accent);
+    stroke: var(--primary);
     stroke-width: 2.5px;
 }
 
-/* --- Node: active / hovered --- */
+.node.active circle,
 :root[data-theme="dark"] .node.active circle {
-    stroke: #7aa2f7;
+    stroke: var(--accent);
     stroke-width: 2.5px;
 }
 
+.node.neighbor circle,
 :root[data-theme="dark"] .node.neighbor circle {
-    stroke: #7aa2f7;
+    stroke: var(--accent);
     stroke-width: 1.5px;
 }
 
+.node.neighbor-2 circle,
 :root[data-theme="dark"] .node.neighbor-2 circle {
-    stroke: #565f89;
+    stroke: var(--secondary);
     stroke-width: 1px;
 }
 
-/* --- Node labels --- */
+.node text,
 :root[data-theme="dark"] .node text {
-    fill: #a9b1d6;         /* fg_dark */
-    text-shadow:
-        -1.5px -1.5px 0 #16161e,
-         1.5px -1.5px 0 #16161e,
-        -1.5px  1.5px 0 #16161e,
-         1.5px  1.5px 0 #16161e;
-}
-
-:root[data-theme="dark"] .node.active text,
-:root[data-theme="dark"] .node.highlighted text {
-    fill: #c0caf5;         /* fg */
-}
-
-/* --- Links --- */
-:root[data-theme="dark"] .link {
-    stroke: #292e42;       /* bg_highlight */
-    stroke-opacity: 0.6;
-}
-
-:root[data-theme="dark"] .link.active {
-    stroke: #7aa2f7;       /* blue accent */
-    stroke-opacity: 0.9;
-}
-
-:root[data-theme="dark"] .link.active-2 {
-    stroke: #565f89;
-    stroke-opacity: 0.5;
-}
-
-:root[data-theme="dark"] .link.dimmed {
-    stroke: #292e42;
-    stroke-opacity: 0.15;
-}
-
-/* --- Tooltip --- */
-:root[data-theme="dark"] .graph-tooltip {
-    background: #24283b;
-    color: #c0caf5;
-    border-color: #292e42;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-}
-
-
-
-/* ===================================================================
-   HEADINGS — Tokyo Night rainbow (h1-h6 colors from obsidian theme)
-   --h1-color: --red      #ff757f
-   --h2-color: --yellow   #e0af68
-   --h3-color: --green    #9ece6a
-   --h4-color: --cyan     #7dcfff
-   --h5-color: --blue     #7aa2f7
-   --h6-color: --magenta  #bb9af7
-   =================================================================== */
-:root[data-theme="dark"] h1 { color: #ff757f; }
-:root[data-theme="dark"] h2 { color: #e0af68; }
-:root[data-theme="dark"] h3 { color: #9ece6a; }
-:root[data-theme="dark"] h4 { color: #7dcfff; }
-:root[data-theme="dark"] h5 { color: #7aa2f7; }
-:root[data-theme="dark"] h6 { color: #bb9af7; }
-
-/* Keep homepage section headings in muted style (they're labels not content) */
-:root[data-theme="dark"] .home-section__heading { color: #565f89; }
-:root[data-theme="dark"] .home-hero__title      { color: #c0caf5; }
-
-/* Post title on single page */
-:root[data-theme="dark"] .post-title { color: #c0caf5; }
-
-
-/* ===================================================================
-   HEADINGS — Coffee Light (warm earthy colors from Primary palette)
-   --h1-color: warm red       #8a3324
-   --h2-color: warm amber     #8a6d2b
-   --h3-color: olive green    #4a7c3f
-   --h4-color: teal           #2d6e6e
-   --h5-color: navy blue      #2d5a8a
-   --h6-color: plum           #6b3a6b
-   =================================================================== */
-h1 { color: #8a3324; }
-h2 { color: #8a6d2b; }
-h3 { color: #4a7c3f; }
-h4 { color: #2d6e6e; }
-h5 { color: #2d5a8a; }
-h6 { color: #6b3a6b; }
-
-/* Keep homepage section headings in muted style */
-.home-section__heading { color: #8b7355; }
-.home-hero__title      { color: #3d2b1f; }
-
-/* Post title on single page */
-.post-title { color: #3d2b1f; }
-
-
-/* ===================================================================
-   GRAPH VIEW — Coffee Light theming
-   =================================================================== */
-#local-graph-container {
-    background: #ede7db;
-    border-color: #d4c5a9;
-}
-
-.node.page circle {
-    fill: #c4b89a;
-}
-
-.node.tag circle {
-    fill: #b88a4a;
-}
-
-.node.current circle {
-    fill: #9b4d3a;
-    stroke: #3d2b1f;
-    stroke-width: 2.5px;
-}
-
-.node.active circle {
-    stroke: #9b4d3a;
-    stroke-width: 2.5px;
-}
-
-.node.neighbor circle {
-    stroke: #9b4d3a;
-    stroke-width: 1.5px;
-}
-
-.node.neighbor-2 circle {
-    stroke: #8b7355;
-    stroke-width: 1px;
-}
-
-.node text {
-    fill: #4a3728;
-    text-shadow:
-        -1.5px -1.5px 0 #f5f0e8,
-         1.5px -1.5px 0 #f5f0e8,
-        -1.5px  1.5px 0 #f5f0e8,
-         1.5px  1.5px 0 #f5f0e8;
+    fill: var(--content);
+    text-shadow: -1.5px -1.5px 0 var(--graph-label-halo), 1.5px -1.5px 0 var(--graph-label-halo), -1.5px 1.5px 0 var(--graph-label-halo), 1.5px 1.5px 0 var(--graph-label-halo);
 }
 
 .node.active text,
-.node.highlighted text {
-    fill: #3d2b1f;
+.node.highlighted text,
+:root[data-theme="dark"] .node.active text,
+:root[data-theme="dark"] .node.highlighted text {
+    fill: var(--primary);
 }
 
-.link {
-    stroke: #d4c5a9;
+.link,
+:root[data-theme="dark"] .link {
+    stroke: var(--border);
     stroke-opacity: 0.6;
 }
 
-.link.active {
-    stroke: #9b4d3a;
+.link.active,
+:root[data-theme="dark"] .link.active {
+    stroke: var(--accent);
     stroke-opacity: 0.9;
 }
 
-.link.active-2 {
-    stroke: #8b7355;
+.link.active-2,
+:root[data-theme="dark"] .link.active-2 {
+    stroke: var(--secondary);
     stroke-opacity: 0.5;
 }
 
-.link.dimmed {
-    stroke: #d4c5a9;
+.link.dimmed,
+:root[data-theme="dark"] .link.dimmed {
+    stroke: var(--border);
     stroke-opacity: 0.15;
 }
 
-.graph-tooltip {
-    background: #ede7db;
-    color: #3d2b1f;
-    border-color: #d4c5a9;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+.graph-tooltip,
+:root[data-theme="dark"] .graph-tooltip {
+    background: var(--code-bg);
+    color: var(--primary);
+    border-color: var(--border);
+    box-shadow: var(--graph-tooltip-shadow);
 }
 
+/* Syntax highlighting. */
+.chroma .err,
+:root[data-theme="dark"] .chroma .err,
+.chroma .kd,
+:root[data-theme="dark"] .chroma .kd,
+.chroma .sa,
+:root[data-theme="dark"] .chroma .sa,
+.chroma .gr,
+:root[data-theme="dark"] .chroma .gr,
+.chroma .gt,
+:root[data-theme="dark"] .chroma .gt {
+    color: var(--red);
+}
 
+.chroma .nc,
+:root[data-theme="dark"] .chroma .nc,
+.chroma .nn,
+:root[data-theme="dark"] .chroma .nn,
+.chroma .py,
+:root[data-theme="dark"] .chroma .py {
+    color: var(--yellow);
+}
 
+.chroma .s,
+:root[data-theme="dark"] .chroma .s,
+.chroma .s1,
+:root[data-theme="dark"] .chroma .s1,
+.chroma .s2,
+:root[data-theme="dark"] .chroma .s2,
+.chroma .sb,
+:root[data-theme="dark"] .chroma .sb,
+.chroma .sc,
+:root[data-theme="dark"] .chroma .sc,
+.chroma .si,
+:root[data-theme="dark"] .chroma .si,
+.chroma .sx,
+:root[data-theme="dark"] .chroma .sx,
+.chroma .ss,
+:root[data-theme="dark"] .chroma .ss {
+    color: var(--green);
+}
 
-/* ===================================================================
-   CODE SYNTAX — Coffee Light (warm readable tones)
-   =================================================================== */
+.chroma .kn,
+:root[data-theme="dark"] .chroma .kn,
+.chroma .nb,
+:root[data-theme="dark"] .chroma .nb,
+.chroma .bp,
+:root[data-theme="dark"] .chroma .bp,
+.chroma .ni,
+:root[data-theme="dark"] .chroma .ni,
+.chroma .nl,
+:root[data-theme="dark"] .chroma .nl,
+.chroma .se,
+:root[data-theme="dark"] .chroma .se,
+.chroma .sr,
+:root[data-theme="dark"] .chroma .sr {
+    color: var(--cyan);
+}
 
-/* Code block container */
+.chroma .na,
+:root[data-theme="dark"] .chroma .na,
+.chroma .nf,
+:root[data-theme="dark"] .chroma .nf,
+.chroma .fm,
+:root[data-theme="dark"] .chroma .fm,
+.chroma .dl,
+:root[data-theme="dark"] .chroma .dl {
+    color: var(--blue);
+}
+
+.chroma .k,
+:root[data-theme="dark"] .chroma .k,
+.chroma .kp,
+:root[data-theme="dark"] .chroma .kp,
+.chroma .kr,
+:root[data-theme="dark"] .chroma .kr,
+.chroma .kt,
+:root[data-theme="dark"] .chroma .kt,
+.chroma .nt,
+:root[data-theme="dark"] .chroma .nt {
+    color: var(--purple);
+}
+
 .bg,
-.chroma              { color: #4a3728; background-color: #ece4d4; }
+:root[data-theme="dark"] .bg,
+.chroma,
+:root[data-theme="dark"] .chroma {
+    color: var(--syntax-text);
+    background-color: var(--code-block-bg);
+}
 
 .md-content pre code {
     color: var(--content);
 }
 
-/* Error */
-.chroma .err         { color: #8a3324; }
-
-/* Line numbers */
 .chroma .lnt,
-.chroma .ln          { color: #b0a08a; }
+:root[data-theme="dark"] .chroma .lnt,
+.chroma .ln,
+:root[data-theme="dark"] .chroma .ln {
+    color: var(--syntax-line-number);
+}
 
-/* Line highlight */
-.chroma .hl          { background-color: #e3d9c5; }
+.chroma .hl,
+:root[data-theme="dark"] .chroma .hl {
+    background-color: var(--syntax-line-highlight);
+}
 
-/* --- Keywords --- */
-.chroma .k,
-.chroma .kp,
-.chroma .kr          { color: #6b3a6b; }
-.chroma .kc          { color: #b5651d; }
-.chroma .kd          { color: #8a3324; }
-.chroma .kn          { color: #2d6e6e; }
-.chroma .kt          { color: #6b3a6b; }
-
-/* --- Names --- */
-.chroma .na          { color: #2d5a8a; }
-.chroma .nb,
-.chroma .bp          { color: #2d6e6e; }
-.chroma .nc          { color: #8a6d2b; }
-.chroma .no          { color: #b5651d; }
-.chroma .nd          { color: #2d5a8a; font-weight: bold; }
-.chroma .ni,
-.chroma .nl          { color: #2d6e6e; }
-.chroma .ne          { color: #b5651d; }
-.chroma .nf,
-.chroma .fm          { color: #2d5a8a; }
-.chroma .nn,
-.chroma .py          { color: #8a6d2b; }
-.chroma .nt          { color: #6b3a6b; }
-.chroma .nv,
-.chroma .vc,
-.chroma .vg,
-.chroma .vi,
-.chroma .vm          { color: #4a3728; }
-
-/* --- Strings --- */
-.chroma .s,
-.chroma .s1,
-.chroma .s2,
-.chroma .sb,
-.chroma .sc,
-.chroma .si,
-.chroma .sx,
-.chroma .ss          { color: #4a7c3f; }
-.chroma .sa          { color: #8a3324; }
-.chroma .dl          { color: #2d5a8a; }
-.chroma .sd,
-.chroma .sh          { color: #8b7355; font-style: italic; }
-.chroma .se          { color: #2d6e6e; }
-.chroma .sr          { color: #2d6e6e; }
-
-/* --- Numbers --- */
+.chroma .kc,
+:root[data-theme="dark"] .chroma .kc,
+.chroma .no,
+:root[data-theme="dark"] .chroma .no,
+.chroma .ne,
+:root[data-theme="dark"] .chroma .ne,
 .chroma .m,
+:root[data-theme="dark"] .chroma .m,
 .chroma .mb,
+:root[data-theme="dark"] .chroma .mb,
 .chroma .mf,
+:root[data-theme="dark"] .chroma .mf,
 .chroma .mh,
+:root[data-theme="dark"] .chroma .mh,
 .chroma .mi,
+:root[data-theme="dark"] .chroma .mi,
 .chroma .il,
-.chroma .mo          { color: #b5651d; }
+:root[data-theme="dark"] .chroma .il,
+.chroma .mo,
+:root[data-theme="dark"] .chroma .mo {
+    color: var(--orange);
+}
 
-/* --- Operators --- */
-.chroma .o,
-.chroma .ow          { color: #2d6e6e; font-weight: bold; }
+.chroma .nd,
+:root[data-theme="dark"] .chroma .nd {
+    color: var(--blue);
+    font-weight: bold;
+}
 
-/* --- Comments --- */
+.chroma .nv,
+:root[data-theme="dark"] .chroma .nv,
+.chroma .vc,
+:root[data-theme="dark"] .chroma .vc,
+.chroma .vg,
+:root[data-theme="dark"] .chroma .vg,
+.chroma .vi,
+:root[data-theme="dark"] .chroma .vi,
+.chroma .vm,
+:root[data-theme="dark"] .chroma .vm {
+    color: var(--syntax-text);
+}
+
+.chroma .sd,
+:root[data-theme="dark"] .chroma .sd,
+.chroma .sh,
+:root[data-theme="dark"] .chroma .sh,
 .chroma .c,
+:root[data-theme="dark"] .chroma .c,
 .chroma .ch,
+:root[data-theme="dark"] .chroma .ch,
 .chroma .cm,
+:root[data-theme="dark"] .chroma .cm,
 .chroma .c1,
+:root[data-theme="dark"] .chroma .c1,
 .chroma .cs,
-.chroma .cp          { color: #8b7355; font-style: italic; }
-.chroma .cpf         { color: #8b7355; font-weight: bold; font-style: italic; }
+:root[data-theme="dark"] .chroma .cs,
+.chroma .cp,
+:root[data-theme="dark"] .chroma .cp {
+    color: var(--secondary);
+    font-style: italic;
+}
 
-/* --- Generic (diff output etc.) --- */
-.chroma .gd          { color: #8a3324; background-color: #f0ddd8; }
-.chroma .ge          { font-style: italic; }
-.chroma .gr,
-.chroma .gt          { color: #8a3324; }
+.chroma .o,
+:root[data-theme="dark"] .chroma .o,
+.chroma .ow,
+:root[data-theme="dark"] .chroma .ow {
+    color: var(--cyan);
+    font-weight: bold;
+}
+
+.chroma .cpf,
+:root[data-theme="dark"] .chroma .cpf {
+    color: var(--secondary);
+    font-weight: bold;
+    font-style: italic;
+}
+
+.chroma .gd,
+:root[data-theme="dark"] .chroma .gd {
+    color: var(--red);
+    background-color: var(--syntax-deleted-bg);
+}
+
+.chroma .ge,
+:root[data-theme="dark"] .chroma .ge {
+    font-style: italic;
+}
+
 .chroma .gh,
-.chroma .gu          { color: #8a6d2b; font-weight: bold; }
-.chroma .gi          { color: #4a7c3f; background-color: #ddeedd; }
-.chroma .gs          { font-weight: bold; }
-.chroma .gl          { text-decoration: underline; }
+:root[data-theme="dark"] .chroma .gh,
+.chroma .gu,
+:root[data-theme="dark"] .chroma .gu {
+    color: var(--yellow);
+    font-weight: bold;
+}
 
+.chroma .gi,
+:root[data-theme="dark"] .chroma .gi {
+    color: var(--green);
+    background-color: var(--syntax-inserted-bg);
+}
 
-/* ===================================================================
-   HEADING SPACING — Proper line spacing above each heading level
-   Keep the garden's heading rhythm over PaperMod's .md-content defaults.
-   =================================================================== */
+.chroma .gs,
+:root[data-theme="dark"] .chroma .gs {
+    font-weight: bold;
+}
+
+.chroma .gl,
+:root[data-theme="dark"] .chroma .gl {
+    text-decoration: underline;
+}
+
+/* Preserve the garden's heading spacing over PaperMod defaults. */
 .post-content h1 {
     margin: 2.0em 0 0.8em;
     font-size: 2.0em;
 }
+
 .post-content h2 {
     margin: 1.8em 0 0.6em;
     font-size: 1.6em;
 }
+
 .post-content h3 {
     margin: 1.5em 0 0.5em;
     font-size: 1.35em;
 }
+
 .post-content h4 {
     margin: 1.3em 0 0.4em;
     font-size: 1.15em;
 }
+
 .post-content h5 {
     margin: 1.2em 0 0.3em;
     font-size: 1.0em;
 }
+
 .post-content h6 {
     margin: 1.1em 0 0.3em;
     font-size: 0.9em;
 }
 
-
-/* ===================================================================
-   COVER IMAGE SIZE — Constrain cover images on list & single pages
-   =================================================================== */
+/* Cover image constraints. */
 .entry-cover img {
     max-height: 250px;
     object-fit: cover;
@@ -567,115 +512,3 @@ h6 { color: #6b3a6b; }
     max-height: 360px;
     object-fit: cover;
 }
-
-
-/* ===================================================================
-   CODE SYNTAX — Tokyo Night Night (maps PaperMod's Chroma tokens)
-   Palette:
-     #c0caf5  fg         — base text
-     #565f89  comment    — comments (italic)
-     #7aa2f7  blue       — functions, attributes
-     #7dcfff  cyan       — builtins, operators, escape, regex
-     #bb9af7  magenta    — keywords
-     #9ece6a  green      — strings
-     #e0af68  yellow     — classes, namespaces
-     #ff9e64  orange     — numbers, constants
-     #ff757f  red        — declarations, errors, deleted
-     #1a1b26  bg         — code block background
-     #16161e  bg_dark    — darkest code bg
-     #292e42  bg_hi      — line highlight
-   =================================================================== */
-
-/* Code block container */
-:root[data-theme="dark"] .bg,
-:root[data-theme="dark"] .chroma              { color: #c0caf5; background-color: #16161e; }
-
-/* Error */
-:root[data-theme="dark"] .chroma .err         { color: #ff757f; }
-
-/* Line numbers */
-:root[data-theme="dark"] .chroma .lnt,
-:root[data-theme="dark"] .chroma .ln          { color: #414868; }
-
-/* Line highlight */
-:root[data-theme="dark"] .chroma .hl          { background-color: #292e42; }
-
-/* --- Keywords --- */
-:root[data-theme="dark"] .chroma .k,
-:root[data-theme="dark"] .chroma .kp,
-:root[data-theme="dark"] .chroma .kr          { color: #bb9af7; }            /* keyword → magenta */
-:root[data-theme="dark"] .chroma .kc          { color: #ff9e64; }            /* keyword constant (true/false/nil) → orange */
-:root[data-theme="dark"] .chroma .kd          { color: #ff757f; }            /* keyword declaration (func/var/class) → red */
-:root[data-theme="dark"] .chroma .kn          { color: #7dcfff; }            /* keyword namespace (import) → cyan */
-:root[data-theme="dark"] .chroma .kt          { color: #bb9af7; }            /* keyword type → magenta */
-
-/* --- Names --- */
-:root[data-theme="dark"] .chroma .na          { color: #7aa2f7; }            /* name attribute → blue */
-:root[data-theme="dark"] .chroma .nb,
-:root[data-theme="dark"] .chroma .bp          { color: #7dcfff; }            /* name builtin → cyan */
-:root[data-theme="dark"] .chroma .nc          { color: #e0af68; }            /* name class → yellow */
-:root[data-theme="dark"] .chroma .no          { color: #ff9e64; }            /* name constant → orange */
-:root[data-theme="dark"] .chroma .nd          { color: #7aa2f7; font-weight: bold; }  /* decorator → blue */
-:root[data-theme="dark"] .chroma .ni,
-:root[data-theme="dark"] .chroma .nl          { color: #7dcfff; }            /* name entity / label → cyan */
-:root[data-theme="dark"] .chroma .ne          { color: #ff9e64; }            /* name exception → orange */
-:root[data-theme="dark"] .chroma .nf,
-:root[data-theme="dark"] .chroma .fm          { color: #7aa2f7; }            /* function → blue */
-:root[data-theme="dark"] .chroma .nn,
-:root[data-theme="dark"] .chroma .py          { color: #e0af68; }            /* namespace / property → yellow */
-:root[data-theme="dark"] .chroma .nt          { color: #bb9af7; }            /* name tag (HTML tags) → magenta */
-:root[data-theme="dark"] .chroma .nv,
-:root[data-theme="dark"] .chroma .vc,
-:root[data-theme="dark"] .chroma .vg,
-:root[data-theme="dark"] .chroma .vi,
-:root[data-theme="dark"] .chroma .vm          { color: #c0caf5; }            /* name variable → fg */
-
-/* --- Strings --- */
-:root[data-theme="dark"] .chroma .s,
-:root[data-theme="dark"] .chroma .s1,
-:root[data-theme="dark"] .chroma .s2,
-:root[data-theme="dark"] .chroma .sb,
-:root[data-theme="dark"] .chroma .sc,
-:root[data-theme="dark"] .chroma .si,
-:root[data-theme="dark"] .chroma .sx,
-:root[data-theme="dark"] .chroma .ss          { color: #9ece6a; }            /* strings → green */
-:root[data-theme="dark"] .chroma .sa          { color: #ff757f; }            /* string affix → red */
-:root[data-theme="dark"] .chroma .dl          { color: #7aa2f7; }            /* string delimiter → blue */
-:root[data-theme="dark"] .chroma .sd,
-:root[data-theme="dark"] .chroma .sh          { color: #565f89; font-style: italic; }  /* docstring → comment */
-:root[data-theme="dark"] .chroma .se          { color: #7dcfff; }            /* string escape → cyan */
-:root[data-theme="dark"] .chroma .sr          { color: #7dcfff; }            /* string regex → cyan */
-
-/* --- Numbers --- */
-:root[data-theme="dark"] .chroma .m,
-:root[data-theme="dark"] .chroma .mb,
-:root[data-theme="dark"] .chroma .mf,
-:root[data-theme="dark"] .chroma .mh,
-:root[data-theme="dark"] .chroma .mi,
-:root[data-theme="dark"] .chroma .il,
-:root[data-theme="dark"] .chroma .mo          { color: #ff9e64; }            /* numbers → orange */
-
-/* --- Operators --- */
-:root[data-theme="dark"] .chroma .o,
-:root[data-theme="dark"] .chroma .ow          { color: #7dcfff; font-weight: bold; }  /* operators → cyan */
-
-/* --- Comments --- */
-:root[data-theme="dark"] .chroma .c,
-:root[data-theme="dark"] .chroma .ch,
-:root[data-theme="dark"] .chroma .cm,
-:root[data-theme="dark"] .chroma .c1,
-:root[data-theme="dark"] .chroma .cs,
-:root[data-theme="dark"] .chroma .cp          { color: #565f89; font-style: italic; }
-:root[data-theme="dark"] .chroma .cpf         { color: #565f89; font-weight: bold; font-style: italic; }
-
-/* --- Generic (diff output etc.) --- */
-:root[data-theme="dark"] .chroma .gd          { color: #ff757f; background-color: #3d1a1e; }  /* deleted → red */
-:root[data-theme="dark"] .chroma .ge          { font-style: italic; }
-:root[data-theme="dark"] .chroma .gr,
-:root[data-theme="dark"] .chroma .gt          { color: #ff757f; }            /* error / traceback → red */
-:root[data-theme="dark"] .chroma .gh,
-:root[data-theme="dark"] .chroma .gu          { color: #e0af68; font-weight: bold; }  /* heading → yellow */
-:root[data-theme="dark"] .chroma .gi          { color: #9ece6a; background-color: #1a2a1a; }   /* inserted → green */
-:root[data-theme="dark"] .chroma .gs          { font-weight: bold; }
-:root[data-theme="dark"] .chroma .gl          { text-decoration: underline; }
-
