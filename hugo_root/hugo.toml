@@ -25,9 +25,6 @@ url = "https://github.com/rishav-singh-0"
 name = "instagram"
 url = "https://www.instagram.com/rishavs.in"
 
-[[params.comments]]
-comments=true
-
 [[menu.main]]
 name = "Archive"
 url = "archives"
@@ -44,6 +41,7 @@ url = "tags/"
 weight = 10
 
 [params]
+comments = true
 ShowShareButtons = false
 ShowReadingTime = true
 #ShowToc = true

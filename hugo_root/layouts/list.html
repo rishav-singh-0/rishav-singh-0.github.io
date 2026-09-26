@@ -29,7 +29,7 @@
 {{- end }}
 
 {{- if not .IsHome -}}
-  {{- partial "local-graph.html" . -}}
+  {{- partial "extend_post_content.html" . -}}
 {{- end -}}
 
 {{- $pages := union .RegularPages .Sections }}
