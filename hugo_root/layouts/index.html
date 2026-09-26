@@ -66,7 +66,7 @@
       {{- /* Repeat the same chips for the seamless marquee. */}}
       {{- range $copy := seq 0 1 }}
       {{- range $topics }}
-      <a class="home-topics__chip" href="{{ .url }}"{{ if $copy }} aria-hidden="true"{{ end }}>{{ .title }}{{ with .count }}
+      <a class="home-topics__chip" href="{{ .url }}"{{ if $copy }} aria-hidden="true" tabindex="-1"{{ end }}>{{ .title }}{{ with .count }}
         <span class="home-topics__chip-count">{{ . }}</span>
       {{ end }}</a>
       {{- end }}
@@ -124,10 +124,38 @@
 {{/* ===== Animated Hero Nodes + Scroll Reveal ===== */}}
 <script>
 (function() {
+  /* --- Scroll Reveal (Intersection Observer) --- */
+  const reveals = document.querySelectorAll('.scroll-reveal');
+  if (reveals.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (el.classList.contains('stagger-item')) {
+            /* stagger siblings */
+            const parent = el.parentElement;
+            const siblings = parent.querySelectorAll('.stagger-item');
+            siblings.forEach((sib, i) => {
+              sib.style.transitionDelay = (i * 0.1) + 's';
+              sib.classList.add('revealed');
+            });
+          } else {
+            el.classList.add('revealed');
+          }
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+  } else {
+    reveals.forEach(el => el.classList.add('revealed'));
+  }
+
   /* --- Floating Nodes Canvas --- */
   const canvas = document.getElementById('hero-nodes');
-  if (!canvas) return;
+  if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const ctx = canvas.getContext('2d');
+  if (!ctx) return;
   let w, h, nodes = [], animId;
   const NODE_COUNT = 40;
   const CONNECT_DIST = 120;
@@ -213,41 +241,18 @@
   loop();
   window.addEventListener('resize', () => { resize(); });
 
-  /* --- Scroll Reveal (Intersection Observer) --- */
-  const reveals = document.querySelectorAll('.scroll-reveal');
-  if (reveals.length && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          if (el.classList.contains('stagger-item')) {
-            /* stagger siblings */
-            const parent = el.parentElement;
-            const siblings = parent.querySelectorAll('.stagger-item');
-            siblings.forEach((sib, i) => {
-              sib.style.transitionDelay = (i * 0.1) + 's';
-              sib.classList.add('revealed');
-            });
-          } else {
-            el.classList.add('revealed');
-          }
-          observer.unobserve(el);
-        }
-      });
-    }, { threshold: 0.15 });
-    reveals.forEach(el => observer.observe(el));
-  }
-
   /* --- Pause canvas when not visible --- */
-  const heroObs = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      if (!animId) loop();
-    } else {
-      cancelAnimationFrame(animId);
-      animId = null;
-    }
-  }, { threshold: 0 });
-  heroObs.observe(canvas.parentElement);
+  if ('IntersectionObserver' in window) {
+    const heroObs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        if (!animId) loop();
+      } else {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    }, { threshold: 0 });
+    heroObs.observe(canvas.parentElement);
+  }
 })();
 </script>
 
