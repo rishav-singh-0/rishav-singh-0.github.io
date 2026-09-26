@@ -45,7 +45,6 @@ PaperMod provides:
 | `_default/_markup/render-codeblock-mermaid.html` | Mermaid diagram rendering |
 | `_default/_markup/render-blockquote-alert.html` | Callout/alert boxes (15+ types) with foldable details |
 | `_default/_markup/render-link.html` | Obsidian-style `[[wikilink]]` → Hugo link resolver |
-| `shortcodes/toy-network.html` | Interactive network visualization (vis-network.js) |
 
 ### Partials (hugo_root/layouts/partials/)
 
@@ -69,20 +68,11 @@ PaperMod provides:
 | `tags-bubbles.css` | Tag/taxonomy bubble styling |
 | `archive.css` | Archive page layout styling |
 
-### JavaScript (hugo_root/static/js/)
-
-| File | Purpose |
-|------|---------|
-| `toy-network.js` | vis-network.js integration for network shortcode |
-| `vis-network.min.js` | Bundled vis-network library |
-
 ### Static Data (hugo_root/static/data/)
 
 | File | Purpose |
 |------|---------|
 | `graph.json` | Auto-generated node/edge data for graph visualizations |
-| `toy-network/nodes.json` | Network demo node data |
-| `toy-network/edges.json` | Network demo edge data |
 
 ---
 
@@ -126,10 +116,9 @@ Custom heading margins for `.post-content h1`–`h6` (PaperMod's reset.css zeroe
 3. **Callout System** — 15+ callout types (note, info, tip, warning, danger, bug, example, quote, etc.) rendered from blockquote syntax with foldable details support
 4. **Mermaid Diagrams** — Code fence `mermaid` blocks auto-rendered via CDN
 5. **Giscus Comments** — GitHub Discussions–based commenting on posts
-6. **Interactive Network Shortcode** — vis-network.js for embedding node/edge visualizations
-7. **Custom Homepage** — Hero section, featured articles grid, topic chips, recent articles list
-8. **Smart Link Resolution** — Obsidian `[[wikilink#section]]` → correct Hugo URLs
-9. **Dual Theme System** — Coffee Light (Primary-inspired warm) + Tokyo Night Dark with full Chroma syntax highlighting for both
+6. **Custom Homepage** — Hero section, featured articles grid, topic chips, recent articles list
+7. **Smart Link Resolution** — Obsidian `[[wikilink#section]]` → correct Hugo URLs
+8. **Dual Theme System** — Coffee Light (Primary-inspired warm) + Tokyo Night Dark with full Chroma syntax highlighting for both
 
 ---
 
@@ -181,7 +170,6 @@ unsafe = true
 | Page | Layout | Purpose |
 |------|--------|---------|
 | `content/graph.md` | `graph` | Full knowledge graph explorer |
-| `content/toy-network.md` | default | Network visualization demo |
 | `content/search.md` | `search` | PaperMod built-in search |
 | `content/archives.md` | `archives` | Chronological post archive |
 | `content/posts/` | auto-generated | Blog posts from Obsidian vault |
@@ -205,7 +193,6 @@ Tags containing `/` represent a **hierarchy** and must be split into multiple se
 - **Static Site Generator:** Hugo
 - **Theme:** PaperMod
 - **Graph Visualization:** D3.js v7
-- **Network Visualization:** vis-network.js
 - **Diagrams:** Mermaid.js (CDN)
 - **Comments:** Giscus (GitHub Discussions)
 - **Search:** Fuse.js (client-side)
