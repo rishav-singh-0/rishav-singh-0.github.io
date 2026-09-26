@@ -59,7 +59,7 @@ jobs:
           restore-keys:
             hugo-
       - name: Pull latest Notes content
-        run: git submodule update --remote --merge
+        run: git submodule update --remote --merge -- vault
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
