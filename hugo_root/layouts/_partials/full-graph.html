@@ -87,7 +87,6 @@
                 <div class="kg-loading__ring"></div>
                 <span>Loading graph&hellip;</span>
             </div>
-            <div class="kg-tooltip" id="kg-tooltip"></div>
 
             <!-- Floating zoom controls -->
             <div class="kg-zoom" id="kg-zoom">
@@ -115,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const loading   = $("#kg-loading");
     const search    = $("#kg-search");
     const sidebar   = $("#kg-sidebar");
-    const tooltip   = $("#kg-tooltip");
     const showTags  = $("#kg-show-tags");
     const colorDir  = $("#kg-color-folders");
     const showLbls  = $("#kg-show-labels");
@@ -136,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const adjList = new Map();
     const degreeMap = new Map();
     const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
-    const LABEL_MIN_DEGREE = 2;
 
     const getDeg = d => degreeMap.get(d.id) || 0;
     const getR   = d => d.type === "tag" ? 5 : 4 + Math.sqrt(getDeg(d)) * 2;
@@ -182,8 +179,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* ── Fetch & init ── */
-    fetch("/data/graph.json", { cache: 'no-store' })
-        .then(r => r.json())
+    fetch({{ "data/graph.json" | relURL }}, { cache: 'no-store' })
+        .then(r => {
+            if (!r.ok) throw new Error("Failed to fetch graph data");
+            return r.json();
+        })
         .then(data => {
             allNodes = data.nodes;
             rawEdges = data.edges.map(e => ({ s: e.source, t: e.target }));
@@ -197,6 +197,13 @@ document.addEventListener("DOMContentLoaded", function () {
             if (loading) loading.style.display = "none";
             initGraph();
             updateGraph();
+        })
+        .catch(error => {
+            console.error("Graph Error:", error);
+            if (loading) {
+                loading.style.display = "flex";
+                loading.textContent = "Error loading graph data.";
+            }
         });
 
     function initGraph() {
@@ -291,14 +298,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         /* Pause simulation off-screen */
-        const obs = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting) { if (simulation.alpha() > simulation.alphaMin()) simulation.restart(); }
-            else simulation.stop();
-        }, { threshold: 0.1 });
-        obs.observe(canvas);
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) { if (simulation.alpha() > simulation.alphaMin()) simulation.restart(); }
+                else simulation.stop();
+            }, { threshold: 0.1 });
+            obs.observe(canvas);
+        }
     }
 
     function handleResize() {
+        if (!simulation) return;
         width  = canvas.clientWidth;
         height = canvas.clientHeight;
         svg.attr("viewBox", [0, 0, width, height]);
@@ -403,6 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function resetHighlight() {
+        if (!nodeG) return;
         nodeG.selectAll("g.node").classed("active neighbor neighbor-2 dimmed highlighted", false);
         linkG.selectAll("line").classed("active active-2 dimmed", false);
         updateFilters();

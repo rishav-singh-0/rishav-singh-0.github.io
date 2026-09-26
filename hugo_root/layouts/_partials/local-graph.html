@@ -166,10 +166,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const tooltip = document.getElementById('node-tooltip');
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 450;
-    const currentTitle = {{ .Title | jsonify }};
+    const currentTitle = {{ .Title }};
     let isDragging = false;
 
-    fetch('/data/graph.json', { cache: 'no-store' })
+    fetch({{ "data/graph.json" | relURL }}, { cache: 'no-store' })
         .then(res => {
             if (!res.ok) throw new Error("Failed to fetch graph data");
             return res.json();
@@ -180,21 +180,24 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(err => {
             console.error("Local Graph Error:", err);
-            if (loading) loading.innerText = "Error loading graph data.";
+            if (loading) {
+                loading.style.display = 'block';
+                loading.innerText = "Error loading graph data.";
+            }
         });
 
     function renderGraph(data, currentTitle) {
         const normalize = (s) => s ? s.trim().toLowerCase() : "";
         const targetTitle = normalize(currentTitle);
         
-        // Find current node
-        let currentNode = data.nodes.find(n => normalize(n.title) === targetTitle);
+        // Prefer the page URL so duplicate titles select the current note.
+        const currentPath = window.location.pathname;
+        let currentNode = data.nodes.find(n => n.url && (normalize(n.url) === normalize(currentPath) || normalize(n.url) === normalize(currentPath + "/")));
         if (!currentNode) {
-            currentNode = data.nodes.find(n => normalize(n.id) === "tag:" + targetTitle);
+            currentNode = data.nodes.find(n => normalize(n.title) === targetTitle);
         }
         if (!currentNode) {
-            const currentPath = window.location.pathname;
-            currentNode = data.nodes.find(n => n.url && (normalize(n.url) === normalize(currentPath) || normalize(n.url) === normalize(currentPath + "/")));
+            currentNode = data.nodes.find(n => normalize(n.id) === "tag:" + targetTitle);
         }
 
         if (!currentNode) {
@@ -393,14 +396,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Pause simulation when scrolled out of view
-        const observer = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting) {
-                if (simulation.alpha() > simulation.alphaMin()) simulation.restart();
-            } else {
-                simulation.stop();
-            }
-        }, { threshold: 0.1 });
-        observer.observe(container);
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    if (simulation.alpha() > simulation.alphaMin()) simulation.restart();
+                } else {
+                    simulation.stop();
+                }
+            }, { threshold: 0.1 });
+            observer.observe(container);
+        }
     }
 });
 </script>

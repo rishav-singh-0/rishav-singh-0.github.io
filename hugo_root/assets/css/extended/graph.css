@@ -338,11 +338,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* Tooltip — hidden; kept in DOM but not used on hover */
-.kg-tooltip {
-    display: none;
-}
-
 /* ── Zoom Controls ── */
 .kg-zoom {
     position: absolute;
