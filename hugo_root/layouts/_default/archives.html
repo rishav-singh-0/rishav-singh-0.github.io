@@ -4,6 +4,7 @@
 {{- if site.Params.ShowAllPagesInArchive }}
 {{- $pages = site.RegularPages }}
 {{- end }}
+{{- $pages = where $pages "Date.Year" "gt" 1 }}
 
 {{/* ===== Collect all tags + years for filters ===== */}}
 {{- $allTags := slice }}
@@ -15,16 +16,11 @@
     {{- end }}
   {{- end }}
   {{- $year := .Date.Format "2006" }}
-  {{- if ne $year "0001" }}
-    {{- $allYears = $allYears | append $year }}
-  {{- end }}
+  {{- $allYears = $allYears | append $year }}
 {{- end }}
 {{- $uniqueTags := $allTags | uniq | sort }}
 {{- $uniqueYears := $allYears | uniq | sort }}
-{{- $yearsDesc := slice }}
-{{- range $i := seq (sub (len $uniqueYears) 1) 0 }}
-  {{- $yearsDesc = $yearsDesc | append (index $uniqueYears $i) }}
-{{- end }}
+{{- $yearsDesc := sort $uniqueYears "value" "desc" }}
 
 <header class="page-hero">
   <h1 class="page-hero__title">Archive</h1>
@@ -40,7 +36,7 @@
       <circle cx="11" cy="11" r="8"></circle>
       <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
     </svg>
-    <input type="text" id="archive-search" class="archive-filter__input" placeholder="Search articles..." autocomplete="off" />
+    <input type="text" id="archive-search" class="archive-filter__input" placeholder="Search articles..." autocomplete="off" aria-label="Search articles" />
     <button id="archive-search-clear" class="archive-filter__clear" aria-label="Clear search" style="display:none;">&times;</button>
   </div>
   <div class="archive-filter__row">
@@ -50,7 +46,7 @@
       <button class="archive-filter__chip" data-tag="{{ . | lower }}">{{ . }}</button>
       {{- end }}
     </div>
-    <select id="archive-year" class="archive-filter__year">
+    <select id="archive-year" class="archive-filter__year" aria-label="Filter by year">
       <option value="all">All Years</option>
       {{- range $yearsDesc }}
       <option value="{{ . }}">{{ . }}</option>
@@ -63,13 +59,10 @@
 {{/* ===== Card Grid ===== */}}
 <div class="archive-grid" id="archive-grid">
   {{- range $pages }}
-  {{- if ne (.Date.Format "2006") "0001" }}
   <article class="archive-card scroll-reveal"
     data-title="{{ .Title | lower }}"
     data-year="{{ .Date.Format "2006" }}"
-    data-tags="{{ with .Params.tags }}{{ delimit . "," | lower }}{{ end }}"
-    data-date="{{ .Date.Format "Jan 2, 2006" }}"
-    data-reading="{{ .ReadingTime }}">
+    data-tags="{{ with .Params.tags }}{{ delimit . "," | lower }}{{ end }}">
     <div class="archive-card__meta">
       <time class="archive-card__date" datetime="{{ .Date.Format "2006-01-02" }}">
         {{ .Date.Format "Jan 2, 2006" }}
@@ -92,7 +85,6 @@
     {{- end }}
     <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
   </article>
-  {{- end }}
   {{- end }}
 </div>
 
@@ -129,7 +121,7 @@
     let visibleCount = 0;
     const query = searchQuery.toLowerCase().trim();
 
-    cards.forEach((card, i) => {
+    cards.forEach(card => {
       const title = card.dataset.title;
       const tags = card.dataset.tags;
       const year = card.dataset.year;
@@ -218,6 +210,8 @@
   } else {
     cards.forEach(card => card.classList.add('revealed'));
   }
+
+  if (!cards.length) filterCards();
 
   /* --- Keyboard shortcut: focus search with / --- */
   document.addEventListener('keydown', function(e) {
