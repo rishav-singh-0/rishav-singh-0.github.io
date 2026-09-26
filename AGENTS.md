@@ -25,7 +25,7 @@ PaperMod provides:
 **Key CSS Variables** (used throughout the overlay):
 `--primary`, `--secondary`, `--tertiary`, `--content`, `--entry`, `--border`, `--radius`, `--gap`, `--theme`, `--code-block-bg`, `--code-bg`
 
-**Theme switching:** PaperMod uses `[data-theme="dark"]` on `:root`. Light mode is the default (no attribute). Custom overrides use `:root` for light and `:root[data-theme="dark"]` for dark.
+**Theme switching:** PaperMod uses `[data-theme="dark"]` on `:root`. Custom overrides define the light palette in `:root` and the dark palette in `:root[data-theme="dark"]`.
 
 ---
 
@@ -35,38 +35,41 @@ PaperMod provides:
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Custom homepage: hero, featured grid, topic chips, recent articles |
-| `_default/single.html` | Post page with local graph + Giscus comments |
-| `_default/list.html` | List pages with page-hero header + local graph partial |
-| `_default/graph.html` | Full knowledge graph visualization page |
-| `_default/terms.html` | Taxonomy terms page |
-| `_default/archives.html` | Chronological post archive |
-| `_default/search.html` | PaperMod search page |
-| `_default/_markup/render-codeblock-mermaid.html` | Mermaid diagram rendering |
-| `_default/_markup/render-blockquote-alert.html` | Callout/alert boxes (15+ types) with foldable details |
-| `_default/_markup/render-link.html` | Obsidian-style `[[wikilink]]` → Hugo link resolver |
+| `home.html` | Custom homepage: hero, featured grid, topic chips, recent articles |
+| `list.html` | List and taxonomy term pages with page-hero header + local graph |
+| `graph.html` | Full knowledge graph visualization page |
+| `taxonomy.html` | Taxonomy terms page |
+| `archives.html` | Article archive with title, tag, and year filters |
+| `search.html` | Redirects `/search/` to the archive, with a no-JavaScript fallback |
+| `_markup/render-codeblock-mermaid.html` | Mermaid diagram rendering |
+| `_markup/render-blockquote-alert.html` | Callout/alert boxes (15+ types) with foldable details |
 
-### Partials (hugo_root/layouts/partials/)
+Post pages use PaperMod's `layouts/single.html`. The overlay adds the local graph and Giscus through the hooks below; it does not copy the post template. Wikilinks are converted by `bin/script.py` before Hugo renders them.
+
+### Partials (hugo_root/layouts/_partials/)
 
 | File | Purpose |
 |------|---------|
-| `local-graph.html` | D3.js force-directed graph showing current page + 2-depth neighbors |
+| `extend_post_content.html` | D3 local graph showing the current page + 2-depth neighbors; PaperMod post-content hook also called by `list.html` |
 | `full-graph.html` | Full knowledge graph with search, settings panel, force sliders |
 | `header.html` | Custom header override (theme toggle, nav) |
 | `callout-icons.html` | SVG icons for callout types (note, tip, warning, danger, etc.) |
-| `giscus.html` | GitHub Discussions comment system integration |
-| `extend_head.html` | Mermaid.js CDN loader |
+| `comments.html` | Giscus integration through PaperMod's comments hook; follows the site's theme |
+| `extend_head.html` | Loads Mermaid.js from its CDN when the page contains a Mermaid code block |
 
 ### CSS (hugo_root/assets/css/extended/)
 
 | File | Purpose |
 |------|---------|
 | `theme-override.css` | **Primary custom CSS**: dual-theme system (Coffee Light + Tokyo Night Dark), heading colors/spacing, cover image constraints, graph theming, Chroma code syntax colors |
+| `graph.css` | Full graph explorer layout, controls, responsive styles, and colors |
 | `home.css` | Homepage styling: hero, featured grid, topic chips, recent articles |
 | `callouts.css` | Callout/alert styling with color schemes per type, foldable details |
 | `page-hero.css` | Centered heading + subtitle + divider for list/taxonomy pages |
 | `tags-bubbles.css` | Tag/taxonomy bubble styling |
 | `archive.css` | Archive page layout styling |
+
+Custom JavaScript stays inline in the homepage, archive, and graph/comment templates. The graph partials load D3.js v7 from its CDN.
 
 ### Static Data (hugo_root/static/data/)
 
@@ -97,7 +100,7 @@ The site ships with two fully customized themes defined in `theme-override.css`:
 
 ### Heading Spacing
 
-Custom heading margins for `.post-content h1`–`h6` (PaperMod's reset.css zeroes all heading margins; `.md-content` defines margins but `.post-content` used by posts does not):
+Post content uses both `post-content` and PaperMod's `md-content` classes. Custom heading margins for `.post-content h1`–`h6` preserve the garden's spacing over PaperMod's defaults:
 - h1: `2.0em` top, h2: `1.8em`, h3: `1.5em`, h4: `1.3em`, h5: `1.2em`, h6: `1.1em`
 
 ### Cover Image Constraints
@@ -131,6 +134,7 @@ theme = 'PaperMod'
 googleAnalytics = "G-NPJY8ZT1P0"
 
 [params]
+comments = true
 featuredLimit = 4
 recentLimit = 6
 selectedTags = ["Programming", "Embedded", "Linux", "Personal"]
@@ -146,6 +150,9 @@ home = ["HTML", "RSS", "JSON"]
 
 [markup.goldmark.renderer]
 unsafe = true
+
+[markup.highlight]
+noClasses = false
 ```
 
 ---
@@ -159,9 +166,17 @@ unsafe = true
    - Generates `hugo_root/static/data/graph.json`
    - Respects draft/production filtering
 
-2. **bin/start.sh** — Local development server startup
+2. **bin/start.sh** — Removes generated `hugo_root/public/`, `hugo_root/static/images/`, and `hugo_root/content/posts/`, then rebuilds the content and starts Hugo in production mode. Only notes explicitly marked `draft: false` are exported in this mode.
 
-3. **Content Flow:** `vault/` → `bin/script.py` → `hugo_root/content/posts/` → Hugo build → `hugo_root/public/`
+3. **Deployment:** `.github/workflows/main.yml` checks out submodules at their recorded revisions, then updates only `vault` from its remote. PaperMod remains pinned to the reviewed submodule commit. The workflow builds with Hugo 0.147.2 and `--gc --minify`.
+
+4. **Content Flow:** `vault/` → `bin/script.py` → `hugo_root/content/posts/` → Hugo build → `hugo_root/public/`
+
+### Maintenance
+
+- Prefer PaperMod's extension hooks and keep related custom behavior in the existing files.
+- Validate theme changes with the deployment Hugo version. Keep `languageCode` until the deployment Hugo version supports `locale`; Hugo 0.147.2 ignores a `locale`-only setting.
+- Compare representative local/live pages visually and functionally, including mobile portrait/landscape, zoom, scrolling, and relevant controls. Exclude the three generated paths removed by `bin/start.sh` from file comparisons.
 
 ---
 
@@ -170,8 +185,8 @@ unsafe = true
 | Page | Layout | Purpose |
 |------|--------|---------|
 | `content/graph.md` | `graph` | Full knowledge graph explorer |
-| `content/search.md` | `search` | PaperMod built-in search |
-| `content/archives.md` | `archives` | Chronological post archive |
+| `content/search.md` | `search` | Redirect to archive search; retain the existing frontmatter layout name |
+| `content/archives.md` | `archives` | Article archive with title, tag, and year filters |
 | `content/posts/` | auto-generated | Blog posts from Obsidian vault |
 
 ---
@@ -180,7 +195,7 @@ unsafe = true
 
 Tags containing `/` represent a **hierarchy** and must be split into multiple separate tags:
 
-- A tag like `Platform/Buildroot` produces **3 tags**: `Platform`, `Buildroot`, and the combined `Platform/Buildroot` is **never** treated as a single tag.
+- A tag like `Platform/Buildroot` produces **2 tags**: `Platform` and `Buildroot`. The combined `Platform/Buildroot` is **never** treated as a single tag.
 - If an article has tags `Platform/Buildroot` and `Platform/FileSystem`, the resulting individual tags are: `Platform`, `Buildroot`, `FileSystem`.
 - The `/` denotes that the right-hand side is a subcategory of the left-hand side (e.g., `Buildroot` is a subcategory of `Platform`), but each part is also a standalone tag usable independently.
 - Tag-specific pages (taxonomy term pages, tag listings) must reflect these split tags — each individual tag (`Platform`, `Buildroot`, `FileSystem`) should have its own page listing all articles that belong to it.
@@ -195,7 +210,7 @@ Tags containing `/` represent a **hierarchy** and must be split into multiple se
 - **Graph Visualization:** D3.js v7
 - **Diagrams:** Mermaid.js (CDN)
 - **Comments:** Giscus (GitHub Discussions)
-- **Search:** Fuse.js (client-side)
+- **Search:** Custom client-side archive filters. The retained `search` layout also causes PaperMod to include its Fuse.js bundle on the redirect page.
 - **Content Authoring:** Obsidian
 - **Build Pipeline:** Python (frontmatter, json, shutil)
-- **Analytics:** Google Tag Manager
+- **Analytics:** Google Analytics 4 through PaperMod's call to Hugo's built-in analytics partial in production; no custom analytics override is needed.

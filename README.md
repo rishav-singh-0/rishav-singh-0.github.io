@@ -1,33 +1,14 @@
 # Rishav's Website
 
-Personal website and digital garden built with Hugo.
+Personal digital garden built with Hugo and PaperMod, published from an Obsidian vault.
 
-Content includes notes, guides, and tutorials from hands-on work.
-
-This repo contains pipeline that publishes a private Obsidian vault as a public website using Hugo as the SSG.
-
-## Prerequisites
-
-- hugo
-- python
-- uv
-
-## Setup
-
-Create a submodule of your actual repo as `vault`
-```bash
-git submodule command
-```
-
-- The notes which has "draft" property will be selected as posts and copied to new location in `hudo_root` directory.
-- All the obsidian to hugo format conversion of contents will be done by the python file
-- Hugo will convert pre-converted markdown files to html and generate static site
-- You will have all the features of `PaperMod` theme of hugo and few additional obsidian features which i have added
-    - Graph view (local and global)
-    - Callouts
-
-## Run locally
+Requires Hugo Extended, uv, and access to the private notes repository. Run from the repository root:
 
 ```bash
+git submodule update --init --recursive
 ./bin/start.sh
 ```
+
+Only notes marked `draft: false` are published.
+
+See [AGENTS.md](AGENTS.md) for architecture and maintenance details.
